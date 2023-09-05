@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import { ConfigProvider, App as AppWrapper } from 'antd';
+import AppThemeProvider from './theme/ThemeProvider';
+import { useRoutes } from 'react-router-dom';
+import router from './router';
 
-function App() {
+const App = () => {
+  const content = useRoutes(router);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <ConfigProvider
+        theme={{
+          token: {
+            fontFamily:
+              '"Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+            borderRadius: 4,
+            fontSize: 15
+          },
+          components: {
+            Typography: {
+              titleMarginBottom: '0.4rem'
+            }
+          }
+        }}
+      >
+        <AppThemeProvider>
+          <AppWrapper>{content}</AppWrapper>
+        </AppThemeProvider>
+      </ConfigProvider>
+    </>
   );
-}
+};
 
 export default App;
