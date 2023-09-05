@@ -17,6 +17,8 @@ const Registration = Loader(
   lazy(() => import('src/content/pages/auth/Registration'))
 );
 
+const Verify = Loader(lazy(() => import('src/content/pages/auth/Verify')));
+
 const authRoutes = [
   {
     path: '',
@@ -33,6 +35,10 @@ const authRoutes = [
   {
     path: 'registration',
     element: <Registration />
+  },
+  {
+    path: 'verify',
+    element: <Verify />
   }
 ];
 
