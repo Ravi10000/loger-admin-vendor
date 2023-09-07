@@ -18,6 +18,9 @@ const App = () => {
           components: {
             Typography: {
               titleMarginBottom: '0.4rem'
+            },
+            Layout: {
+              colorBgHeader: 'rgba(8, 104, 248, 0.1)'
             }
           }
         }}
