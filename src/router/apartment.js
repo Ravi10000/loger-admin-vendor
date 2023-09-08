@@ -10,6 +10,8 @@ const Loader = Component => props =>
 
 const MainPage = Loader(lazy(() => import('src/content/MainPage')));
 const Boarding = Loader(lazy(() => import('src/content/Apartment/Boarding')));
+const Listing = Loader(lazy(() => import('src/content/Apartment/Listing')));
+const Place = Loader(lazy(() => import('src/content/Apartment/Place')));
 
 const apartmentRoutes = [
   {
@@ -19,6 +21,14 @@ const apartmentRoutes = [
   {
     path: 'boarding',
     element: <Boarding />
+  },
+  {
+    path: 'listing',
+    element: <Listing />
+  },
+  {
+    path: 'place',
+    element: <Place />
   }
 ];
 

@@ -1,9 +1,20 @@
-import { Button, Card, Col, Row, Space, Typography } from 'antd';
+import {
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  Divider,
+  Row,
+  Space,
+  Typography
+} from 'antd';
 import React from 'react';
 import { styled } from 'styled-components';
+import { BsArrowLeft } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 
 const media = {
-  checkIcon: '/assets/images/checkbox-icon.png'
+  checkIcon: '/assets/images/label-img.png'
 };
 
 const MainWrapper = styled.div`
@@ -30,22 +41,57 @@ const StyledCard = styled(Card)`
   }
 `;
 
-const CheckboxLabel = styled(Button)`
+const CheckboxLabel = styled(Checkbox)`
   width: 100%;
   display: flex;
   align-items: center;
-  color: #fff;
+  border: 1px solid ${props => props.theme.antd.colorBorderSecondary};
+  height: 60px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  transition: all 0.3s ease;
+  border-radius: ${props => props.theme.antd.borderRadius}px;
+  position: relative;
 
-  &.ant-btn.ant-btn-lg {
-    height: 60px;
+  &:hover {
+    border-color: ${props => props.theme.antd.colorPrimary};
+  }
+
+  .ant-checkbox {
+    position: absolute;
+    right: 1rem;
+
+    .ant-checkbox-inner {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+
+      &::after {
+        inset-inline-start: 25%;
+        width: 7px;
+        height: 12px;
+      }
+    }
   }
 
   img {
     width: 30px;
+    display: inline-block;
+    margin-right: 2rem;
+  }
+`;
+
+const CardBottom = styled(Space)`
+  display: flex;
+
+  .ant-space-item:last-child {
+    flex: 1;
   }
 `;
 
 const Boarding = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       <MainWrapper>
@@ -56,20 +102,48 @@ const Boarding = () => {
           <Row>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <StyledCard>
-                <Space direction="vertical" style={{ width: '100%' }}>
-                  <CheckboxLabel type="primary" size="large">
-                    <Space size="middle">
-                      <img src={media.checkIcon} alt="" />
-                      <span>One Apartment</span>
-                    </Space>
+                <Space
+                  direction="vertical"
+                  size="middle"
+                  style={{ width: '100%' }}
+                >
+                  <CheckboxLabel>
+                    <img src={media.checkIcon} alt="" />
+                    <span>One Apartment</span>
                   </CheckboxLabel>
-                  <CheckboxLabel type="primary" size="large">
-                    <Space size="middle">
-                      <img src={media.checkIcon} alt="" />
-                      <span>Multiple Apartment</span>
-                    </Space>
+                  <CheckboxLabel>
+                    <img src={media.checkIcon} alt="" />
+                    <span>Multiple Apartment</span>
                   </CheckboxLabel>
                 </Space>
+                <Divider style={{ marginTop: '2rem', marginBottom: '2rem' }} />
+                <CardBottom direction="horizontal">
+                  <Button
+                    size="large"
+                    type="primary"
+                    ghost
+                    icon={<BsArrowLeft />}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center'
+                    }}
+                    onClick={() => {
+                      navigate('/apartment');
+                    }}
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    size="large"
+                    type="primary"
+                    style={{ width: '100%' }}
+                    onClick={() => {
+                      navigate('/apartment/listing');
+                    }}
+                  >
+                    Continue
+                  </Button>
+                </CardBottom>
               </StyledCard>
             </Col>
           </Row>
