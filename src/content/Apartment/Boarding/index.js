@@ -10,7 +10,7 @@ import {
 } from 'antd';
 import React from 'react';
 import { styled } from 'styled-components';
-import { BsArrowLeft } from 'react-icons/bs';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
 const media = {
@@ -30,12 +30,6 @@ const Container = styled.div`
 `;
 
 const StyledCard = styled(Card)`
-  transition: all 0.3s ease;
-
-  &:hover {
-    border-color: ${props => props.theme.antd.colorPrimary};
-  }
-
   .ant-space-item {
     text-align: center;
   }
@@ -83,6 +77,7 @@ const CheckboxLabel = styled(Checkbox)`
 
 const CardBottom = styled(Space)`
   display: flex;
+  width: 100%;
 
   .ant-space-item:last-child {
     flex: 1;
@@ -122,7 +117,7 @@ const Boarding = () => {
                     size="large"
                     type="primary"
                     ghost
-                    icon={<BsArrowLeft />}
+                    icon={<ArrowLeftOutlined />}
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center'
@@ -136,7 +131,7 @@ const Boarding = () => {
                   <Button
                     size="large"
                     type="primary"
-                    style={{ width: '100%' }}
+                    block
                     onClick={() => {
                       navigate('/apartment/listing');
                     }}

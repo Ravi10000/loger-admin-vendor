@@ -20,12 +20,6 @@ const Container = styled.div`
 `;
 
 const StyledCard = styled(Card)`
-  transition: all 0.3s ease;
-
-  &:hover {
-    border-color: ${props => props.theme.antd.colorPrimary};
-  }
-
   .ant-space-item {
     text-align: center;
     width: 100%;
@@ -63,7 +57,7 @@ const Listing = () => {
                     <Button
                       size="large"
                       type="primary"
-                      style={{ width: '100%' }}
+                      block
                       onClick={() => {
                         navigate('/apartment/place');
                       }}
@@ -74,7 +68,7 @@ const Listing = () => {
                       size="large"
                       type="primary"
                       ghost
-                      style={{ width: '100%' }}
+                      block
                       onClick={() => {
                         navigate('/apartment/boarding');
                       }}

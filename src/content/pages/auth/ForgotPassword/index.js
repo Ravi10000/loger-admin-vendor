@@ -1,7 +1,7 @@
 import { Button, Form, Input, Typography } from 'antd';
 import React from 'react';
 import { styled } from 'styled-components';
-import { BsArrowLeft } from 'react-icons/bs';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
 const media = {
@@ -95,7 +95,7 @@ const ForgotPassword = () => {
                   alignItems: 'center'
                 }}
               >
-                <BsArrowLeft />
+                <ArrowLeftOutlined />
                 <span style={{ marginLeft: '0.5rem' }}>Back to Log In</span>
               </Link>
             </FormWrapper>

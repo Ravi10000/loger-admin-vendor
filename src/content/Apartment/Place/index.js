@@ -2,9 +2,13 @@ import { Button, Card, Col, Form, Input, Row, Space, Typography } from 'antd';
 import React from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { AiOutlineLike, AiOutlineClose, AiOutlineBulb } from 'react-icons/ai';
 
-import { BsArrowLeft } from 'react-icons/bs';
+import {
+  ArrowLeftOutlined,
+  LikeOutlined,
+  BulbOutlined,
+  CloseOutlined
+} from '@ant-design/icons';
 
 const MainWrapper = styled.div`
   padding-top: 3.5rem;
@@ -19,12 +23,6 @@ const Container = styled.div`
 `;
 
 const StyledCard = styled(Card)`
-  transition: all 0.3s ease;
-
-  &:hover {
-    border-color: ${props => props.theme.antd.colorPrimary};
-  }
-
   .ant-space-item {
     text-align: center;
   }
@@ -32,6 +30,7 @@ const StyledCard = styled(Card)`
 
 const CardBottom = styled(Space)`
   display: flex;
+  width: 100%;
 
   .ant-space-item:last-child {
     flex: 1;
@@ -60,7 +59,7 @@ const Place = () => {
                       size="large"
                       type="primary"
                       ghost
-                      icon={<BsArrowLeft />}
+                      icon={<ArrowLeftOutlined />}
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center'
@@ -74,7 +73,7 @@ const Place = () => {
                     <Button
                       size="large"
                       type="primary"
-                      style={{ width: '100%' }}
+                      block
                       onClick={() => {
                         navigate('/apartment/property');
                       }}
@@ -92,10 +91,10 @@ const Place = () => {
                     <Space
                       size="middle"
                       direction="horizontal"
-                      style={{ alignItems: 'flex-start' }}
+                      style={{ alignItems: 'flex-start', width: '100%' }}
                     >
                       <Typography.Text style={{ fontSize: '2rem' }}>
-                        <AiOutlineLike />
+                        <LikeOutlined />
                       </Typography.Text>
                       <Space direction="vertical">
                         <Typography.Title level={4}>
@@ -121,7 +120,7 @@ const Place = () => {
                       </Space>
                       <Button
                         type="text"
-                        icon={<AiOutlineClose />}
+                        icon={<CloseOutlined />}
                         style={{
                           display: 'flex',
                           alignItems: 'center',
@@ -136,10 +135,10 @@ const Place = () => {
                     <Space
                       size="middle"
                       direction="horizontal"
-                      style={{ alignItems: 'flex-start' }}
+                      style={{ alignItems: 'flex-start', width: '100%' }}
                     >
                       <Typography.Text style={{ fontSize: '2rem' }}>
-                        <AiOutlineBulb />
+                        <BulbOutlined />
                       </Typography.Text>
                       <Space direction="vertical">
                         <Typography.Title level={4}>
@@ -158,7 +157,7 @@ const Place = () => {
                       </Space>
                       <Button
                         type="text"
-                        icon={<AiOutlineClose />}
+                        icon={<CloseOutlined />}
                         style={{
                           display: 'flex',
                           alignItems: 'center',
