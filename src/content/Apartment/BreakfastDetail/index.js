@@ -26,7 +26,30 @@ const CardBottom = styled(Space)`
   }
 `;
 
-const tagsData = ['Movies', 'Books', 'Music', 'Sports'];
+const CheckableTag = styled(Tag.CheckableTag)`
+  font-size: 1rem;
+  line-height: 35px;
+  border: 1px solid ${props => props.theme.antd.colorBorder};
+
+  &:not(.ant-tag-checkable-checked):hover {
+    border-color: ${props => props.theme.antd.colorPrimary};
+    background-color: #fff;
+  }
+  &.ant-tag-checkable-checked {
+    border-color: ${props => props.theme.antd.colorInfoTextHover};
+  }
+`;
+
+const tagsData = [
+  'American',
+  'Breakfast to go',
+  'Asian',
+  'Vegan',
+  'Continental',
+  'Full English/Irish',
+  'Gluten-free',
+  'Vegetarian'
+];
 
 const BreakfastDetail = () => {
   const navigate = useNavigate();
@@ -85,14 +108,14 @@ const BreakfastDetail = () => {
                       </Typography.Title>
                       <Space size={[0, 8]} wrap>
                         {tagsData.map(tag => (
-                          <Tag.CheckableTag
+                          <CheckableTag
                             bordered
                             key={tag}
                             checked={selectedTags.includes(tag)}
                             onChange={checked => handleTagChange(tag, checked)}
                           >
                             {tag}
-                          </Tag.CheckableTag>
+                          </CheckableTag>
                         ))}
                       </Space>
                     </Space>
