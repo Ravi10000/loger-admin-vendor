@@ -1,34 +1,13 @@
 import { Button, Card, Col, Row, Space, Typography } from 'antd';
 import React from 'react';
-import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
 import { ArrowLeftOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 
 const media = {
   mapImg: '/assets/images/map-img.png'
 };
-
-const MainWrapper = styled.div`
-  padding-top: 3.5rem;
-`;
-
-const Container = styled.div`
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 2rem;
-  padding-right: 2rem;
-`;
-
-const CardBottom = styled(Space)`
-  display: flex;
-  width: 100%;
-
-  .ant-space-item:last-child {
-    flex: 1;
-  }
-`;
 
 const Location = () => {
   const navigate = useNavigate();

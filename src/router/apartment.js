@@ -20,6 +20,12 @@ const PropertyDetail = Loader(
 const BreakfastDetail = Loader(
   lazy(() => import('src/content/Apartment/BreakfastDetail'))
 );
+const Parking = Loader(lazy(() => import('src/content/Apartment/Parking')));
+const Language = Loader(lazy(() => import('src/content/Apartment/Language')));
+const Rules = Loader(lazy(() => import('src/content/Apartment/Rules')));
+const HostProfile = Loader(
+  lazy(() => import('src/content/Apartment/HostProfile'))
+);
 
 const apartmentRoutes = [
   {
@@ -53,6 +59,22 @@ const apartmentRoutes = [
   {
     path: 'breakfast-detail',
     element: <BreakfastDetail />
+  },
+  {
+    path: 'parking',
+    element: <Parking />
+  },
+  {
+    path: 'language',
+    element: <Language />
+  },
+  {
+    path: 'rules',
+    element: <Rules />
+  },
+  {
+    path: 'host-profile',
+    element: <HostProfile />
   }
 ];
 

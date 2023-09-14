@@ -1,46 +1,9 @@
-import {
-  Button,
-  Card,
-  Col,
-  Form,
-  Input,
-  Row,
-  Select,
-  Space,
-  Typography
-} from 'antd';
+import { Button, Card, Col, Form, Input, Row, Select, Typography } from 'antd';
 import React from 'react';
-import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { COUNTRY_LIST as countryList } from 'src/constants/country';
 import { EnvironmentOutlined, ArrowLeftOutlined } from '@ant-design/icons';
-
-const MainWrapper = styled.div`
-  padding-top: 3.5rem;
-`;
-
-const Container = styled.div`
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 2rem;
-  padding-right: 2rem;
-`;
-
-const StyledCard = styled(Card)`
-  .ant-space-item {
-    text-align: center;
-  }
-`;
-
-const CardBottom = styled(Space)`
-  display: flex;
-  width: 100%;
-
-  .ant-space-item:last-child {
-    flex: 1;
-  }
-`;
+import { Container, MainWrapper, CardBottom } from 'src/components/Global';
 
 const Property = () => {
   const navigate = useNavigate();
@@ -54,7 +17,7 @@ const Property = () => {
           </Typography.Title>
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
-              <StyledCard>
+              <Card>
                 <Form layout="vertical">
                   <Form.Item label="Country">
                     <Select
@@ -108,7 +71,7 @@ const Property = () => {
                     </Button>
                   </CardBottom>
                 </Form>
-              </StyledCard>
+              </Card>
             </Col>
           </Row>
         </Container>

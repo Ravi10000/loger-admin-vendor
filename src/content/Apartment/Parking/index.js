@@ -1,53 +1,19 @@
-import { Button, Card, Col, Radio, Row, Space, Typography, Tag } from 'antd';
-import React, { useState } from 'react';
-import { styled } from 'styled-components';
+import { Button, Card, Col, Radio, Row, Space, Typography } from 'antd';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Container, MainWrapper, CardBottom } from 'src/components/Global';
+import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 
-const CheckableTag = styled(Tag.CheckableTag)`
-  font-size: 1rem;
-  line-height: 35px;
-  border: 1px solid ${props => props.theme.antd.colorBorder};
-
-  &:not(.ant-tag-checkable-checked):hover {
-    border-color: ${props => props.theme.antd.colorPrimary};
-    background-color: #fff;
-  }
-  &.ant-tag-checkable-checked {
-    border-color: ${props => props.theme.antd.colorInfoTextHover};
-  }
-`;
-
-const tagsData = [
-  'American',
-  'Breakfast to go',
-  'Asian',
-  'Vegan',
-  'Continental',
-  'Full English/Irish',
-  'Gluten-free',
-  'Vegetarian'
-];
-
-const BreakfastDetail = () => {
+const Parking = () => {
   const navigate = useNavigate();
-  const [selectedTags, setSelectedTags] = useState([]);
-
-  const handleTagChange = (tag, checked) => {
-    const nextSelectedTags = checked
-      ? [...selectedTags, tag]
-      : selectedTags.filter(t => t !== tag);
-    setSelectedTags(nextSelectedTags);
-  };
 
   return (
     <>
       <MainWrapper>
         <Container>
           <Typography.Title level={2} style={{ marginBottom: '2.5rem' }}>
-            Breakfast Details
+            Tell us about the parking situtaion at your apartment
           </Typography.Title>
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
@@ -59,46 +25,60 @@ const BreakfastDetail = () => {
                 >
                   <Space direction="vertical" style={{ width: '100%' }}>
                     <Typography.Title level={5}>
-                      Do You Serve Guests Breakfast?
+                      Is Parking Available to Guests?
                     </Typography.Title>
                     <Radio.Group
                     // onChange={handleAllowChild}
                     // value={allowChild}
                     >
-                      <Radio value={1}>Yes</Radio>
-                      <Radio value={2}>No</Radio>
+                      <Space direction="vertical" style={{}}>
+                        <Radio value={1}>Yes, free</Radio>
+                        <Radio value={2}>Yes, Paid</Radio>
+                        <Radio value={3}>No</Radio>
+                      </Space>
                     </Radio.Group>
                   </Space>
                   <Space direction="vertical" style={{ width: '100%' }}>
                     <Typography.Title level={5}>
-                      Is Breakfast Included in the Price Guests Pay?
+                      Do guests need to reserve a parking spot?
                     </Typography.Title>
                     <Radio.Group
                     // onChange={handleAllowChild}
                     // value={allowChild}
                     >
-                      <Radio value={1}>Yes</Radio>
-                      <Radio value={2}>No</Radio>
+                      <Space direction="vertical" style={{ width: '100%' }}>
+                        <Radio value={1}>Reservation needed</Radio>
+                        <Radio value={2}>No reservation needed</Radio>
+                      </Space>
                     </Radio.Group>
                   </Space>
                   <Space direction="vertical" style={{ width: '100%' }}>
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      <Typography.Title level={5}>
-                        What type of breakfast do you offer?
-                      </Typography.Title>
-                      <Space size={[0, 8]} wrap>
-                        {tagsData.map(tag => (
-                          <CheckableTag
-                            bordered
-                            key={tag}
-                            checked={selectedTags.includes(tag)}
-                            onChange={checked => handleTagChange(tag, checked)}
-                          >
-                            {tag}
-                          </CheckableTag>
-                        ))}
+                    <Typography.Title level={5}>
+                      Where is the parking located?
+                    </Typography.Title>
+                    <Radio.Group
+                    // onChange={handleAllowChild}
+                    // value={allowChild}
+                    >
+                      <Space direction="vertical" style={{}}>
+                        <Radio value={1}>On site</Radio>
+                        <Radio value={2}>Off site</Radio>
                       </Space>
-                    </Space>
+                    </Radio.Group>
+                  </Space>
+                  <Space direction="vertical" style={{ width: '100%' }}>
+                    <Typography.Title level={5}>
+                      What type of Parking is it?
+                    </Typography.Title>
+                    <Radio.Group
+                    // onChange={handleAllowChild}
+                    // value={allowChild}
+                    >
+                      <Space direction="vertical" style={{}}>
+                        <Radio value={1}>Private </Radio>
+                        <Radio value={2}>Public</Radio>
+                      </Space>
+                    </Radio.Group>
                   </Space>
                   <CardBottom direction="horizontal">
                     <Button
@@ -111,7 +91,7 @@ const BreakfastDetail = () => {
                         alignItems: 'center'
                       }}
                       onClick={() => {
-                        navigate('/apartment/property-detail');
+                        navigate('/apartment/breakfast-detail');
                       }}
                     >
                       Back
@@ -121,7 +101,7 @@ const BreakfastDetail = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/apartment/parking');
+                        navigate('/apartment/language');
                       }}
                     >
                       Continue
@@ -137,4 +117,4 @@ const BreakfastDetail = () => {
   );
 };
 
-export default BreakfastDetail;
+export default Parking;

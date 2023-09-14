@@ -18,27 +18,7 @@ import {
   PlusOutlined,
   PlusCircleOutlined
 } from '@ant-design/icons';
-
-const MainWrapper = styled.div`
-  padding-top: 3.5rem;
-`;
-
-const Container = styled.div`
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 2rem;
-  padding-right: 2rem;
-`;
-
-const CardBottom = styled(Space)`
-  display: flex;
-  width: 100%;
-
-  .ant-space-item:last-child {
-    flex: 1;
-  }
-`;
+import { Container, MainWrapper, CardBottom } from 'src/components/Global';
 
 const ControlButton = styled(Button)`
   display: inline-flex;

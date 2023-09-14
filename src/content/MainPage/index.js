@@ -1,18 +1,7 @@
 import { Button, Card, Col, Row, Space, Typography } from 'antd';
 import React from 'react';
+import { Container, MainWrapper } from 'src/components/Global';
 import { styled } from 'styled-components';
-
-const MainWrapper = styled.div`
-  padding-top: 3.5rem;
-`;
-
-const Container = styled.div`
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 2rem;
-  padding-right: 2rem;
-`;
 
 const media = {
   flatLogo: '/assets/images/flat-logo.png',

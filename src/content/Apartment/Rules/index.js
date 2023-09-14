@@ -1,16 +1,24 @@
-import { Button, Card, Col, Form, Input, Row, Space, Typography } from 'antd';
+import {
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  Row,
+  Space,
+  TimePicker,
+  Typography
+} from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
   ArrowLeftOutlined,
-  LikeOutlined,
   BulbOutlined,
   CloseOutlined
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 
-const Place = () => {
+const Rules = () => {
   const navigate = useNavigate();
 
   return (
@@ -18,15 +26,44 @@ const Place = () => {
       <MainWrapper>
         <Container>
           <Typography.Title level={2} style={{ marginBottom: '2.5rem' }}>
-            What's the name of your place?
+            House Rules
           </Typography.Title>
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
-                <Form layout="vertical">
-                  <Form.Item label="Property Name">
-                    <Input size="large" />
-                  </Form.Item>
+                <Space
+                  direction="vertical"
+                  size="large"
+                  style={{ width: '100%' }}
+                >
+                  <Checkbox.Group>
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Checkbox value="english">
+                        Smoking is shared area allowed
+                      </Checkbox>
+                      <Checkbox value="french">Pets allowed</Checkbox>
+                      <Checkbox value="arabic">Children allowed</Checkbox>
+                      <Checkbox value="spanish">
+                        Parties/ events allowed
+                      </Checkbox>
+                    </Space>
+                  </Checkbox.Group>
+                  <Space direction="vertical" style={{ width: '100%' }}>
+                    <Typography.Title level={5}>Check in</Typography.Title>
+                    <TimePicker.RangePicker
+                      size="large"
+                      style={{ width: '100%' }}
+                      placeholder={['From', 'Until']}
+                    />
+                  </Space>
+                  <Space direction="vertical" style={{ width: '100%' }}>
+                    <Typography.Title level={5}>Check Out</Typography.Title>
+                    <TimePicker.RangePicker
+                      size="large"
+                      style={{ width: '100%' }}
+                      placeholder={['From', 'Until']}
+                    />
+                  </Space>
                   <CardBottom direction="horizontal">
                     <Button
                       size="large"
@@ -38,7 +75,7 @@ const Place = () => {
                         alignItems: 'center'
                       }}
                       onClick={() => {
-                        navigate('/apartment/listing');
+                        navigate('/apartment/language');
                       }}
                     >
                       Back
@@ -48,13 +85,13 @@ const Place = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/apartment/property');
+                        navigate('/apartment/host-profile');
                       }}
                     >
                       Continue
                     </Button>
                   </CardBottom>
-                </Form>
+                </Space>
               </Card>
             </Col>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
@@ -67,55 +104,11 @@ const Place = () => {
                       style={{ alignItems: 'flex-start', width: '100%' }}
                     >
                       <Typography.Text style={{ fontSize: '2rem' }}>
-                        <LikeOutlined />
-                      </Typography.Text>
-                      <Space direction="vertical">
-                        <Typography.Title level={4}>
-                          What should I consider when choosing a name?
-                        </Typography.Title>
-                        <ul style={{ marginLeft: '1rem' }}>
-                          <li>
-                            <Typography.Paragraph>
-                              Lorem ipsum dolor sit amet consectetur.
-                            </Typography.Paragraph>
-                          </li>
-                          <li>
-                            <Typography.Paragraph>
-                              Lorem ipsum dolor sit amet consectetur.
-                            </Typography.Paragraph>
-                          </li>
-                          <li>
-                            <Typography.Paragraph>
-                              Lorem ipsum dolor sit amet consectetur.
-                            </Typography.Paragraph>
-                          </li>
-                        </ul>
-                      </Space>
-                      <Button
-                        type="text"
-                        icon={<CloseOutlined />}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                      />
-                    </Space>
-                  </Card>
-                </Col>
-                <Col xs={24}>
-                  <Card>
-                    <Space
-                      size="middle"
-                      direction="horizontal"
-                      style={{ alignItems: 'flex-start', width: '100%' }}
-                    >
-                      <Typography.Text style={{ fontSize: '2rem' }}>
                         <BulbOutlined />
                       </Typography.Text>
                       <Space direction="vertical">
                         <Typography.Title level={4}>
-                          Why do I need to name my property?
+                          What If My Rules Change ?
                         </Typography.Title>
                         <Typography.Paragraph>
                           Lorem ipsum dolor sit amet consectetur. Non in quis
@@ -123,9 +116,7 @@ const Place = () => {
                           montes id mattis molestie aliquet. Lorem eget vivamus
                           id et lacus nulla risus adipiscing molestie. mattis
                           molestie aliquet. Lorem eget vivamus id et lacus nulla
-                          risus adipiscing molestienulla risus adipiscing
-                          molestie. mattis molestie aliquet. Lorem eget vivamus
-                          id et lacus nulla risus adipiscing molestie..
+                          risus adipiscing molestie.
                         </Typography.Paragraph>
                       </Space>
                       <Button
@@ -149,4 +140,4 @@ const Place = () => {
   );
 };
 
-export default Place;
+export default Rules;
