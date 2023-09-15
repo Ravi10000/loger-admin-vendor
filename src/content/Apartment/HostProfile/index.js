@@ -119,7 +119,7 @@ const HostProfile = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        // navigate('/apartment/property-detail');
+                        navigate('/apartment/gallery');
                       }}
                     >
                       Continue

@@ -26,6 +26,7 @@ const Rules = Loader(lazy(() => import('src/content/Apartment/Rules')));
 const HostProfile = Loader(
   lazy(() => import('src/content/Apartment/HostProfile'))
 );
+const Gallery = Loader(lazy(() => import('src/content/Apartment/Gallery')));
 
 const apartmentRoutes = [
   {
@@ -75,6 +76,10 @@ const apartmentRoutes = [
   {
     path: 'host-profile',
     element: <HostProfile />
+  },
+  {
+    path: 'gallery',
+    element: <Gallery />
   }
 ];
 
