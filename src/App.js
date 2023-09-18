@@ -22,7 +22,7 @@ const App = () => {
               titleMarginBottom: '0.4rem'
             },
             Layout: {
-              colorBgHeader: 'rgba(8, 104, 248, 0.1)'
+              headerBg: 'rgba(8, 104, 248, 0.1)'
             }
           }
         }}

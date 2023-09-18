@@ -9,7 +9,7 @@ import {
   Upload,
   App
 } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -20,11 +20,87 @@ import {
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import styled from 'styled-components';
+import {
+  DndContext,
+  closestCenter,
+  MouseSensor,
+  TouchSensor,
+  DragOverlay,
+  useSensor,
+  useSensors
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  rectSortingStrategy,
+  useSortable
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const UploadIconWrapper = styled(Typography.Paragraph)`
   color: ${props => props.theme.antd.colorPrimary};
   font-size: 3rem;
 `;
+
+const Grid = styled.div(props => ({
+  display: 'grid',
+  gridTemplateColumns: `repeat(${props.$columns}, 1fr)`,
+  gridGap: 10,
+  padding: props.theme.antd.paddingXS
+}));
+
+export const SortablePhoto = props => {
+  const sortable = useSortable({ id: props.id });
+  const {
+    attributes,
+    listeners,
+    isDragging,
+    setNodeRef,
+    transform,
+    transition
+  } = sortable;
+
+  const commonStyle = {
+    transition: 'unset' // Prevent element from shaking after drag
+  };
+
+  const style = transform
+    ? {
+        ...commonStyle,
+        transform: CSS.Transform.toString(transform),
+        transition: isDragging ? 'unset' : transition // Improve performance/visual effect when dragging
+      }
+    : commonStyle;
+
+  return (
+    <Photo
+      ref={setNodeRef}
+      style={style}
+      {...props}
+      {...attributes}
+      {...listeners}
+    />
+  );
+};
+
+export const Photo = forwardRef(
+  ({ url, index, faded, style, ...props }, ref) => {
+    const inlineStyles = {
+      opacity: faded ? '0' : '1',
+      transformOrigin: '0 0',
+      height: index === 0 ? 410 : 200,
+      gridRowStart: index === 0 ? 'span 2' : null,
+      gridColumnStart: index === 0 ? 'span 2' : null,
+      backgroundImage: `url("${url}")`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundColor: 'grey',
+      ...style
+    };
+
+    return <div ref={ref} style={inlineStyles} {...props} />;
+  }
+);
 
 const Gallery = () => {
   const navigate = useNavigate();
@@ -33,6 +109,9 @@ const Gallery = () => {
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const { message } = App.useApp();
+
+  const [activeId, setActiveId] = useState(null);
+  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
   const uploadProps = {
     onRemove: file => {
@@ -66,14 +145,36 @@ const Gallery = () => {
       setPreviewTitle(file.name);
     },
     fileList,
-    multiple: true
+    multiple: true,
+    showUploadList: false
   };
 
   useEffect(() => {
     return () => fileList.forEach(file => URL.revokeObjectURL(file.url));
   }, [fileList]);
 
-  console.log(fileList);
+  function handleDragStart(event) {
+    setActiveId(event.active.id);
+  }
+
+  function handleDragEnd(event) {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setFileList(items => {
+        const oldIndex = items.findIndex(item => item.uid === active.id);
+        const newIndex = items.findIndex(item => item.uid === over.id);
+
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+
+    setActiveId(null);
+  }
+
+  function handleDragCancel() {
+    setActiveId(null);
+  }
 
   return (
     <>
@@ -108,6 +209,43 @@ const Gallery = () => {
                       Drag and Drop Your Photos Here
                     </Typography.Paragraph>
                   </Upload.Dragger>
+                  {fileList.length > 0 && (
+                    <DndContext
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragStart={handleDragStart}
+                      onDragEnd={handleDragEnd}
+                      onDragCancel={handleDragCancel}
+                    >
+                      <SortableContext
+                        items={fileList}
+                        strategy={rectSortingStrategy}
+                      >
+                        <Grid $columns={3}>
+                          {fileList.map((item, index) => (
+                            <SortablePhoto
+                              id={item.uid}
+                              key={item.uid}
+                              url={item.url}
+                              index={index}
+                            />
+                          ))}
+                        </Grid>
+                      </SortableContext>
+                      <DragOverlay adjustScale={true}>
+                        {activeId ? (
+                          <Photo
+                            url={
+                              fileList.find(item => item.uid === activeId).url
+                            }
+                            index={fileList.findIndex(
+                              item => item.uid === activeId
+                            )}
+                          />
+                        ) : null}
+                      </DragOverlay>
+                    </DndContext>
+                  )}
                   <CardBottom direction="horizontal">
                     <Button
                       size="large"
