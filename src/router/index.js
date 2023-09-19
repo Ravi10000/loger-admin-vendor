@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import authRoutes from './auth';
 import apartmentRoutes from './apartment';
+import hotelRoutes from './hotel';
 import BaseLayout from 'src/layout/BaseLayout';
 
 const router = [
@@ -16,6 +17,11 @@ const router = [
     path: 'apartment',
     element: <BaseLayout />,
     children: apartmentRoutes
+  },
+  {
+    path: 'hotel',
+    element: <BaseLayout />,
+    children: hotelRoutes
   }
 ];
 
