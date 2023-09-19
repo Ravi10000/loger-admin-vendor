@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeftOutlined,
   CloseOutlined,
+  DeleteOutlined,
   FileImageOutlined,
   LikeOutlined
 } from '@ant-design/icons';
@@ -49,8 +50,15 @@ const Grid = styled.div(props => ({
   padding: props.theme.antd.paddingXS
 }));
 
-export const SortablePhoto = props => {
-  const sortable = useSortable({ id: props.id });
+const RemoveButton = styled(Button)`
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  right: 10px;
+`;
+
+export const SortablePhoto = ({ id, faded, index, onDelete, ...props }) => {
+  const sortable = useSortable({ id });
   const {
     attributes,
     listeners,
@@ -72,35 +80,43 @@ export const SortablePhoto = props => {
       }
     : commonStyle;
 
+  const inlineStyles = {
+    opacity: faded ? '0' : '1',
+    transformOrigin: '0 0',
+    height: index === 0 ? 410 : 200,
+    gridRowStart: index === 0 ? 'span 2' : null,
+    gridColumnStart: index === 0 ? 'span 2' : null,
+    position: 'relative'
+  };
+
   return (
-    <Photo
-      ref={setNodeRef}
-      style={style}
-      {...props}
-      {...attributes}
-      {...listeners}
-    />
+    <div style={inlineStyles}>
+      <Photo
+        ref={setNodeRef}
+        style={style}
+        {...props}
+        {...attributes}
+        {...listeners}
+      />
+      <RemoveButton shape="circle" onClick={() => onDelete(id)}>
+        <DeleteOutlined />
+      </RemoveButton>
+    </div>
   );
 };
 
-export const Photo = forwardRef(
-  ({ url, index, faded, style, ...props }, ref) => {
-    const inlineStyles = {
-      opacity: faded ? '0' : '1',
-      transformOrigin: '0 0',
-      height: index === 0 ? 410 : 200,
-      gridRowStart: index === 0 ? 'span 2' : null,
-      gridColumnStart: index === 0 ? 'span 2' : null,
-      backgroundImage: `url("${url}")`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundColor: 'grey',
-      ...style
-    };
+export const Photo = forwardRef(({ url, style, ...props }, ref) => {
+  const inlineStyles = {
+    backgroundImage: `url("${url}")`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundColor: 'grey',
+    height: '100%',
+    ...style
+  };
 
-    return <div ref={ref} style={inlineStyles} {...props} />;
-  }
-);
+  return <div ref={ref} style={inlineStyles} {...props} />;
+});
 
 const Gallery = () => {
   const navigate = useNavigate();
@@ -176,6 +192,10 @@ const Gallery = () => {
     setActiveId(null);
   }
 
+  function handleDeletePhoto(id) {
+    setFileList([...fileList.filter(item => item.uid !== id)]);
+  }
+
   return (
     <>
       <MainWrapper>
@@ -228,6 +248,7 @@ const Gallery = () => {
                               key={item.uid}
                               url={item.url}
                               index={index}
+                              onDelete={handleDeletePhoto}
                             />
                           ))}
                         </Grid>
@@ -267,7 +288,7 @@ const Gallery = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        // navigate('/apartment/rules');
+                        navigate('/apartment/guest');
                       }}
                     >
                       Continue

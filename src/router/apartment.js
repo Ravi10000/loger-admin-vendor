@@ -27,6 +27,11 @@ const HostProfile = Loader(
   lazy(() => import('src/content/Apartment/HostProfile'))
 );
 const Gallery = Loader(lazy(() => import('src/content/Apartment/Gallery')));
+const Guest = Loader(lazy(() => import('src/content/Apartment/Guest')));
+const ReceiveBooking = Loader(
+  lazy(() => import('src/content/Apartment/ReceiveBooking'))
+);
+const Payment = Loader(lazy(() => import('src/content/Apartment/Payment')));
 
 const apartmentRoutes = [
   {
@@ -80,6 +85,18 @@ const apartmentRoutes = [
   {
     path: 'gallery',
     element: <Gallery />
+  },
+  {
+    path: 'guest',
+    element: <Guest />
+  },
+  {
+    path: 'receive-booking',
+    element: <ReceiveBooking />
+  },
+  {
+    path: 'payment',
+    element: <Payment />
   }
 ];
 
