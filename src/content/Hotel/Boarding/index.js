@@ -1,13 +1,4 @@
-import {
-  Button,
-  Card,
-  Checkbox,
-  Col,
-  Divider,
-  Row,
-  Space,
-  Typography
-} from 'antd';
+import { Button, Card, Checkbox, Col, Row, Space, Typography } from 'antd';
 import React from 'react';
 import { styled } from 'styled-components';
 import { ArrowLeftOutlined } from '@ant-design/icons';
