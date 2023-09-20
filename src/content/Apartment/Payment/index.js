@@ -82,7 +82,7 @@ const Payment = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        // navigate('/apartment/gallery');
+                        navigate('/apartment/charge');
                       }}
                     >
                       Continue

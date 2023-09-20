@@ -32,6 +32,9 @@ const ReceiveBooking = Loader(
   lazy(() => import('src/content/Apartment/ReceiveBooking'))
 );
 const Payment = Loader(lazy(() => import('src/content/Apartment/Payment')));
+const Charge = Loader(lazy(() => import('src/content/Apartment/Charge')));
+const Plans = Loader(lazy(() => import('src/content/Apartment/Plans')));
+const Policy = Loader(lazy(() => import('src/content/Apartment/Policy')));
 
 const apartmentRoutes = [
   {
@@ -97,6 +100,18 @@ const apartmentRoutes = [
   {
     path: 'payment',
     element: <Payment />
+  },
+  {
+    path: 'charge',
+    element: <Charge />
+  },
+  {
+    path: 'plans',
+    element: <Plans />
+  },
+  {
+    path: 'cancellation-policy',
+    element: <Policy />
   }
 ];
 
