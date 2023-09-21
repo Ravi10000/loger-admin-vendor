@@ -111,7 +111,7 @@ const Policy = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        // navigate('/apartment/host-profile');
+                        navigate('/apartment/availability');
                       }}
                     >
                       Continue

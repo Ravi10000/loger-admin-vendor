@@ -96,7 +96,7 @@ const ReceiveBooking = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/apartment/payment');
+                        navigate('/apartment/guest-payment');
                       }}
                     >
                       Continue

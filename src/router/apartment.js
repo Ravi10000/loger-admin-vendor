@@ -31,10 +31,17 @@ const Guest = Loader(lazy(() => import('src/content/Apartment/Guest')));
 const ReceiveBooking = Loader(
   lazy(() => import('src/content/Apartment/ReceiveBooking'))
 );
-const Payment = Loader(lazy(() => import('src/content/Apartment/Payment')));
+const GuestPayment = Loader(
+  lazy(() => import('src/content/Apartment/GuestPayment'))
+);
 const Charge = Loader(lazy(() => import('src/content/Apartment/Charge')));
 const Plans = Loader(lazy(() => import('src/content/Apartment/Plans')));
 const Policy = Loader(lazy(() => import('src/content/Apartment/Policy')));
+const Availability = Loader(
+  lazy(() => import('src/content/Apartment/Availability'))
+);
+const Complete = Loader(lazy(() => import('src/content/Apartment/Complete')));
+const Payment = Loader(lazy(() => import('src/content/Apartment/Payment')));
 
 const apartmentRoutes = [
   {
@@ -98,8 +105,8 @@ const apartmentRoutes = [
     element: <ReceiveBooking />
   },
   {
-    path: 'payment',
-    element: <Payment />
+    path: 'guest-payment',
+    element: <GuestPayment />
   },
   {
     path: 'charge',
@@ -112,6 +119,18 @@ const apartmentRoutes = [
   {
     path: 'cancellation-policy',
     element: <Policy />
+  },
+  {
+    path: 'availability',
+    element: <Availability />
+  },
+  {
+    path: 'review-and-complete',
+    element: <Complete />
+  },
+  {
+    path: 'payment',
+    element: <Payment />
   }
 ];
 

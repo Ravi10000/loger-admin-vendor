@@ -55,7 +55,7 @@ const Verify = () => {
             Thanks for signup with us. Click on the button below to verify your
             email address.
           </Typography.Paragraph>
-          <Button size="large" type="primary" style={{ width: '100%' }}>
+          <Button size="large" type="primary" block>
             Verify your email
           </Button>
         </Space>

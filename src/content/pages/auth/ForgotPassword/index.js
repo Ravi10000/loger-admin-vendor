@@ -78,12 +78,7 @@ const ForgotPassword = () => {
                   />
                 </Form.Item>
                 <Form.Item>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    size="large"
-                    style={{ width: '100%' }}
-                  >
+                  <Button type="primary" htmlType="submit" size="large" block>
                     {'Reset Password'}
                   </Button>
                 </Form.Item>
