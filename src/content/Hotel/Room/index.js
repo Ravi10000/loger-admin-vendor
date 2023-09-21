@@ -1,54 +1,61 @@
-import { Button, Card, Col, Form, Input, Row, Select, Space,Typography } from 'antd';
+import { Button, Card, Col, Row, Space, Typography, Select } from 'antd';
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { COUNTRY_LIST as countryList } from 'src/constants/country';
-import { EnvironmentOutlined, ArrowLeftOutlined } from '@ant-design/icons';
-import { Container, MainWrapper, CardBottom } from 'src/components/Global';
 
 import {
-    
-    LikeOutlined,
-    BulbOutlined,
-    CloseOutlined
-  } from '@ant-design/icons';
-const Property = () => {
+  ArrowLeftOutlined,
+  BulbOutlined,
+  CloseOutlined
+} from '@ant-design/icons';
+import { CardBottom, Container, MainWrapper } from 'src/components/Global';
+
+const Room = () => {
   const navigate = useNavigate();
+
+  const options = [];
+  for (let i = 10; i < 36; i++) {
+    options.push({
+      label: i.toString(36) + i,
+      value: i.toString(36) + i
+    });
+  }
+  const handleChange = value => {
+    console.log(`selected ${value}`);
+  };
 
   return (
     <>
       <MainWrapper>
         <Container>
           <Typography.Title level={2} style={{ marginBottom: '2.5rem' }}>
-            Where is the property you're listing ?
+            What’s the Name of this Room?
           </Typography.Title>
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
-                <Form layout="vertical">
-                  <Form.Item label="Country">
-                    <Select
-                      size="large"
-                      options={countryList.map(({ name }) => ({
-                        value: name,
-                        label: name
-                      }))}
-                    />
-                  </Form.Item>
-                  <Form.Item label="Address">
-                    <Input size="large" suffix={<EnvironmentOutlined />} />
-                  </Form.Item>
-                  <Row gutter={32}>
-                    <Col xs={24} md={12}>
-                      <Form.Item label="City">
-                        <Input size="large" />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={24} md={12}>
-                      <Form.Item label="Pincode">
-                        <Input size="large" />
-                      </Form.Item>
-                    </Col>
-                  </Row>
+                <Space
+                  direction="vertical"
+                  size="large"
+                  style={{ width: '100%' }}
+                >
+                  <Typography.Paragraph>
+                    Lorem ipsum dolor sit amet consectetur. Arcu mattis id
+                    ultricies aliquam tincidunt nunc.
+                  </Typography.Paragraph>
+                  <Typography.Title level={4} style={{ marginBottom: '0rem' }}>
+                    Room Name
+                  </Typography.Title>
+                  <Select
+                    mode="multiple"
+                    allowClear
+                    size="large"
+                    maxTagCount={6}
+                    style={{ width: '100%' }}
+                    placeholder=""
+                    onChange={handleChange}
+                    options={options}
+                  />
                   <CardBottom direction="horizontal">
                     <Button
                       size="large"
@@ -60,7 +67,7 @@ const Property = () => {
                         alignItems: 'center'
                       }}
                       onClick={() => {
-                        navigate('/hotel/listing');
+                        navigate('/hotel/bathroomdetail');
                       }}
                     >
                       Back
@@ -70,13 +77,13 @@ const Property = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/hotel/location');
+                        navigate('/hotel/charge');
                       }}
                     >
                       Continue
                     </Button>
                   </CardBottom>
-                </Form>
+                </Space>
               </Card>
             </Col>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
@@ -89,11 +96,11 @@ const Property = () => {
                       style={{ alignItems: 'flex-start', width: '100%' }}
                     >
                       <Typography.Text style={{ fontSize: '2rem' }}>
-                        <LikeOutlined />
+                        <BulbOutlined />
                       </Typography.Text>
                       <Space direction="vertical">
                         <Typography.Title level={4}>
-                          What should I consider when choosing a name?
+                          Why do I Need to Name My Property?
                         </Typography.Title>
                         <ul style={{ marginLeft: '1rem' }}>
                           <li>
@@ -111,43 +118,23 @@ const Property = () => {
                               Lorem ipsum dolor sit amet consectetur.
                             </Typography.Paragraph>
                           </li>
+                          <li>
+                            <Typography.Paragraph>
+                              Lorem ipsum dolor sit amet consectetur.
+                            </Typography.Paragraph>
+                          </li>
+                          <li>
+                            <Typography.Paragraph>
+                              Lorem ipsum dolor sit amet consectetur.
+                            </Typography.Paragraph>
+                          </li>
                         </ul>
-                      </Space>
-                      <Button
-                        type="text"
-                        icon={<CloseOutlined />}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                      />
-                    </Space>
-                  </Card>
-                </Col>
-                <Col xs={24}>
-                  <Card>
-                    <Space
-                      size="middle"
-                      direction="horizontal"
-                      style={{ alignItems: 'flex-start', width: '100%' }}
-                    >
-                      <Typography.Text style={{ fontSize: '2rem' }}>
-                        <BulbOutlined />
-                      </Typography.Text>
-                      <Space direction="vertical">
-                        <Typography.Title level={4}>
-                          Why do I need to name my property?
-                        </Typography.Title>
                         <Typography.Paragraph>
                           Lorem ipsum dolor sit amet consectetur. Non in quis
                           ante porttitor praesent volutpat neque. Metus in neque
                           montes id mattis molestie aliquet. Lorem eget vivamus
                           id et lacus nulla risus adipiscing molestie. mattis
-                          molestie aliquet. Lorem eget vivamus id et lacus nulla
-                          risus adipiscing molestienulla risus adipiscing
-                          molestie. mattis molestie aliquet. Lorem eget vivamus
-                          id et lacus nulla risus adipiscing molestie..
+                          molestie
                         </Typography.Paragraph>
                       </Space>
                       <Button
@@ -171,4 +158,4 @@ const Property = () => {
   );
 };
 
-export default Property;
+export default Room;

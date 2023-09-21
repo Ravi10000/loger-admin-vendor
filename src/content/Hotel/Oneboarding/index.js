@@ -101,7 +101,7 @@ rooms that guests can book</span>
                         alignItems: 'center'
                       }}
                       onClick={() => {
-                        navigate('/hotel');
+                        navigate('/hotel/boarding');
                       }}
                     >
                       Back

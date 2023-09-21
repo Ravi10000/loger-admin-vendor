@@ -1,15 +1,19 @@
-import { Button, Card, Col, Row, Space, Typography } from 'antd';
+import { Button, Card, Col, Radio, Row, Space, Typography } from 'antd';
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import { ArrowLeftOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { Checkbox } from 'antd';
+import {
+  ArrowLeftOutlined,
+  BulbOutlined,
+  CloseOutlined
+} from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
-
-const media = {
-  mapImg: '/assets/images/map-img.png'
+const onChange = e => {
+  console.log(`checked = ${e.target.checked}`);
 };
 
-const Location = () => {
+const Availability = () => {
   const navigate = useNavigate();
 
   return (
@@ -17,31 +21,28 @@ const Location = () => {
       <MainWrapper>
         <Container>
           <Typography.Title level={2} style={{ marginBottom: '2.5rem' }}>
-          Pin the location of your Property
+            Guest Payment Options
           </Typography.Title>
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
                 <Space
                   direction="vertical"
-                  size="middle"
+                  size="large"
                   style={{ width: '100%' }}
                 >
-                  <Space
-                    direction="vertical"
-                    size="small"
-                    style={{ width: '100%' }}
-                  >
-                    <Typography.Title level={4} style={{ marginBottom: 0 }}>
-                      Location
+                  <Space direction="vertical" style={{ width: '100%' }}>
+                    <Typography.Title level={5}>
+                      Can you Charge Credit Cards at Your Property?
                     </Typography.Title>
-                    <Typography.Text>
-                      <EnvironmentOutlined style={{ marginRight: '0.5rem' }} />
-                      Mahipal Khandari, near Ramaya Inn, Haridwar, Pin
-                      Code:249410, Haridwar, India
-                    </Typography.Text>
+                    <Radio.Group>
+                      <Space direction="vertical" style={{}}>
+                        <Radio value={1}>Yes</Radio>
+                        <Radio value={2}>No</Radio>
+                      </Space>
+                    </Radio.Group>
                   </Space>
-                  <img src={media.mapImg} alt="" />
+
                   <CardBottom direction="horizontal">
                     <Button
                       size="large"
@@ -53,7 +54,7 @@ const Location = () => {
                         alignItems: 'center'
                       }}
                       onClick={() => {
-                        navigate('/hotel/property');
+                        navigate('/hotel/availability');
                       }}
                     >
                       Back
@@ -63,7 +64,7 @@ const Location = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/hotel/rating');
+                        navigate('/hotel/invoicing');
                       }}
                     >
                       Continue
@@ -79,4 +80,4 @@ const Location = () => {
   );
 };
 
-export default Location;
+export default Availability;

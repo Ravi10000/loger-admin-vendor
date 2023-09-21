@@ -138,7 +138,7 @@ const Rating = () => {
                         alignItems: 'center'
                       }}
                       onClick={() => {
-                        navigate('/hostel/place');
+                        navigate('/hotel/location');
                       }}
                     >
                       Back
@@ -148,7 +148,7 @@ const Rating = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/hostel/location');
+                        navigate('/hotel/guest');
                       }}
                     >
                       Continue

@@ -308,7 +308,7 @@ const Boarding = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/hotel/listing');
+                        navigate('/hotel/oneboarding');
                       }}
                     >
                       Continue
