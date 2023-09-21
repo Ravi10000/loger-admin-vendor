@@ -50,7 +50,7 @@ const Listing = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/hotel/place');
+                        navigate('/hotel/property');
                       }}
                     >
                       Continue
@@ -61,7 +61,7 @@ const Listing = () => {
                       ghost
                       block
                       onClick={() => {
-                        navigate('/hotel/boarding');
+                        navigate('/hotel/oneboarding');
                       }}
                     >
                       No, need to make change
