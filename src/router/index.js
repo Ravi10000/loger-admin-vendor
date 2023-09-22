@@ -3,6 +3,8 @@ import authRoutes from './auth';
 import apartmentRoutes from './apartment';
 import hotelRoutes from './hotel';
 import BaseLayout from 'src/layout/BaseLayout';
+import SideBarLayout from 'src/layout/SidebarLayout';
+import dashboardRoutes from './dashboard';
 
 const router = [
   {
@@ -22,6 +24,11 @@ const router = [
     path: 'hotel',
     element: <BaseLayout />,
     children: hotelRoutes
+  },
+  {
+    path: 'dashboard',
+    element: <SideBarLayout />,
+    children: dashboardRoutes
   }
 ];
 

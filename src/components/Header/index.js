@@ -45,7 +45,19 @@ const LangSwitcher = styled(Button)`
 const Header = () => {
   return (
     <>
-      <DefaultHeader style={{ padding: '0.5rem', height: 'auto' }}>
+      <DefaultHeader
+        style={{
+          padding: '0.5rem',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          position: 'sticky',
+          left: 0,
+          top: 0,
+          width: '100%',
+          zIndex: 99
+        }}
+      >
         <Container>
           <div
             style={{
