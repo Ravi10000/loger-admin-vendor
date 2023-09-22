@@ -1,62 +1,17 @@
-import {
-  Button,
-  Card,
-  Checkbox,
-  Col,
-  Divider,
-  Row,
-  Space,
-  Typography
-} from 'antd';
+import { Button, Card, Col, Divider, Row, Space, Typography } from 'antd';
 import React from 'react';
-import { styled } from 'styled-components';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { CardBottom, Container, MainWrapper } from 'src/components/Global';
+import {
+  CardBottom,
+  Container,
+  MainWrapper,
+  CheckboxLabel
+} from 'src/components/Global';
 
 const media = {
   checkIcon: '/assets/images/label-img.png'
 };
-
-const CheckboxLabel = styled(Checkbox)`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  border: 1px solid ${props => props.theme.antd.colorBorderSecondary};
-  height: 60px;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  transition: all 0.3s ease;
-  border-radius: ${props => props.theme.antd.borderRadius}px;
-  position: relative;
-
-  &:hover {
-    border-color: ${props => props.theme.antd.colorPrimary};
-  }
-
-  .ant-checkbox {
-    position: absolute;
-    right: 1rem;
-
-    .ant-checkbox-inner {
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-
-      &::after {
-        inset-inline-start: 25%;
-        width: 7px;
-        height: 12px;
-      }
-    }
-  }
-
-  img {
-    width: 30px;
-    display: inline-block;
-    margin-right: 2rem;
-  }
-`;
 
 const Boarding = () => {
   const navigate = useNavigate();
