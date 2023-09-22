@@ -30,6 +30,10 @@ const Gallery = Loader(lazy(()=> import('src/content/Hotel/Gallery')));
 const Availability = Loader(lazy(()=> import('src/content/Hotel/Availability')));
 const Guestpayment = Loader(lazy(()=> import('src/content/Hotel/Guestpayment')));
 const Invoicing = Loader(lazy(()=> import('src/content/Hotel/Invoicing')));
+const Complete = Loader(lazy(()=> import('src/content/Hotel/Complete')));
+const Hotelinfo = Loader(lazy(()=> import('src/content/Hotel/Hotelinfo')));
+const Payment = Loader(lazy(()=> import('src/content/Hotel/Payment')));
+const Onehotel = Loader(lazy(()=> import('src/content/Hotel/Onehotel')));
 
 const hotelRoutes = [
   {
@@ -119,6 +123,22 @@ const hotelRoutes = [
   {
     path: 'invoicing',
     element: <Invoicing/>
+  },
+  {
+    path: 'complete',
+    element: <Complete/>
+  },
+  {
+    path: 'hotelinfo',
+    element: <Hotelinfo/>
+  },
+  {
+    path: 'payment',
+    element: <Payment/>
+  },
+  {
+    path: 'onehotel',
+    element: <Onehotel/>
   }
 ];
 export default hotelRoutes;

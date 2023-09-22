@@ -2,11 +2,10 @@ import { Button, Card, Col, Radio, Row, Space, Typography } from 'antd';
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Checkbox } from 'antd';
+
 import {
   ArrowLeftOutlined,
-  BulbOutlined,
-  CloseOutlined
+ 
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 const onChange = e => {
@@ -77,7 +76,7 @@ const Availability = () => {
                         alignItems: 'center'
                       }}
                       onClick={() => {
-                        navigate('/hotel/gallery');
+                        navigate('/hotel/guestpayment');
                       }}
                     >
                       Back
@@ -87,7 +86,7 @@ const Availability = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/hotel/guestpayment');
+                        navigate('/hotel/hotelinfo');
                       }}
                     >
                       Continue
