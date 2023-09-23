@@ -12,7 +12,12 @@ const Loader = Component => props =>
 const GroupHome = Loader(
   lazy(() => import('src/content/Dashboard/Group/GroupHome'))
 );
-
+const Reviews = Loader(
+  lazy(() => import('src/content/Dashboard/Group/Reviews'))
+);
+const Analytics = Loader(
+  lazy(() => import('src/content/Dashboard/Group/Analytics'))
+);
 const dashboardRoutes = [
   {
     path: '',
@@ -24,7 +29,15 @@ const dashboardRoutes = [
       {
         path: 'groups-home',
         element: <GroupHome />
-      }
+      },
+      {
+        path: 'reviews',
+        element: <Reviews />
+      },
+      {
+        path: 'analytics',
+        element: <Analytics />
+      },
     ]
   }
 ];

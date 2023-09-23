@@ -8,9 +8,6 @@ import {
  
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
-const onChange = e => {
-  console.log(`checked = ${e.target.checked}`);
-};
 
 const Availability = () => {
   const navigate = useNavigate();

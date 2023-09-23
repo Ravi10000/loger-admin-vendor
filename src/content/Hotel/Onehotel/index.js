@@ -1,28 +1,23 @@
-import {
-  CalendarOutlined,
-  ArrowLeftOutlined,
-  CheckCircleOutlined,
-  UserOutlined
-} from '@ant-design/icons';
+
 import { Button, Card, Col, Row, Space, Typography, Divider } from 'antd';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import { Container, MainWrapper } from 'src/components/Global';
-import { CardBottom } from 'src/components/Global';
+
 const media = {
   checkIcon: '/assets/images/hotel-img-2.png',
   checkIco: '/assets/images/hotel-img-3.png'
 };
 
 const Hotelinfo = () => {
-  const navigate = useNavigate();
+  
 
   return (
     <>
       <MainWrapper>
         <Container>
           <Row gutter={[32, 32]}>
-            <Col xs={24} xl={22} xxl={8}>
+            <Col xs={24} xl={20} xxl={8}>
               <Space
                 direction="vertical"
                 style={{ width: '100%' }}
@@ -57,7 +52,7 @@ const Hotelinfo = () => {
                       </Typography.Paragraph>
                     </Space>
                     <Typography.Title
-                      style={{ color: 'blue', marginLeft: '36rem' }}
+                      style={{ color: 'blue', marginLeft: '26rem' }}
                       level={5}
                     >
                       Edit
@@ -93,7 +88,7 @@ const Hotelinfo = () => {
                       </Typography.Paragraph>
                     </Space>
                     <Typography.Title
-                      style={{ color: 'blue', marginLeft: '38rem' }}
+                      style={{ color: 'blue', marginLeft: '28rem' }}
                       level={5}
                     >
                       Edit
@@ -124,7 +119,7 @@ const Hotelinfo = () => {
                       <Space
                         direction="horizontal"
                         style={{ width: '100%' }}
-                        size="large"
+                        
                       >
                         <Space direction="vertical" style={{ width: '200%' }}>
                           <Typography.Title
@@ -165,7 +160,7 @@ const Hotelinfo = () => {
                           </Typography.Title>
                           <Typography.Text>$2000</Typography.Text>
                         </Space>
-                        <Divider type="vertical" />
+                        <Divider type="vertical" size='large'/>
                         <Space direction="vertical" style={{ width: '200%' }}>
                           <Typography.Title
                             style={{ marginBottom: '-.5rem' }}
