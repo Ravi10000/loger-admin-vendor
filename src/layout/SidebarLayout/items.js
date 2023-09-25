@@ -1,15 +1,64 @@
-import { Link } from 'react-router-dom';
-import { BellOutlined, HomeOutlined } from '@ant-design/icons';
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { BellOutlined, HomeOutlined, TagsOutlined } from '@ant-design/icons';
+import { match } from 'path-to-regexp';
 
-export const groupItem = [
+const items = [
   {
-    label: <Link to="/dashboard/groups/groups-home">Home Group</Link>,
-    key: 'groups-home',
+    path: '/dashboard/groups/groups-home',
+    label: 'Home Group',
     icon: <HomeOutlined />
   },
   {
-    label: <Link to="/dashboard/groups/reservations">Reservations</Link>,
-    key: 'reservations',
+    path: '/dashboard/groups/reservations',
+    label: 'Reservations',
     icon: <BellOutlined />
+  },
+  {
+    path: '/dashboard/manage/home',
+    icon: <HomeOutlined />,
+    label: 'Home'
+  },
+  {
+    path: '/dashboard/manage/reservations',
+    icon: <BellOutlined />,
+    label: 'Reservations'
+  },
+  {
+    path: '/dashboard/manage/promotions',
+    icon: <TagsOutlined />,
+    label: 'Promotions'
   }
 ];
+
+const useMenuItems = () => {
+  const [menuItems, setMenuItems] = useState([]);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const urlMatch = match('/dashboard/:tab(groups|manage)', {
+      decode: decodeURIComponent,
+      end: false
+    });
+    const list = items
+      .filter(({ path }) => {
+        const isPathMatch = urlMatch(path);
+        const pathNameMatch = urlMatch(pathname);
+
+        return isPathMatch && pathNameMatch
+          ? isPathMatch.params.tab === pathNameMatch.params.tab
+          : false;
+      })
+      .map(({ path, icon, label }, index) => ({
+        label: <Link to={path}>{label}</Link>,
+        key: index,
+        icon
+      }));
+
+    setMenuItems(list);
+  }, [pathname]);
+
+  return [menuItems];
+};
+
+export default useMenuItems;

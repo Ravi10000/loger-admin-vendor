@@ -151,7 +151,7 @@ const Charge = () => {
                       alignItems: 'center'
                     }}
                     onClick={() => {
-                      navigate('/apartment/guest-payment');
+                      navigate('/apartment/guest');
                     }}
                   >
                     Back

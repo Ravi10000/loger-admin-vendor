@@ -34,9 +34,6 @@ const Gallery = Loader(lazy(() => import('src/content/Hotel/Gallery')));
 const Availability = Loader(
   lazy(() => import('src/content/Hotel/Availability'))
 );
-const Guestpayment = Loader(
-  lazy(() => import('src/content/Hotel/Guestpayment'))
-);
 const Invoicing = Loader(lazy(() => import('src/content/Hotel/Invoicing')));
 const Complete = Loader(lazy(() => import('src/content/Hotel/Complete')));
 const Hotelinfo = Loader(lazy(() => import('src/content/Hotel/Hotelinfo')));
@@ -123,10 +120,6 @@ const hotelRoutes = [
   {
     path: 'availability',
     element: <Availability />
-  },
-  {
-    path: 'guest-payment',
-    element: <Guestpayment />
   },
   {
     path: 'invoicing',

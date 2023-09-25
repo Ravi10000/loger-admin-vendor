@@ -67,7 +67,7 @@ const Availability = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/hotel/guest-payment');
+                        navigate('/hotel/invoicing');
                       }}
                     >
                       Continue

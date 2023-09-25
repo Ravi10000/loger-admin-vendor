@@ -117,7 +117,7 @@ const Guest = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/apartment/receive-booking');
+                        navigate('/apartment/charge');
                       }}
                     >
                       Continue

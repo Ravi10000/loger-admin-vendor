@@ -68,7 +68,7 @@ const Availability = () => {
                         alignItems: 'center'
                       }}
                       onClick={() => {
-                        navigate('/hotel/guest-payment');
+                        navigate('/hotel/availability');
                       }}
                     >
                       Back

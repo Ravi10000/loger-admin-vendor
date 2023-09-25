@@ -1,9 +1,10 @@
 import { Layout, Menu, theme } from 'antd';
 import React, { memo } from 'react';
-import { groupItem } from './items';
+import useMenuItems from './items';
 
 const SideBar = ({ collapsed, handleCollapsed }) => {
   const { token } = theme.useToken();
+  const [items] = useMenuItems();
 
   return (
     <>
@@ -24,7 +25,7 @@ const SideBar = ({ collapsed, handleCollapsed }) => {
           overflow: 'auto'
         }}
       >
-        <Menu theme="light" mode="inline" items={groupItem} />
+        <Menu theme="light" mode="inline" items={items} />
       </Layout.Sider>
     </>
   );
