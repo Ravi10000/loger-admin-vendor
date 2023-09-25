@@ -13,7 +13,7 @@ const Parking = () => {
       <MainWrapper>
         <Container>
           <Typography.Title level={2} style={{ marginBottom: '2.5rem' }}>
-          Tell us about the parking situation at your Hotel
+            Tell us about the parking situation at your Hotel
           </Typography.Title>
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
@@ -31,7 +31,7 @@ const Parking = () => {
                     // onChange={handleAllowChild}
                     // value={allowChild}
                     >
-                      <Space direction="vertical" style={{}}>
+                      <Space direction="vertical">
                         <Radio value={1}>Yes, free</Radio>
                         <Radio value={2}>Yes, Paid</Radio>
                         <Radio value={3}>No</Radio>
@@ -46,7 +46,7 @@ const Parking = () => {
                     // onChange={handleAllowChild}
                     // value={allowChild}
                     >
-                      <Space direction="vertical" style={{ width: '100%' }}>
+                      <Space direction="vertical">
                         <Radio value={1}>Reservation needed</Radio>
                         <Radio value={2}>No reservation needed</Radio>
                       </Space>
@@ -60,7 +60,7 @@ const Parking = () => {
                     // onChange={handleAllowChild}
                     // value={allowChild}
                     >
-                      <Space direction="vertical" style={{}}>
+                      <Space direction="vertical">
                         <Radio value={1}>On site</Radio>
                         <Radio value={2}>Off site</Radio>
                       </Space>
@@ -74,7 +74,7 @@ const Parking = () => {
                     // onChange={handleAllowChild}
                     // value={allowChild}
                     >
-                      <Space direction="vertical" style={{}}>
+                      <Space direction="vertical">
                         <Radio value={1}>Private </Radio>
                         <Radio value={2}>Public</Radio>
                       </Space>
@@ -91,7 +91,7 @@ const Parking = () => {
                         alignItems: 'center'
                       }}
                       onClick={() => {
-                        navigate('/hotel/breakfastdetail');
+                        navigate('/hotel/breakfast-detail');
                       }}
                     >
                       Back

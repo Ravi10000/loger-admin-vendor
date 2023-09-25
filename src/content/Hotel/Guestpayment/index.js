@@ -1,17 +1,8 @@
 import { Button, Card, Col, Radio, Row, Space, Typography } from 'antd';
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Checkbox } from 'antd';
-import {
-  ArrowLeftOutlined,
-  BulbOutlined,
-  CloseOutlined
-} from '@ant-design/icons';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
-const onChange = e => {
-  console.log(`checked = ${e.target.checked}`);
-};
 
 const Availability = () => {
   const navigate = useNavigate();
@@ -42,7 +33,6 @@ const Availability = () => {
                       </Space>
                     </Radio.Group>
                   </Space>
-
                   <CardBottom direction="horizontal">
                     <Button
                       size="large"

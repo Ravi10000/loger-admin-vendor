@@ -1,18 +1,14 @@
 import {
   ArrowLeftOutlined,
   CheckOutlined,
-  CloseOutlined,
-  InfoCircleOutlined
+  CloseOutlined
 } from '@ant-design/icons';
 import {
   Button,
   Card,
-  
-  Checkbox,
   Col,
   Divider,
   Input,
-  
   Row,
   Select,
   Space,
@@ -20,11 +16,7 @@ import {
 } from 'antd';
 
 import React from 'react';
-import {
-  
-    BulbOutlined,
-  
-  } from '@ant-design/icons';
+import { BulbOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { useTheme } from 'styled-components';
@@ -65,7 +57,7 @@ const Charge = () => {
                     style={{ width: '100%' }}
                   >
                     <Space direction="vertical" style={{ width: '100%' }}>
-                      <Typography.Title level={5}>
+                      <Typography.Title level={5} style={{ marginBottom: 0 }}>
                         Price guests pay
                       </Typography.Title>
                       <Space.Compact style={{ width: '100%' }}>
@@ -85,39 +77,48 @@ const Charge = () => {
                       <Typography.Title level={5}>
                         20% Loger.ma Commission
                       </Typography.Title>
-                      <ul style={{ listStyle: 'none' }}>
-                        <li>
-                          <Typography.Paragraph>
-                            <CheckOutlined style={{ marginRight: '1rem' }} />
-                            24/7 Help in Your Language
-                          </Typography.Paragraph>
-                        </li>
-                        <li>
-                          <Typography.Paragraph>
-                            <CheckOutlined style={{ marginRight: '1rem' }} />
-                            Save time with automatically confirmed bookings
-                          </Typography.Paragraph>
-                        </li>
-                        <li>
-                          <Typography.Paragraph>
-                            <CheckOutlined style={{ marginRight: '1rem' }} />
-                            We promote your place on Google
-                          </Typography.Paragraph>
-                        </li>
-                      </ul>
+                      <Space direction="vertical">
+                        <Typography.Paragraph style={{ marginBottom: 0 }}>
+                          <CheckOutlined
+                            style={{
+                              marginRight: '1rem',
+                              color: theme.antd.colorSuccess
+                            }}
+                          />
+                          24/7 Help in Your Language
+                        </Typography.Paragraph>
+                        <Typography.Paragraph style={{ marginBottom: 0 }}>
+                          <CheckOutlined
+                            style={{
+                              marginRight: '1rem',
+                              color: theme.antd.colorSuccess
+                            }}
+                          />
+                          Save time with automatically confirmed bookings
+                        </Typography.Paragraph>
+
+                        <Typography.Paragraph style={{ marginBottom: 0 }}>
+                          <CheckOutlined
+                            style={{
+                              marginRight: '1rem',
+                              color: theme.antd.colorSuccess
+                            }}
+                          />
+                          We promote your place on Google
+                        </Typography.Paragraph>
+                      </Space>
                     </Space>
                     <Divider style={{ marginBlock: 0 }} />
-                    <Typography.Title level={5}>
+                    <Typography.Title level={5} style={{ marginBottom: 0 }}>
                       <Typography.Text
                         style={{ color: theme.antd.colorPrimary }}
                       >
                         INR 400.00
                       </Typography.Text>{' '}
-                      Your earning(including taxes)
+                      Your earning( including taxes )
                     </Typography.Title>
                   </Space>
                 </Card>
-
                 <CardBottom direction="horizontal">
                   <Button
                     size="large"
@@ -161,14 +162,14 @@ const Charge = () => {
                       </Typography.Text>
                       <Space direction="vertical">
                         <Typography.Title level={4}>
-                          What if I’m not sure about my price?
+                          What if I'm not sure about my price?
                         </Typography.Title>
                         <Typography.Paragraph>
                           Lorem ipsum dolor sit amet consectetur. Non in quis
                           ante porttitor praesent volutpat neque. Metus in neque
                           montes id mattis molestie aliquet. Lorem eget vivamus
                           id et lacus nulla risus adipiscing molestie. mattis
-                          molestie aliquet.
+                          molestie aliquet.{' '}
                           <Typography.Link>Learn More</Typography.Link>
                         </Typography.Paragraph>
                       </Space>

@@ -10,7 +10,7 @@ import {
   Radio
 } from 'antd';
 import { Rate } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeftOutlined } from '@ant-design/icons';
@@ -18,17 +18,6 @@ import { Container, MainWrapper, CardBottom } from 'src/components/Global';
 
 const Rating = () => {
   const navigate = useNavigate();
-  const [value, setValue] = useState(1);
-  const onChange = e => {
-    console.log('radio checked', e.target.value);
-    setValue(e.target.value);
-  };
-
-  const [valu, setValu] = useState(1);
-  const onChang = e => {
-    console.log('radio checked', e.target.value);
-    setValu(e.target.value);
-  };
 
   return (
     <>
@@ -88,23 +77,36 @@ const Rating = () => {
                     <Typography.Title level={5}>
                       What is the star rating of your hotel?
                     </Typography.Title>
-                    <Radio.Group onChange={onChange} value={value}>
+                    <Radio.Group>
                       <Space direction="vertical">
                         <Radio value={1}>N/A</Radio>
                         <Radio value={2}>
-                          1 Star <Rate disabled defaultValue={1} />
+                          <span style={{ marginRight: '0.5rem' }}>1 Star </span>
+                          <Rate disabled defaultValue={1} count={1} />
                         </Radio>
                         <Radio value={3}>
-                          2 Stars <Rate disabled defaultValue={2} />
+                          <span style={{ marginRight: '0.5rem' }}>
+                            2 Stars{' '}
+                          </span>
+                          <Rate disabled defaultValue={2} count={2} />
                         </Radio>
                         <Radio value={4}>
-                          3 Stars <Rate disabled defaultValue={3} />
+                          <span style={{ marginRight: '0.5rem' }}>
+                            3 Stars{' '}
+                          </span>
+                          <Rate disabled defaultValue={3} count={3} />
                         </Radio>
                         <Radio value={5}>
-                          4 Stars <Rate disabled defaultValue={4} />
+                          <span style={{ marginRight: '0.5rem' }}>
+                            4 Stars{' '}
+                          </span>
+                          <Rate disabled defaultValue={4} count={4} />
                         </Radio>
                         <Radio value={6}>
-                          5 Stars <Rate disabled defaultValue={5} />
+                          <span style={{ marginRight: '0.5rem' }}>
+                            5 Stars{' '}
+                          </span>
+                          <Rate disabled defaultValue={5} count={5} />
                         </Radio>
                       </Space>
                     </Radio.Group>
@@ -114,7 +116,7 @@ const Rating = () => {
                       Are you a property management company or part of a group
                       or chain ?
                     </Typography.Title>
-                    <Radio.Group onChang={onChang} valu={valu}>
+                    <Radio.Group>
                       <Space direction="horizontal">
                         <Radio value={2}>Yes</Radio>
                         <Radio value={3}>No</Radio>

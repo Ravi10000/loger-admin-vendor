@@ -1,12 +1,8 @@
 import { Button, Card, Col, Radio, Row, Space, Typography } from 'antd';
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import {
-  ArrowLeftOutlined,
- 
-} from '@ant-design/icons';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 
 const Availability = () => {
@@ -27,7 +23,7 @@ const Availability = () => {
                   size="large"
                   style={{ width: '100%' }}
                 >
-                  <Typography.Paragraph>
+                  <Typography.Paragraph style={{ marginBottom: 0 }}>
                     Lorem ipsum dolor sit amet consectetur. Eget non ac nascetur
                     facilisi arcu integer ut. Eget lectus amet ipsum
                     pellentesque leo ac. Vulputate eget in tortor orci quam
@@ -38,7 +34,7 @@ const Availability = () => {
                     nec .
                   </Typography.Paragraph>
                   <Space direction="vertical" style={{ width: '100%' }}>
-                    <Typography.Title level={5}>
+                    <Typography.Title level={5} style={{ marginBottom: 0 }}>
                       Do you use a channel manager?
                     </Typography.Title>
                     <Radio.Group>
@@ -50,18 +46,17 @@ const Availability = () => {
                     </Radio.Group>
                   </Space>
                   <Space direction="vertical" style={{ width: '100%' }}>
-                    <Typography.Title level={5}>
-                    Does this recipient have the same address as your property ?
+                    <Typography.Title level={5} style={{ marginBottom: 0 }}>
+                      Does this recipient have the same address as your property
+                      ?
                     </Typography.Title>
                     <Radio.Group>
-                      <Space direction="vertical" style={{}}>
+                      <Space direction="vertical">
                         <Radio value={1}>Yes</Radio>
                         <Radio value={2}>No</Radio>
-                        
                       </Space>
-                    </Radio.Group>  
+                    </Radio.Group>
                   </Space>
-
                   <CardBottom direction="horizontal">
                     <Button
                       size="large"
@@ -73,7 +68,7 @@ const Availability = () => {
                         alignItems: 'center'
                       }}
                       onClick={() => {
-                        navigate('/hotel/guestpayment');
+                        navigate('/hotel/guest-payment');
                       }}
                     >
                       Back
@@ -83,7 +78,7 @@ const Availability = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/hotel/hotelinfo');
+                        navigate('/hotel/hotel-info');
                       }}
                     >
                       Continue

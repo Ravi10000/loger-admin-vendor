@@ -285,7 +285,7 @@ const Boarding = () => {
                     </Col>
                   </Row>
                   <Typography.Link>
-                    I don’t see my property type on the list
+                    I don't see my property type on the list
                   </Typography.Link>
                   <CardBottom direction="horizontal">
                     <Button
@@ -308,7 +308,7 @@ const Boarding = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/hotel/oneboarding');
+                        navigate('/hotel/one-boarding');
                       }}
                     >
                       Continue

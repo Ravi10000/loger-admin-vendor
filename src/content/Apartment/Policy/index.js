@@ -41,7 +41,7 @@ const Policy = () => {
                     direction="vertical"
                     style={{ width: '100%' }}
                   >
-                    <Typography.Title level={5}>
+                    <Typography.Title level={5} style={{ marginBottom: 0 }}>
                       How many days before arrival can guests cancel their
                       booking for free?
                     </Typography.Title>

@@ -1,17 +1,8 @@
 import { Button, Card, Col, Radio, Row, Space, Typography } from 'antd';
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Checkbox } from 'antd';
-import {
-  ArrowLeftOutlined,
-  BulbOutlined,
-  CloseOutlined
-} from '@ant-design/icons';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
-const onChange = e => {
-  console.log(`checked = ${e.target.checked}`);
-};
 
 const Availability = () => {
   const navigate = useNavigate();
@@ -20,7 +11,6 @@ const Availability = () => {
     <>
       <MainWrapper>
         <Container>
-         
           <Typography.Title level={2} style={{ marginBottom: '2.5rem' }}>
             Availability
           </Typography.Title>
@@ -32,28 +22,30 @@ const Availability = () => {
                   size="large"
                   style={{ width: '100%' }}
                 >
-                     <Typography.Paragraph>
-            Lorem ipsum dolor sit amet consectetur. Eget non ac nascetur
-            facilisi arcu integer ut. Eget lectus amet ipsum pellentesque leo
-            ac. Vulputate eget in tortor orci quam ultricies viverra. Integer
-            nulla netus elementum quam suscipit eu imperdiet porttitor. Tellus
-            nam sed tortor erat non tempor et. Senectus sed sit ornare et
-            imperdiet. Enim semper odio massa lobortis.
-          </Typography.Paragraph>
+                  <Typography.Paragraph style={{ marginBottom: 0 }}>
+                    Lorem ipsum dolor sit amet consectetur. Eget non ac nascetur
+                    facilisi arcu integer ut. Eget lectus amet ipsum
+                    pellentesque leo ac. Vulputate eget in tortor orci quam
+                    ultricies viverra. Integer nulla netus elementum quam
+                    suscipit eu imperdiet porttitor. Tellus nam sed tortor erat
+                    non tempor et. Senectus sed sit ornare et imperdiet. Enim
+                    semper odio massa lobortis.
+                  </Typography.Paragraph>
                   <Space direction="vertical" style={{ width: '100%' }}>
                     <Typography.Title level={5}>
                       Do you use a channel manager?
                     </Typography.Title>
                     <Radio.Group>
-                      <Space direction="vertical" style={{}}>
-                        <Radio value={1}>Yes, I use a channel manager</Radio>
-                        <Radio value={2}>
-                          No, I don’t use a channel manager
-                        </Radio>
-                      </Space>
+                      <Radio.Group>
+                        <Space direction="vertical">
+                          <Radio value={1}>Yes, I use a channel manager</Radio>
+                          <Radio value={2}>
+                            No, I don't use a channel manager
+                          </Radio>
+                        </Space>
+                      </Radio.Group>
                     </Radio.Group>
                   </Space>
-
                   <CardBottom direction="horizontal">
                     <Button
                       size="large"
@@ -75,7 +67,7 @@ const Availability = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/hotel/guestpayment');
+                        navigate('/hotel/guest-payment');
                       }}
                     >
                       Continue

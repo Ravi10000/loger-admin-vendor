@@ -33,9 +33,9 @@ const Listing = () => {
                   <Typography.Paragraph>You're listing</Typography.Paragraph>
                   <img src={media.hotelIcon} alt="" />
                   <Typography.Title level={4}>
-                  One Hotel Where Guests Can 
-                  <br></br>
-                  Book a Room
+                    One Hotel Where Guests Can
+                    <br></br>
+                    Book a Room
                   </Typography.Title>
                   <Typography.Paragraph>
                     Does this sound like your property?
@@ -61,7 +61,7 @@ const Listing = () => {
                       ghost
                       block
                       onClick={() => {
-                        navigate('/hotel/oneboarding');
+                        navigate('/hotel/one-boarding');
                       }}
                     >
                       No, need to make change

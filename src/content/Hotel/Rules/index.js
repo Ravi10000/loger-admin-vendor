@@ -85,7 +85,7 @@ const Rules = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/hotel/roomdetail');
+                        navigate('/hotel/room-detail');
                       }}
                     >
                       Continue

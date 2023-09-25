@@ -16,24 +16,32 @@ const Property = Loader(lazy(() => import('src/content/Hotel/Property')));
 const Location = Loader(lazy(() => import('src/content/Hotel/Location')));
 const Rating = Loader(lazy(() => import('src/content/Hotel/Rating')));
 const Guest = Loader(lazy(() => import('src/content/Hotel/Guest')));
-const BreakfastDetail = Loader(lazy(() => import('src/content/Hotel/BreakfastDetail')));
+const BreakfastDetail = Loader(
+  lazy(() => import('src/content/Hotel/BreakfastDetail'))
+);
 const Parking = Loader(lazy(() => import('src/content/Hotel/Parking')));
-const Language = Loader(lazy(()=> import('src/content/Hotel/Language')));
-const Rules = Loader(lazy(()=> import('src/content/Hotel/Rules')));
-const Roomdetail = Loader(lazy(()=> import('src/content/Hotel/Roomdetail')));
-const Bathroomdetail = Loader(lazy(()=> import('src/content/Hotel/Bathroomdetail')));
-const Room = Loader(lazy(()=> import('src/content/Hotel/Room')));
-const Charge = Loader(lazy(()=> import('src/content/Hotel/Charge')));
-const Plans = Loader(lazy(()=> import('src/content/Hotel/Plans')));
-const Policy = Loader(lazy(()=> import('src/content/Hotel/Policy')));
-const Gallery = Loader(lazy(()=> import('src/content/Hotel/Gallery')));
-const Availability = Loader(lazy(()=> import('src/content/Hotel/Availability')));
-const Guestpayment = Loader(lazy(()=> import('src/content/Hotel/Guestpayment')));
-const Invoicing = Loader(lazy(()=> import('src/content/Hotel/Invoicing')));
-const Complete = Loader(lazy(()=> import('src/content/Hotel/Complete')));
-const Hotelinfo = Loader(lazy(()=> import('src/content/Hotel/Hotelinfo')));
-const Payment = Loader(lazy(()=> import('src/content/Hotel/Payment')));
-const Onehotel = Loader(lazy(()=> import('src/content/Hotel/Onehotel')));
+const Language = Loader(lazy(() => import('src/content/Hotel/Language')));
+const Rules = Loader(lazy(() => import('src/content/Hotel/Rules')));
+const Roomdetail = Loader(lazy(() => import('src/content/Hotel/Roomdetail')));
+const Bathroomdetail = Loader(
+  lazy(() => import('src/content/Hotel/Bathroomdetail'))
+);
+const Room = Loader(lazy(() => import('src/content/Hotel/Room')));
+const Charge = Loader(lazy(() => import('src/content/Hotel/Charge')));
+const Plans = Loader(lazy(() => import('src/content/Hotel/Plans')));
+const Policy = Loader(lazy(() => import('src/content/Hotel/Policy')));
+const Gallery = Loader(lazy(() => import('src/content/Hotel/Gallery')));
+const Availability = Loader(
+  lazy(() => import('src/content/Hotel/Availability'))
+);
+const Guestpayment = Loader(
+  lazy(() => import('src/content/Hotel/Guestpayment'))
+);
+const Invoicing = Loader(lazy(() => import('src/content/Hotel/Invoicing')));
+const Complete = Loader(lazy(() => import('src/content/Hotel/Complete')));
+const Hotelinfo = Loader(lazy(() => import('src/content/Hotel/Hotelinfo')));
+const Payment = Loader(lazy(() => import('src/content/Hotel/Payment')));
+const Onehotel = Loader(lazy(() => import('src/content/Hotel/Onehotel')));
 
 const hotelRoutes = [
   {
@@ -49,7 +57,7 @@ const hotelRoutes = [
     element: <Listing />
   },
   {
-    path: 'oneboarding',
+    path: 'one-boarding',
     element: <Oneboarding />
   },
   {
@@ -69,76 +77,76 @@ const hotelRoutes = [
     element: <Guest />
   },
   {
-    path: 'breakfastdetail',
-    element:<BreakfastDetail/>
+    path: 'breakfast-detail',
+    element: <BreakfastDetail />
   },
   {
     path: 'parking',
-    element:<Parking/>
+    element: <Parking />
   },
   {
     path: 'language',
-    element: <Language/>
+    element: <Language />
   },
   {
     path: 'rules',
-    element: <Rules/>
+    element: <Rules />
   },
   {
-    path: 'roomdetail',
-    element: <Roomdetail/>
+    path: 'room-detail',
+    element: <Roomdetail />
   },
   {
-    path: 'bathroomdetail',
-    element: <Bathroomdetail/>
+    path: 'bathroom-detail',
+    element: <Bathroomdetail />
   },
   {
     path: 'room',
-    element: <Room/>
+    element: <Room />
   },
   {
     path: 'charge',
-    element: <Charge/>
+    element: <Charge />
   },
   {
     path: 'plans',
-    element: <Plans/>
+    element: <Plans />
   },
   {
-    path: 'policy',
-    element: <Policy/>
+    path: 'cancellation-policy',
+    element: <Policy />
   },
   {
     path: 'gallery',
-    element: <Gallery/>
+    element: <Gallery />
   },
   {
     path: 'availability',
-    element: <Availability/>
+    element: <Availability />
   },
   {
-    path: 'guestpayment',
-    element: <Guestpayment/>
+    path: 'guest-payment',
+    element: <Guestpayment />
   },
   {
     path: 'invoicing',
-    element: <Invoicing/>
+    element: <Invoicing />
+  },
+  {
+    path: 'hotel-info',
+    element: <Hotelinfo />
   },
   {
     path: 'complete',
-    element: <Complete/>
-  },
-  {
-    path: 'hotelinfo',
-    element: <Hotelinfo/>
+    element: <Complete />
   },
   {
     path: 'payment',
-    element: <Payment/>
+    element: <Payment />
   },
   {
-    path: 'onehotel',
-    element: <Onehotel/>
+    path: 'one-hotel',
+    element: <Onehotel />
   }
 ];
 export default hotelRoutes;

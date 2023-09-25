@@ -4,7 +4,7 @@ import {
   CheckCircleOutlined,
   UserOutlined
 } from '@ant-design/icons';
-import { Button, Card,  Col, Row, Space, Typography } from 'antd';
+import { Button, Card, Col, Row, Space, Typography } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, MainWrapper } from 'src/components/Global';

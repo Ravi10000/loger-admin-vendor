@@ -1,4 +1,4 @@
-import { Button, Card, Col, Row, Space, Typography, Select } from 'antd';
+import { Button, Card, Col, Row, Space, Typography, Input } from 'antd';
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -13,23 +13,12 @@ import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 const Room = () => {
   const navigate = useNavigate();
 
-  const options = [];
-  for (let i = 10; i < 36; i++) {
-    options.push({
-      label: i.toString(36) + i,
-      value: i.toString(36) + i
-    });
-  }
-  const handleChange = value => {
-    console.log(`selected ${value}`);
-  };
-
   return (
     <>
       <MainWrapper>
         <Container>
           <Typography.Title level={2} style={{ marginBottom: '2.5rem' }}>
-            What’s the Name of this Room?
+            What's the Name of this Room?
           </Typography.Title>
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
@@ -39,23 +28,16 @@ const Room = () => {
                   size="large"
                   style={{ width: '100%' }}
                 >
-                  <Typography.Paragraph>
+                  <Typography.Paragraph style={{ marginBottom: 0 }}>
                     Lorem ipsum dolor sit amet consectetur. Arcu mattis id
                     ultricies aliquam tincidunt nunc.
                   </Typography.Paragraph>
-                  <Typography.Title level={4} style={{ marginBottom: '0rem' }}>
-                    Room Name
-                  </Typography.Title>
-                  <Select
-                    mode="multiple"
-                    allowClear
-                    size="large"
-                    maxTagCount={6}
-                    style={{ width: '100%' }}
-                    placeholder=""
-                    onChange={handleChange}
-                    options={options}
-                  />
+                  <Space direction="vertical" style={{ width: '100%' }}>
+                    <Typography.Title level={4} style={{ marginBottom: 0 }}>
+                      Room Name
+                    </Typography.Title>
+                    <Input size="large" />
+                  </Space>
                   <CardBottom direction="horizontal">
                     <Button
                       size="large"
@@ -67,7 +49,7 @@ const Room = () => {
                         alignItems: 'center'
                       }}
                       onClick={() => {
-                        navigate('/hotel/bathroomdetail');
+                        navigate('/hotel/bathroom-detail');
                       }}
                     >
                       Back
@@ -129,7 +111,7 @@ const Room = () => {
                             </Typography.Paragraph>
                           </li>
                         </ul>
-                        <Typography.Paragraph>
+                        <Typography.Paragraph style={{ marginBottom: 0 }}>
                           Lorem ipsum dolor sit amet consectetur. Non in quis
                           ante porttitor praesent volutpat neque. Metus in neque
                           montes id mattis molestie aliquet. Lorem eget vivamus

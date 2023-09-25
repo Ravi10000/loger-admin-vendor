@@ -38,9 +38,7 @@ const Complete = () => {
                       style={{ width: '100%' }}
                     >
                       <Typography.Text>
-                        <b>
-                          After you finish your registration you’ll be able to:
-                        </b>
+                        After you finish your registration you'll be able to:
                       </Typography.Text>
                       <Space direction="vertical" style={{ width: '100%' }}>
                         <Space
@@ -49,10 +47,7 @@ const Complete = () => {
                         >
                           <CalendarOutlined />
                           <Space direction="vertical" style={{ width: '100%' }}>
-                            <Typography.Title
-                              level={5}
-                              style={{ marginBottom: '2.5rem' }}
-                            >
+                            <Typography.Title level={5}>
                               Manage your property from dashboard
                             </Typography.Title>
                           </Space>
@@ -63,10 +58,7 @@ const Complete = () => {
                         >
                           <CheckCircleOutlined />
                           <Space direction="vertical" style={{ width: '100%' }}>
-                            <Typography.Title
-                              level={5}
-                              style={{ marginBottom: '2.5rem' }}
-                            >
+                            <Typography.Title level={5}>
                               Get booking and make money from guests browsing
                               our site
                             </Typography.Title>
@@ -78,10 +70,7 @@ const Complete = () => {
                         >
                           <UserOutlined />
                           <Space direction="vertical" style={{ width: '100%' }}>
-                            <Typography.Title
-                              level={5}
-                              style={{ marginBottom: '2.5rem' }}
-                            >
+                            <Typography.Title level={5}>
                               Stay on top of bookings from all the sites you use
                               by syncing your calendar
                             </Typography.Title>
@@ -94,36 +83,14 @@ const Complete = () => {
                       direction="vertical"
                       style={{ width: '100%' }}
                     >
-                      <Space
-                        direction="horizontal"
-                        size="large"
-                        style={{
-                          width: '100%',
-                          justifyContent: 'space-between',
-                          alignItems: 'flex-start'
-                        }}
-                      >
-                        <Checkbox></Checkbox>
-                        <Typography.Paragraph>
-                          Lorem ipsum dolor sit amet consectetur. Eget non ac
-                          nascetur facilisi arcu integer ut. Eget lectus amet
-                          ipsum pellentesque leo ac. Vulputate eget in tortor
-                          orci quam ultricies viverra. Integer nulla netus .
-                        </Typography.Paragraph>
-                      </Space>
-                      <Space
-                        direction="horizontal"
-                        size="large"
-                        style={{
-                          width: '100%',
-                          
-                          alignItems: 'flex-start'
-                        }}
-                      >
-                        <Checkbox></Checkbox>
+                      <Checkbox>
+                        Lorem ipsum dolor sit amet consectetur. Eget non ac
+                        nascetur facilisi arcu integer ut.
+                      </Checkbox>
+                      <Checkbox>
                         Lorem ipsum dolor sit amet consectetur. Eget General
                         delivery Terms.
-                      </Space>
+                      </Checkbox>
                     </Space>
                   </Space>
                 </Card>
@@ -137,7 +104,7 @@ const Complete = () => {
                     type="primary"
                     block
                     onClick={() => {
-                        navigate('/hotel/payment');
+                      navigate('/hotel/payment');
                     }}
                   >
                     Complete Registration & Open Bookings
@@ -147,7 +114,7 @@ const Complete = () => {
                     type="link"
                     block
                     onClick={() => {
-                      navigate('/hotel/hotelinfo');
+                      navigate('/hotel/hotel-info');
                     }}
                   >
                     Complete Registration & open Later

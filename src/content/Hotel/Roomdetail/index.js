@@ -69,29 +69,26 @@ const Roomdetail = () => {
                     size="large"
                     style={{ width: '100%' }}
                   >
-                    <Typography.Title
-                      level={5}
-                      style={{ marginBottom: '0rem' }}
-                    >
-                      What Type of Unit is This ?
-                    </Typography.Title>
-                    <Select
-                      mode="multiple"
-                      allowClear
-                      size="large"
-                      maxTagCount={6}
-                      style={{ width: '100%' }}
-                      placeholder=""
-                      onChange={handleChange}
-                      options={options}
-                    />
-                    <Typography.Title
-                      level={5}
-                      style={{ marginBottom: '0rem' }}
-                    >
-                      How many rooms of this type do you have?
-                    </Typography.Title>
-                    <Input size="large" style={{ width: '20%' }} />
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Typography.Title level={5} style={{ marginBottom: 0 }}>
+                        What Type of Unit is This ?
+                      </Typography.Title>
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        size="large"
+                        maxTagCount={6}
+                        style={{ width: '100%' }}
+                        onChange={handleChange}
+                        options={options}
+                      />
+                    </Space>
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Typography.Title level={5} style={{ marginBottom: 0 }}>
+                        How many rooms of this type do you have?
+                      </Typography.Title>
+                      <Input size="large" style={{ width: '20%' }} />
+                    </Space>
                   </Space>
                 </Card>
                 <Card>
@@ -100,10 +97,7 @@ const Roomdetail = () => {
                     size="large"
                     style={{ width: '100%' }}
                   >
-                    <Typography.Title
-                      level={5}
-                      style={{ marginBottom: '0rem' }}
-                    >
+                    <Typography.Title level={5} style={{ marginBottom: 0 }}>
                       Which Beds are Available in This Room?
                     </Typography.Title>
                     <Space
@@ -121,18 +115,11 @@ const Roomdetail = () => {
                         style={{ width: '100%', alignItems: 'flex-start' }}
                       >
                         <img src={media.checkIcon} alt="" />
-                        <Space
-                          style={{ width: '100%' }}
-                          direction="vertical"
-                          size={4}
-                        >
-                          <Typography.Title
-                            level={5}
-                            style={{ marginBottom: 0 }}
-                          >
-                            Single Bed
-                          </Typography.Title>
-                          <Typography.Paragraph>
+                        <Space style={{ width: '100%' }} direction="vertical">
+                          <Typography.Text>
+                            <b>Single Bed</b>
+                          </Typography.Text>
+                          <Typography.Paragraph style={{ marginBottom: 0 }}>
                             70-120cm wide
                           </Typography.Paragraph>
                         </Space>
@@ -172,18 +159,11 @@ const Roomdetail = () => {
                         style={{ width: '100%', alignItems: 'flex-start' }}
                       >
                         <img src={media.checkIcon} alt="" />
-                        <Space
-                          style={{ width: '100%' }}
-                          direction="vertical"
-                          size={4}
-                        >
-                          <Typography.Title
-                            level={5}
-                            style={{ marginBottom: 0 }}
-                          >
-                            Double Bed
-                          </Typography.Title>
-                          <Typography.Paragraph>
+                        <Space style={{ width: '100%' }} direction="vertical">
+                          <Typography.Text>
+                            <b>Double Bed</b>
+                          </Typography.Text>
+                          <Typography.Paragraph style={{ marginBottom: 0 }}>
                             121-160cm wide
                           </Typography.Paragraph>
                         </Space>
@@ -223,18 +203,11 @@ const Roomdetail = () => {
                         style={{ width: '100%', alignItems: 'flex-start' }}
                       >
                         <img src={media.checkIcon} alt="" />
-                        <Space
-                          style={{ width: '100%' }}
-                          direction="vertical"
-                          size={4}
-                        >
-                          <Typography.Title
-                            level={5}
-                            style={{ marginBottom: 0 }}
-                          >
-                            Large Bed King Size
-                          </Typography.Title>
-                          <Typography.Paragraph>
+                        <Space style={{ width: '100%' }} direction="vertical">
+                          <Typography.Text>
+                            <b>Large Bed King Size</b>
+                          </Typography.Text>
+                          <Typography.Paragraph style={{ marginBottom: 0 }}>
                             151-180cm wide
                           </Typography.Paragraph>
                         </Space>
@@ -279,13 +252,10 @@ const Roomdetail = () => {
                           direction="vertical"
                           size={4}
                         >
-                          <Typography.Title
-                            level={5}
-                            style={{ marginBottom: 0 }}
-                          >
-                            Extra-Large Double Bed (Super-King Size)
-                          </Typography.Title>
-                          <Typography.Paragraph>
+                          <Typography.Text>
+                            <b>Extra-Large Double Bed (Super-King Size)</b>
+                          </Typography.Text>
+                          <Typography.Paragraph style={{ marginBottom: 0 }}>
                             181-210cm wide
                           </Typography.Paragraph>
                         </Space>
@@ -331,7 +301,7 @@ const Roomdetail = () => {
                         type="primary"
                         block
                         onClick={() => {
-                          navigate('/hotel/bathroomdetail');
+                          navigate('/hotel/bathroom-detail');
                         }}
                       >
                         Continue

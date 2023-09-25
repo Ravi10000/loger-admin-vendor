@@ -9,9 +9,6 @@ import {
   CloseOutlined
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
-const onChange = e => {
-  console.log(`checked = ${e.target.checked}`);
-};
 
 const Bathroomdetail = () => {
   const navigate = useNavigate();
@@ -36,27 +33,30 @@ const Bathroomdetail = () => {
                       Is the Bathroom Private?
                     </Typography.Title>
                     <Radio.Group>
-                      <Space direction="vertical" style={{}}>
+                      <Space direction="vertical">
                         <Radio value={1}>Yes</Radio>
-                        <Radio value={2}>No, it’s shared</Radio>
+                        <Radio value={2}>No, it's shared</Radio>
                       </Space>
                     </Radio.Group>
                   </Space>
-
                   <Space direction="vertical" style={{ width: '100%' }}>
-                    <Typography.Title level={5} style={{ marginTop: '2.5rem' }}>
+                    <Typography.Title level={5}>
                       What Bathroom Items are Available in This Room?
                     </Typography.Title>
-                    <Checkbox onChange={onChange}>Toilet paper</Checkbox>
-                    <Checkbox onChange={onChange}>Shower</Checkbox>
-                    <Checkbox onChange={onChange}>Toilet</Checkbox>
-                    <Checkbox onChange={onChange}>Hairdryer</Checkbox>
-                    <Checkbox onChange={onChange}>Bathtub</Checkbox>
-                    <Checkbox onChange={onChange}>Free toiletries</Checkbox>
-                    <Checkbox onChange={onChange}>Bidget</Checkbox>
-                    <Checkbox onChange={onChange}>Slippers</Checkbox>
-                    <Checkbox onChange={onChange}>Bathrobe</Checkbox>
-                    <Checkbox onChange={onChange}>Spa tub</Checkbox>
+                    <Checkbox.Group>
+                      <Space direction="vertical">
+                        <Checkbox>Toilet paper</Checkbox>
+                        <Checkbox>Shower</Checkbox>
+                        <Checkbox>Toilet</Checkbox>
+                        <Checkbox>Hairdryer</Checkbox>
+                        <Checkbox>Bathtub</Checkbox>
+                        <Checkbox>Free toiletries</Checkbox>
+                        <Checkbox>Bidget</Checkbox>
+                        <Checkbox>Slippers</Checkbox>
+                        <Checkbox>Bathrobe</Checkbox>
+                        <Checkbox>Spa tub</Checkbox>
+                      </Space>
+                    </Checkbox.Group>
                   </Space>
                   <CardBottom direction="horizontal">
                     <Button
@@ -69,7 +69,7 @@ const Bathroomdetail = () => {
                         alignItems: 'center'
                       }}
                       onClick={() => {
-                        navigate('/hotel/roomdetail');
+                        navigate('/hotel/room-detail');
                       }}
                     >
                       Back

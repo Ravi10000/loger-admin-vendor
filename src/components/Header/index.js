@@ -1,6 +1,6 @@
+import { QuestionCircleOutlined, DownOutlined } from '@ant-design/icons';
 import { Avatar, Button, Dropdown, Layout, Space, Typography } from 'antd';
 import React from 'react';
-import { AiOutlineQuestionCircle, AiOutlineDown } from 'react-icons/ai';
 import { styled } from 'styled-components';
 
 const flagIcon = {
@@ -153,7 +153,7 @@ const Header = () => {
                   fontSize: '1rem'
                 }}
               >
-                <AiOutlineQuestionCircle />
+                <QuestionCircleOutlined />
                 <span style={{ marginLeft: '0.4rem' }}>Help</span>
               </Button>
               <Dropdown
@@ -176,13 +176,13 @@ const Header = () => {
                     style={{
                       backgroundColor: '#8E03CF',
                       color: '#fff',
-                      marginRight: '0.5rem'
+                      marginRight: '0.4rem'
                     }}
                     size="small"
                   >
                     A
                   </Avatar>
-                  <AiOutlineDown />
+                  <DownOutlined />
                 </Button>
               </Dropdown>
             </Space>

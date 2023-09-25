@@ -28,7 +28,7 @@ const Guest = () => {
       <MainWrapper>
         <Container>
           <Typography.Title level={2} style={{ marginBottom: '2.5rem' }}>
-          What can guests use in this room?
+            What can guests use in this room?
           </Typography.Title>
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
@@ -117,7 +117,7 @@ const Guest = () => {
                       type="primary"
                       block
                       onClick={() => {
-                        navigate('/hotel/breakfastdetail');
+                        navigate('/hotel/breakfast-detail');
                       }}
                     >
                       Continue

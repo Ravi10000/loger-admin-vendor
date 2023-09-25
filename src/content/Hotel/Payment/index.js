@@ -18,7 +18,9 @@ const Payment = () => {
                   size="middle"
                   style={{ width: '100%' }}
                 >
-                  <Typography.Title level={5}>Bank Details</Typography.Title>
+                  <Typography.Title level={5} style={{ marginBlock: 0 }}>
+                    Bank Details
+                  </Typography.Title>
                   <Typography.Paragraph style={{ marginBlock: 0 }}>
                     Lorem ipsum dolor sit amet consectetur. Dolor in scelerisque
                     nibh ornare faucibus. Sapien semper id faucibus dictumst vel
@@ -39,7 +41,7 @@ const Payment = () => {
                       size="large"
                       style={{ width: '100%' }}
                     >
-                      <Typography.Title level={5}>
+                      <Typography.Title level={5} style={{ marginBlock: 0 }}>
                         New Bank Details
                       </Typography.Title>
                       <Form layout="vertical">

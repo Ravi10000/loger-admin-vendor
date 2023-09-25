@@ -1,16 +1,21 @@
-import { Button, Card, Col, Form, Input, Row, Select, Space,Typography } from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Input,
+  Row,
+  Select,
+  Space,
+  Typography
+} from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { COUNTRY_LIST as countryList } from 'src/constants/country';
 import { EnvironmentOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { Container, MainWrapper, CardBottom } from 'src/components/Global';
 
-import {
-    
-    LikeOutlined,
-    BulbOutlined,
-    CloseOutlined
-  } from '@ant-design/icons';
+import { LikeOutlined, BulbOutlined, CloseOutlined } from '@ant-design/icons';
 const Property = () => {
   const navigate = useNavigate();
 

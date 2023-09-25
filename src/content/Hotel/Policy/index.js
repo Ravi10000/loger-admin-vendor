@@ -4,7 +4,6 @@ import {
   Col,
   Radio,
   Row,
-  Segmented,
   Select,
   Space,
   Switch,
@@ -53,7 +52,7 @@ const Policy = () => {
                     direction="vertical"
                     style={{ width: '100%' }}
                   >
-                    <Typography.Title level={5}>
+                    <Typography.Title level={5} style={{ marginBottom: 0 }}>
                       When can the guests cancel their bookings for free ?
                     </Typography.Title>
                     <Select
@@ -125,7 +124,7 @@ const Policy = () => {
                       type="primary"
                       block
                       onClick={() => {
-                         navigate('/hotel/gallery');
+                        navigate('/hotel/gallery');
                       }}
                     >
                       Continue
