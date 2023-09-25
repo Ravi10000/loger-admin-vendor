@@ -7,11 +7,11 @@ import { Table} from 'antd';
 import { Tabs } from 'antd';
 
 
-const onChange = (key: string) => {
+const onChange = (key) => {
   console.log(key);
 };
 
-const items: TabsProps['items'] = [
+const items = [
   {
     key: '1',
     label: 'Operations',
