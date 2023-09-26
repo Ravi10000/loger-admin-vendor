@@ -12,14 +12,102 @@ import {
   Row,
   Select,
   Space,
+  Table,
   Typography
 } from 'antd';
 import React from 'react';
 import { Container, MainWrapper } from 'src/components/Global';
 import { useTheme } from 'styled-components';
 
+const columns = [
+  {
+    title: 'Reservation No.',
+    dataIndex: 'reservationNo'
+  },
+  {
+    title: 'Property Name',
+    dataIndex: 'propertyName'
+  },
+  {
+    title: 'Guest Name',
+    dataIndex: 'guestName'
+  },
+  {
+    title: 'Check In',
+    dataIndex: 'checkIn'
+  },
+  {
+    title: 'Check Out',
+    dataIndex: 'checkOut'
+  },
+  {
+    title: 'Status',
+    dataIndex: 'status'
+  },
+  {
+    title: 'Price',
+    dataIndex: 'price'
+  },
+  {
+    title: 'commission',
+    dataIndex: 'checkIn'
+  },
+  {
+    title: 'Booked On',
+    dataIndex: 'bookedOn'
+  }
+];
+
+const data = [
+  {
+    reservationNo: '2564568732',
+    propertyName: 'Westheimer Rd. Santa Ana',
+    guestName: 'Richard Parker',
+    checkIn: '13 july 2023',
+    checkOut: '17 july 2023',
+    status: 'Paid',
+    price: 0,
+    commission: 100,
+    bookedOn: '13 July 2023'
+  },
+  {
+    reservationNo: '2564568732',
+    propertyName: 'Westheimer Rd. Santa Ana',
+    guestName: 'Richard Parker',
+    checkIn: '13 july 2023',
+    checkOut: '17 july 2023',
+    status: 'Paid',
+    price: 0,
+    commission: 100,
+    bookedOn: '13 July 2023'
+  },
+  {
+    reservationNo: '2564568732',
+    propertyName: 'Westheimer Rd. Santa Ana',
+    guestName: 'Richard Parker',
+    checkIn: '13 july 2023',
+    checkOut: '17 july 2023',
+    status: 'Paid',
+    price: 0,
+    commission: 100,
+    bookedOn: '13 July 2023'
+  },
+  {
+    reservationNo: '2564568732',
+    propertyName: 'Westheimer Rd. Santa Ana',
+    guestName: 'Richard Parker',
+    checkIn: '13 july 2023',
+    checkOut: '17 july 2023',
+    status: 'Paid',
+    price: 0,
+    commission: 100,
+    bookedOn: '13 July 2023'
+  }
+];
+
 const Reservations = () => {
   const theme = useTheme();
+
   return (
     <>
       <MainWrapper>
@@ -82,6 +170,15 @@ const Reservations = () => {
                     }
                   />
                 </Space>
+                <Table
+                  bordered
+                  scroll={{
+                    x: theme.antd.screenXL
+                  }}
+                  pagination={false}
+                  dataSource={data || []}
+                  columns={columns}
+                />
               </Space>
             </Col>
           </Row>

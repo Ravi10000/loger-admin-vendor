@@ -21,8 +21,10 @@ const SideBar = ({ collapsed, handleCollapsed }) => {
           top: token.Layout.headerHeight,
           left: 0,
           bottom: 0,
-          height: '100vh',
-          overflow: 'auto'
+          overflow: 'auto',
+          height: `calc(100vh - ${
+            token.Layout.headerHeight + token.Layout.triggerHeight
+          }px)`
         }}
       >
         <Menu theme="light" mode="inline" items={items} />
