@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 import Header from 'src/components/Header';
 import SideBar from './Sidebar';
 
-const { Content } = Layout;
+const { Content, Footer } = Layout;
 
 const SideBarLayout = () => {
   const { token } = theme.useToken();
@@ -29,6 +29,7 @@ const SideBarLayout = () => {
             }}
           >
             <Outlet />
+            <Footer />
           </Content>
         </Layout>
       </Layout>

@@ -18,6 +18,14 @@ const Reviews = Loader(
 const Analytics = Loader(
   lazy(() => import('src/content/Dashboard/Group/Analytics'))
 );
+const ManageHome = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/Home'))
+);
+
+const Reservations = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/Reservation'))
+);
+
 const dashboardRoutes = [
   {
     path: '',
@@ -37,7 +45,20 @@ const dashboardRoutes = [
       {
         path: 'analytics',
         element: <Analytics />
+      }
+    ]
+  },
+  {
+    path: 'manage',
+    children: [
+      {
+        path: 'home',
+        element: <ManageHome />
       },
+      {
+        path: 'reservations',
+        element: <Reservations />
+      }
     ]
   }
 ];
