@@ -18,6 +18,17 @@ const Reviews = Loader(
 const Analytics = Loader(
   lazy(() => import('src/content/Dashboard/Group/Analytics'))
 );
+
+const ReservationList = Loader(
+  lazy(() => import('src/content/Dashboard/Group/ReservationList'))
+);
+const Finance = Loader(
+  lazy(() => import('src/content/Dashboard/Group/Finance'))
+);
+const SalesStatistics = Loader(
+  lazy(() => import('src/content/Dashboard/Group/SalesStatistics'))
+);
+
 const dashboardRoutes = [
   {
     path: '',
@@ -38,6 +49,18 @@ const dashboardRoutes = [
         path: 'analytics',
         element: <Analytics />
       },
+      {
+        path: 'reservation-list',
+        element: <ReservationList/>
+      },
+      {
+        path: 'finance',
+        element: <Finance/>
+      },
+      {
+        path: 'sales-statistics',
+        element: <SalesStatistics/>
+      }
     ]
   }
 ];
