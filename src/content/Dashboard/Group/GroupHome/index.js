@@ -2,30 +2,25 @@ import React from 'react';
 import { Button, Card, Col, Row, Space, Typography, Input } from 'antd';
 import { Container, MainWrapper } from 'src/components/Global';
 
-
-import { Table} from 'antd';
+import { Table } from 'antd';
 import { Tabs } from 'antd';
 
-
-const onChange = (key) => {
+const onChange = key => {
   console.log(key);
 };
 
 const items = [
   {
     key: '1',
-    label: 'Operations',
-   
+    label: 'Operations'
   },
   {
     key: '2',
-    label: 'Performance',
-    
+    label: 'Performance'
   },
   {
     key: '3',
-    label: 'Settings',
-    
+    label: 'Settings'
   }
 ];
 
@@ -104,20 +99,17 @@ const column = [
   {
     title: 'Departure in Next 48hrs',
     dataIndex: 'DepartureinNext48hrs',
-    Key: 'Departure in Next 48hrs',
-   
+    Key: 'Departure in Next 48hrs'
   },
   {
     title: 'Guests Messages',
     dataIndex: 'GuestsMessages',
-    Key: 'Guests Messages',
-   
+    Key: 'Guests Messages'
   },
   {
     title: 'Loger.ma Messages',
     dataIndex: 'LogermaMessages',
-    Key: 'Loger.ma Messages',
-   
+    Key: 'Loger.ma Messages'
   }
 ];
 
@@ -127,14 +119,11 @@ const dat = [
     Id: '104817',
     Property: 'Blueberry',
     StatusonLogerma: 'Closed/Not bookable',
-    ArrivalsinNext48hrs : '0',
-    DepartureinNext48hrs:'0',
-    GuestsMessages:'0',
-   
-  },
-  
+    ArrivalsinNext48hrs: '0',
+    DepartureinNext48hrs: '0',
+    GuestsMessages: '0'
+  }
 ];
-
 
 const GroupHome = () => {
   return (

@@ -227,14 +227,14 @@ const ReservationList = () => {
                 <DatePicker showTime onChange={onChange} onOk={onOk} />
               </Form.Item>
               <Form.Item label="Filter by Dates" labelCol={{ span: 24 }}>
-              <RangePicker
-                showTime={{
-                  format: 'HH:mm'
-                }}
-                format="YYYY-MM-DD HH:mm"
-                onChange={onChange}
-                onOk={onOk}
-              />
+                <RangePicker
+                  showTime={{
+                    format: 'HH:mm'
+                  }}
+                  format="YYYY-MM-DD HH:mm"
+                  onChange={onChange}
+                  onOk={onOk}
+                />
               </Form.Item>
               <Select showSearch placeholder="filter" />
               <Button type="primary">Show Results</Button>

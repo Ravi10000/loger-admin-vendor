@@ -1,17 +1,6 @@
 import React, { useState } from 'react';
-import {
- 
-  Card,
-  Col,
-  Row,
-  Space,
-  Typography,
-  Select,
-  Rate,
-  Divider
-} from 'antd';
+import { Card, Col, Row, Space, Typography, Select, Rate, Divider } from 'antd';
 import { Container, MainWrapper } from 'src/components/Global';
-
 
 import { DatePicker } from 'antd';
 const { RangePicker } = DatePicker;
@@ -236,7 +225,7 @@ const Reviews = () => {
                     <Space direction="horizontal" align="flex-start">
                       <img src={'/assets/images/dashboard-3.png'} alt="" />
                       <Space direction="vertical">
-                        <Typography.Title level={5} >
+                        <Typography.Title level={5}>
                           Ralph Edwards
                         </Typography.Title>
                         <Typography.Text>10 August 2023</Typography.Text>

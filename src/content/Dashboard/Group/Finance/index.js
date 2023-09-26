@@ -1,5 +1,15 @@
 import React from 'react';
-import { Col, Row, Card, Space, Typography, Select, Button, Table,Form } from 'antd';
+import {
+  Col,
+  Row,
+  Card,
+  Space,
+  Typography,
+  Select,
+  Button,
+  Table,
+  Form
+} from 'antd';
 import { Container, MainWrapper } from 'src/components/Global';
 import { DatePicker } from 'antd';
 import {
@@ -13,10 +23,7 @@ const onChange = (date, dateString) => {
 };
 
 const { RangePicker } = DatePicker;
-const onChang = (value, dateString) => {
-  console.log('Selected Time: ', value);
-  console.log('Formatted Selected Time: ', dateString);
-};
+
 const onOk = value => {
   console.log('onOk: ', value);
 };
@@ -25,14 +32,11 @@ const columns = [
   {
     title: 'Invoice',
     dataIndex: 'Invoice',
-     render: (_, record) => (
-      <Space direction='vertical' size="small">
-        
+    render: (_, record) => (
+      <Space direction="vertical" size="small">
         <Typography.Text>104817</Typography.Text>
-        
+
         <a>Invoice </a>
-        
-        
       </Space>
     )
   },
@@ -67,13 +71,9 @@ const columns = [
     title: 'Invoice Type',
     dataIndex: 'InvoiceType',
     render: (_, record) => (
-      <Space direction='horizontal' size="small">
-        
+      <Space direction="horizontal" size="small">
         <Typography.Text>{record.InvoiceType}</Typography.Text>
-        <DeleteOutlined style={{color:'red'}} />
-        
-        
-        
+        <DeleteOutlined style={{ color: 'red' }} />
       </Space>
     )
   }
@@ -82,8 +82,7 @@ const columns = [
 const data = [
   {
     key: '1',
-    
-  
+
     PropertyName: 'Westheimer Rd. Santa Ana, ',
     InvoiceDate: '13 july 2023',
     GuestName: 'Richard Parker',
@@ -97,8 +96,7 @@ const data = [
   },
   {
     key: '2',
-    
-  
+
     PropertyName: 'Westheimer Rd. Santa Ana, ',
     InvoiceDate: '13 july 2023',
     GuestName: 'Richard Parker',
@@ -112,8 +110,7 @@ const data = [
   },
   {
     key: '3',
-    
-  
+
     PropertyName: 'Westheimer Rd. Santa Ana, ',
     InvoiceDate: '13 july 2023',
     GuestName: 'Richard Parker',
@@ -127,8 +124,7 @@ const data = [
   },
   {
     key: '4',
-    
-  
+
     PropertyName: 'Westheimer Rd. Santa Ana, ',
     InvoiceDate: '13 july 2023',
     GuestName: 'Richard Parker',
@@ -139,8 +135,7 @@ const data = [
     Amount: '₹ 3,568',
 
     InvoiceType: 'Delete'
-  },
-
+  }
 ];
 
 const Finance = () => {
@@ -226,10 +221,10 @@ const Finance = () => {
             </Space>
           </Space>
           <Space direction="horizontal" size={12} style={{ marginTop: '4REM' }}>
-          <Form.Item label="Date of" labelCol={{ span: 24 }}>
-                <DatePicker showTime onChange={onChange} onOk={onOk} />
-              </Form.Item>
-              <Form.Item label="Filter by Dates" labelCol={{ span: 24 }}>
+            <Form.Item label="Date of" labelCol={{ span: 24 }}>
+              <DatePicker showTime onChange={onChange} onOk={onOk} />
+            </Form.Item>
+            <Form.Item label="Filter by Dates" labelCol={{ span: 24 }}>
               <RangePicker
                 showTime={{
                   format: 'HH:mm'
@@ -238,7 +233,7 @@ const Finance = () => {
                 onChange={onChange}
                 onOk={onOk}
               />
-              </Form.Item>
+            </Form.Item>
             <Select showSearch placeholder="filter" />
             <Button type="primary">Show Results</Button>
             <Select
@@ -246,9 +241,13 @@ const Finance = () => {
               placeholder="filter"
               style={{ marginLeft: '5rem', width: 300 }}
             />
-             
           </Space>
-          <Table columns={columns} dataSource={data} size="middle" style={{marginTop:'3rem'}}/>
+          <Table
+            columns={columns}
+            dataSource={data}
+            size="middle"
+            style={{ marginTop: '3rem' }}
+          />
         </Container>
       </MainWrapper>
     </>
