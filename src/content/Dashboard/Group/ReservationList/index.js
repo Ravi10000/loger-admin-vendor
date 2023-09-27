@@ -218,9 +218,9 @@ const ReservationList = () => {
             >
               <Typography.Title level={2}>Reservations</Typography.Title>
               <PrinterOutlined style={{ marginLeft: '60rem' }} />
-              <Typography.Text>Print Reservation List</Typography.Text>
+              <Button type='text'>Print Reservation List</Button>
               <DownloadOutlined style={{ marginLeft: '5rem' }} />
-              <Typography.Text>Downloaded</Typography.Text>
+              <Button type='text'>Downloaded</Button>
             </Space>
             <Space direction="horizontal" size={12}>
               <Form.Item label="Date of" labelCol={{ span: 24 }}>
@@ -244,7 +244,7 @@ const ReservationList = () => {
                 style={{ marginLeft: '25rem', width: 300 }}
               />
             </Space>
-            <Table columns={columns} dataSource={data} size="middle" />
+            <Table pagination={false}columns={columns} dataSource={data} size="middle" />
           </Space>
         </Container>
       </MainWrapper>

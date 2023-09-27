@@ -92,7 +92,11 @@ const data = [
 
     Amount: '₹ 3,568',
 
-    InvoiceType: 'Delete '
+    InvoiceType: (
+      <>
+        <Button type="text">Delete</Button>
+      </>
+    )
   },
   {
     key: '2',
@@ -106,7 +110,11 @@ const data = [
 
     Amount: '₹ 3,568',
 
-    InvoiceType: 'Delete'
+    InvoiceType: (
+      <>
+        <Button type="text">Delete</Button>
+      </>
+    )
   },
   {
     key: '3',
@@ -120,7 +128,11 @@ const data = [
 
     Amount: '₹ 3,568',
 
-    InvoiceType: 'Delete'
+    InvoiceType: (
+      <>
+        <Button type="text">Delete</Button>
+      </>
+    )
   },
   {
     key: '4',
@@ -134,7 +146,11 @@ const data = [
 
     Amount: '₹ 3,568',
 
-    InvoiceType: 'Delete'
+    InvoiceType: (
+      <>
+        <Button type="text">Delete</Button>
+      </>
+    )
   }
 ];
 
@@ -208,16 +224,16 @@ const Finance = () => {
               <DownloadOutlined
                 style={{ marginLeft: '48rem', marginRight: '0.5rem' }}
               />
-              <Typography.Text>Downloaded</Typography.Text>
+            <Button type="text">Downloaded</Button>
             </Space>
 
             <Space direction="horizontal">
               <PauseOutlined style={{ marginLeft: '3rem' }} />
-              <Typography.Text>Customize</Typography.Text>
+              <Button type="text">Customize</Button>
             </Space>
             <Space direction="horizontal">
               <EyeOutlined style={{ marginLeft: '3rem' }} />
-              <Typography.Text>Customize view</Typography.Text>
+              <Button type="text">Delete</Button>
             </Space>
           </Space>
           <Space direction="horizontal" size={12} style={{ marginTop: '4REM' }}>
@@ -243,6 +259,7 @@ const Finance = () => {
             />
           </Space>
           <Table
+          pagination={false}
             columns={columns}
             dataSource={data}
             size="middle"

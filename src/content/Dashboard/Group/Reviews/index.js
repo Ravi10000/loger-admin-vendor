@@ -1,8 +1,26 @@
 import React, { useState } from 'react';
-import { Card, Col, Row, Space, Typography, Select, Rate, Divider } from 'antd';
+import {
+  Card,
+  Col,
+  Row,
+  Space,
+  Typography,
+  Select,
+  Rate,
+  Divider,
+  Button,
+  Form
+} from 'antd';
+import {
+  DeleteOutlined,
+  EditOutlined ,
+  SearchOutlined,
+  ExclamationCircleOutlined
+} from '@ant-design/icons';
 import { Container, MainWrapper } from 'src/components/Global';
 
 import { DatePicker } from 'antd';
+import FormItem from 'antd/es/form/FormItem';
 const { RangePicker } = DatePicker;
 
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
@@ -41,83 +59,101 @@ const Reviews = () => {
     <>
       <MainWrapper>
         <Container>
-          <Typography.Title level={2}>Reviews</Typography.Title>
-          <Row gutter={[32, 32]}>
-            <Space
-              direction="horizontal"
-              style={{ width: '100%' }}
-              align="flex-start"
+          <Typography.Title style={{ marginBottom: '2.5rem' }} level={2}>
+            Reviews
+          </Typography.Title>
+
+          <Space
+            direction="horizontal"
+            size="large"
+            style={{ width: '100%', alignItems: 'center' }}
+          >
+            <Form.Item
+              label={
+                <>
+                  {' '}
+                  <Typography.Title level={5}>Filter by Dates</Typography.Title>
+                </>
+              }
+              labelCol={{ span: 24 }}
             >
-              <Space direction="vertical" style={{ width: '100%' }}>
-                <Typography.Title level={3} style={{ marginTop: '2.5rem' }}>
-                  Filter by Dates{' '}
-                </Typography.Title>
-                <RangePicker
-                  value={dates || value}
-                  disabledDate={disabledDate}
-                  onCalendarChange={val => {
-                    setDates(val);
-                  }}
-                  onChange={val => {
-                    setValue(val);
-                  }}
-                  onOpenChange={onOpenChange}
-                  changeOnBlur
-                />
-              </Space>
-              <Space direction="vertical" style={{ width: '100%' }}>
-                <Typography.Title
-                  level={3}
-                  style={{ marginTop: '2.5rem', marginLeft: '2.5rem' }}
-                >
-                  Select Property
-                </Typography.Title>
-                <Space direction="horizontal" style={{ width: '100%' }}>
-                  <Select
-                    style={{ marginLeft: '4.5rem' }}
-                    showSearch
-                    placeholder="Select Property"
-                    optionFilterProp="children"
-                    onChange={onChange}
-                    onSearch={onSearch}
-                  />
-                  <button
-                    style={{
-                      backgroundColor: 'blue',
-                      color: 'white',
-                      marginLeft: '2.5rem',
-                      fontSize: '20px'
-                    }}
+              <RangePicker
+                size="large"
+                value={dates || value}
+                disabledDate={disabledDate}
+                onCalendarChange={val => {
+                  setDates(val);
+                }}
+                onChange={val => {
+                  setValue(val);
+                }}
+                onOpenChange={onOpenChange}
+                changeOnBlur
+              />
+            </Form.Item>
+
+            <Form.Item
+              label={
+                <>
+                  <Typography.Title level={5}>Select Property</Typography.Title>
+                </>
+              }
+              labelCol={{ span: 24 }}
+            >
+              <Select
+                size="large"
+                showSearch
+                placeholder="Select Property"
+                optionFilterProp="children"
+                onChange={onChange}
+                onSearch={onSearch}
+              />
+            </Form.Item>
+
+            <Button type="primary">Show Reviews</Button>
+
+            <Select
+              style={{ marginLeft: '20rem' }}
+              showSearch
+              placeholder="Search by Score Date & Comment"
+              optionFilterProp="children"
+              onChange={onChang}
+              onSearch={onSearc}
+            />
+          </Space>
+          <Row gutter={[32, 32]}>
+            <Col xs={22}>
+              <Space
+                direction="horizontal"
+                size="large"
+                style={{ width: '100%', marginTop: '2.5rem' }}
+              >
+                <Card size="large">
+                  <Space
+                    direction="vertical"
+                    style={{ width: '100%' }}
+                    align="flex-start"
                   >
-                    Show Reviews
-                  </button>
-                  <Select
-                    style={{ marginLeft: '4.5rem' }}
-                    showSearch
-                    placeholder="Search by Score Date & Comment"
-                    optionFilterProp="children"
-                    onChange={onChang}
-                    onSearch={onSearc}
-                  />
-                </Space>
-              </Space>
-            </Space>
-            <Col xs={24} xl={22} xxl={8}>
-              <Space direction="horizontal">
-                <Card>
-                  <Space direction="vertical" align="flex-start">
-                    <Space direction="horizontal" align="flex-start">
-                      <img src={'/assets/images/dashboard-1.png'} alt="" />
-                      <Space direction="vertical">
-                        <Typography.Title level={5}>
-                          Jane Cooper
-                        </Typography.Title>
-                        <Typography.Text>20 July 2023</Typography.Text>
+                    <Space
+                      direction="horizontal"
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between'
+                      }}
+                    >
+                      <Space direction="horizontal">
+                        <img src={'/assets/images/dashboard-1.png'} alt="" />
+
+                        <Space direction="vertical">
+                          <Typography.Title level={5}>
+                            Jane Cooper
+                          </Typography.Title>
+                          <Typography.Text>20 July 2023</Typography.Text>
+                        </Space>
                       </Space>
                       <Space direction="vertical" style={{ width: '100%' }}>
                         <span>
                           <Rate
-                            style={{ marginLeft: '40rem' }}
                             tooltips={desc}
                             onChange={setValu}
                             value={valu}
@@ -130,9 +166,10 @@ const Reviews = () => {
                             ''
                           )}
                         </span>
+
                         <Space
                           direction="horizontal"
-                          style={{ width: '100%', marginLeft: '43rem' }}
+                          style={{ width: '100%', marginLeft: '' }}
                         >
                           <Typography.Text>3</Typography.Text>
                           <Divider type="vertical" />
@@ -153,29 +190,45 @@ const Reviews = () => {
                 </Card>
                 <Space
                   direction="vertical"
-                  style={{ width: '100%', marginLeft: '2.5rem' }}
+                  style={{ width: '100%', marginLeft: '1.8rem' }}
                 >
-                  <button style={{ padding: '12px 16px' }}>Edit</button>
-                  <button style={{ padding: '12px 16px' }}>Delete</button>
+                  <Button icon={<EditOutlined />}>Edit</Button>
+                  <Button icon={<DeleteOutlined />}danger>Delete</Button>
                 </Space>
               </Space>
             </Col>
-            <Col xs={24} xl={22} xxl={8}>
-              <Space direction="horizontal">
-                <Card>
-                  <Space direction="vertical" align="flex-start">
-                    <Space direction="horizontal" align="flex-start">
-                      <img src={'/assets/images/dashboard-2.png'} alt="" />
-                      <Space direction="vertical">
-                        <Typography.Title level={5}>
-                          Bessie Cooper
-                        </Typography.Title>
-                        <Typography.Text>30 July 2023</Typography.Text>
+            <Col xs={22}>
+              <Space
+                direction="horizontal"
+                size="large"
+                style={{ width: '100%', marginTop: '2.5rem' }}
+              >
+                <Card size="large">
+                  <Space
+                    direction="vertical"
+                    style={{ width: '100%' }}
+                    align="flex-start"
+                  >
+                    <Space
+                      direction="horizontal"
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between'
+                      }}
+                    >
+                      <Space direction="horizontal">
+                        <img src={'/assets/images/dashboard-2.png'} alt="" />
+
+                        <Space direction="vertical">
+                          <Typography.Title level={5}>
+                            Bessie Cooper
+                          </Typography.Title>
+                          <Typography.Text>30 July 2023</Typography.Text>
+                        </Space>
                       </Space>
                       <Space direction="vertical" style={{ width: '100%' }}>
                         <span>
                           <Rate
-                            style={{ marginLeft: '40rem' }}
                             tooltips={desc}
                             onChange={setValu}
                             value={valu}
@@ -188,9 +241,10 @@ const Reviews = () => {
                             ''
                           )}
                         </span>
+
                         <Space
                           direction="horizontal"
-                          style={{ width: '100%', marginLeft: '43rem' }}
+                          style={{ width: '100%', marginLeft: '' }}
                         >
                           <Typography.Text>3</Typography.Text>
                           <Divider type="vertical" />
@@ -211,29 +265,45 @@ const Reviews = () => {
                 </Card>
                 <Space
                   direction="vertical"
-                  style={{ width: '100%', marginLeft: '2.5rem' }}
+                  style={{ width: '100%', marginLeft: '1.8rem' }}
                 >
-                  <button style={{ padding: '12px 16px' }}>Edit</button>
-                  <button style={{ padding: '12px 16px' }}>Delete</button>
+                  <Button icon={<EditOutlined />}>Edit</Button>
+                  <Button icon={<DeleteOutlined />}danger>Delete</Button>
                 </Space>
               </Space>
             </Col>
-            <Col xs={24} xl={22} xxl={8}>
-              <Space direction="horizontal">
-                <Card>
-                  <Space direction="vertical" align="flex-start">
-                    <Space direction="horizontal" align="flex-start">
-                      <img src={'/assets/images/dashboard-3.png'} alt="" />
-                      <Space direction="vertical">
-                        <Typography.Title level={5}>
-                          Ralph Edwards
-                        </Typography.Title>
-                        <Typography.Text>10 August 2023</Typography.Text>
+            <Col xs={22}>
+              <Space
+                direction="horizontal"
+                size="large"
+                style={{ width: '100%', marginTop: '2.5rem' }}
+              >
+                <Card size="large">
+                  <Space
+                    direction="vertical"
+                    style={{ width: '100%' }}
+                    align="flex-start"
+                  >
+                    <Space
+                      direction="horizontal"
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between'
+                      }}
+                    >
+                      <Space direction="horizontal">
+                        <img src={'/assets/images/dashboard-3.png'} alt="" />
+
+                        <Space direction="vertical">
+                          <Typography.Title level={5}>
+                            Ralph Edwards
+                          </Typography.Title>
+                          <Typography.Text>10 August 2023</Typography.Text>
+                        </Space>
                       </Space>
                       <Space direction="vertical" style={{ width: '100%' }}>
                         <span>
                           <Rate
-                            style={{ marginLeft: '39rem' }}
                             tooltips={desc}
                             onChange={setValu}
                             value={valu}
@@ -246,9 +316,10 @@ const Reviews = () => {
                             ''
                           )}
                         </span>
+
                         <Space
                           direction="horizontal"
-                          style={{ width: '100%', marginLeft: '43rem' }}
+                          style={{ width: '100%', marginLeft: '' }}
                         >
                           <Typography.Text>3</Typography.Text>
                           <Divider type="vertical" />
@@ -269,29 +340,45 @@ const Reviews = () => {
                 </Card>
                 <Space
                   direction="vertical"
-                  style={{ width: '100%', marginLeft: '2.5rem' }}
+                  style={{ width: '100%', marginLeft: '1.8rem' }}
                 >
-                  <button style={{ padding: '12px 16px' }}>Edit</button>
-                  <button style={{ padding: '12px 16px' }}>Delete</button>
+                  <Button icon={<EditOutlined />}>Edit</Button>
+                  <Button icon={<DeleteOutlined />}danger>Delete</Button>
                 </Space>
               </Space>
             </Col>
-            <Col xs={24} xl={22} xxl={8}>
-              <Space direction="horizontal">
-                <Card>
-                  <Space direction="vertical" align="flex-start">
-                    <Space direction="horizontal" align="flex-start">
-                      <img src={'/assets/images/dashboard-4.png'} alt="" />
-                      <Space direction="vertical">
-                        <Typography.Title level={5}>
-                          Guy Hawkins
-                        </Typography.Title>
-                        <Typography.Text>2 September 2023</Typography.Text>
+            <Col xs={22}>
+              <Space
+                direction="horizontal"
+                size="large"
+                style={{ width: '100%', marginTop: '2.5rem' }}
+              >
+                <Card size="large">
+                  <Space
+                    direction="vertical"
+                    style={{ width: '100%' }}
+                    align="flex-start"
+                  >
+                    <Space
+                      direction="horizontal"
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between'
+                      }}
+                    >
+                      <Space direction="horizontal">
+                        <img src={'/assets/images/dashboard-4.png'} alt="" />
+
+                        <Space direction="vertical">
+                          <Typography.Title level={5}>
+                            Guy Hawkins
+                          </Typography.Title>
+                          <Typography.Text>2 September 2023</Typography.Text>
+                        </Space>
                       </Space>
                       <Space direction="vertical" style={{ width: '100%' }}>
                         <span>
                           <Rate
-                            style={{ marginLeft: '40rem' }}
                             tooltips={desc}
                             onChange={setValu}
                             value={valu}
@@ -304,9 +391,10 @@ const Reviews = () => {
                             ''
                           )}
                         </span>
+
                         <Space
                           direction="horizontal"
-                          style={{ width: '100%', marginLeft: '43rem' }}
+                          style={{ width: '100%', marginLeft: '' }}
                         >
                           <Typography.Text>3</Typography.Text>
                           <Divider type="vertical" />
@@ -327,10 +415,10 @@ const Reviews = () => {
                 </Card>
                 <Space
                   direction="vertical"
-                  style={{ width: '100%', marginLeft: '2.5rem' }}
+                  style={{ width: '100%', marginLeft: '1.8rem' }}
                 >
-                  <button style={{ padding: '12px 16px' }}>Edit</button>
-                  <button style={{ padding: '12px 16px' }}>Delete</button>
+                  <Button icon={<EditOutlined />}>Edit</Button>
+                  <Button icon={<DeleteOutlined />}danger>Delete</Button>
                 </Space>
               </Space>
             </Col>

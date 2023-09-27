@@ -45,6 +45,12 @@ const items = [
     key: 'groupsFinance'
   },
   {
+    path: '/dashboard/groups/reviews',
+    label: 'Reviews',
+    icon: <StarOutlined />,
+    key: 'groupsReviews'
+  },
+  {
     path: '/dashboard/manage/home',
     icon: <HomeOutlined />,
     label: 'Home',
