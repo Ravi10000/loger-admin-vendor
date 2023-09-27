@@ -46,6 +46,14 @@ const Property = Loader(
   lazy(() => import('src/content/Dashboard/Manage/Property/Charge'))
 );
 
+const GroupPromotions = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/Promotions'))
+);
+
+const GroupNewPromotion = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/NewPromotion'))
+);
+
 const dashboardRoutes = [
   {
     path: '',
@@ -112,6 +120,19 @@ const dashboardRoutes = [
       {
         path: 'property',
         element: <Property />
+      },
+      {
+        path: 'promotions',
+        children: [
+          {
+            path: '',
+            element: <GroupPromotions />
+          },
+          {
+            path: 'new-promotion',
+            element: <GroupNewPromotion />
+          }
+        ]
       }
     ]
   }
