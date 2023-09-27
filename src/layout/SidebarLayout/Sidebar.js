@@ -15,7 +15,7 @@ const SideBar = ({ collapsed, handleCollapsed }) => {
         collapsed={collapsed}
         onCollapse={handleCollapsed}
         width={token.Layout.siderWidth}
-        collapsedWidth={token.colorBgLayout.siderCollapsedWidth}
+        collapsedWidth={token.Layout.siderCollapsedWidth}
         style={{
           position: 'fixed',
           top: token.Layout.headerHeight,

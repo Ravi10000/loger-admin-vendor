@@ -5,6 +5,7 @@ import {
   CalendarOutlined,
   DollarOutlined,
   HomeOutlined,
+  MessageOutlined,
   PieChartOutlined,
   StarOutlined,
   TagsOutlined
@@ -125,7 +126,7 @@ const items = [
   },
   {
     path: '/dashboard/manage/inbox',
-    icon: <TagsOutlined />,
+    icon: <MessageOutlined />,
     label: 'Inbox',
     key: 'manageInbox',
     children: [

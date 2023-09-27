@@ -14,9 +14,9 @@ const theme = {
     Layout: {
       headerBg: 'rgb(221, 234, 253)',
       headerHeight: 100,
-      siderWidth: 200,
-      siderCollapsedWidth: 80,
-      triggerHeight: 48
+      siderWidth: 250,
+      siderCollapsedWidth: 90,
+      triggerHeight: 50
     }
   }
 };

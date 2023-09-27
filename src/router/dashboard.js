@@ -35,8 +35,12 @@ const Finance = Loader(
 const SalesStatistics = Loader(
   lazy(() => import('src/content/Dashboard/Group/SalesStatistics'))
 );
-const ReservationDetails = Loader(
+const GroupReservationDetails = Loader(
   lazy(() => import('src/content/Dashboard/Group/ReservationDetails'))
+);
+
+const ManageReservationDetails = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/ReservationDetails'))
 );
 
 const dashboardRoutes = [
@@ -61,7 +65,16 @@ const dashboardRoutes = [
       },
       {
         path: 'reservations',
-        element: <GroupsReservation />
+        children: [
+          {
+            path: '',
+            element: <GroupsReservation />
+          },
+          {
+            path: ':reservationNo',
+            element: <GroupReservationDetails />
+          }
+        ]
       },
       {
         path: 'finance',
@@ -70,10 +83,6 @@ const dashboardRoutes = [
       {
         path: 'sales-statistics',
         element: <SalesStatistics />
-      },
-      {
-        path: 'reservation-details',
-        element: <ReservationDetails/>
       }
     ]
   },
@@ -86,7 +95,16 @@ const dashboardRoutes = [
       },
       {
         path: 'reservations',
-        element: <ManageReservations />
+        children: [
+          {
+            path: '',
+            element: <ManageReservations />
+          },
+          {
+            path: ':reservationNo',
+            element: <ManageReservationDetails />
+          }
+        ]
       }
     ]
   }
