@@ -42,6 +42,9 @@ const GroupReservationDetails = Loader(
 const ManageReservationDetails = Loader(
   lazy(() => import('src/content/Dashboard/Manage/ReservationDetails'))
 );
+const Property = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/Property/Charge'))
+);
 
 const dashboardRoutes = [
   {
@@ -105,6 +108,10 @@ const dashboardRoutes = [
             element: <ManageReservationDetails />
           }
         ]
+      },
+      {
+        path: 'property',
+        element: <Property />
       }
     ]
   }
