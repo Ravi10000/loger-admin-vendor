@@ -1,7 +1,10 @@
+import { UserOutlined } from '@ant-design/icons';
 import {
+  Avatar,
   Card,
   Col,
   Divider,
+  List,
   Row,
   Select,
   Space,
@@ -160,6 +163,21 @@ const items = [
   }
 ];
 
+const data = [
+  {
+    name: 'Pratiksha Sharma'
+  },
+  {
+    name: 'Anil Sogra'
+  },
+  {
+    name: 'Dipanshu Gupta'
+  },
+  {
+    name: 'Anil Sogra'
+  }
+];
+
 const Home = () => {
   const theme = useTheme();
   return (
@@ -306,6 +324,53 @@ const Home = () => {
                     </Row>
                   </Card>
                 </Space>
+                <Row gutter={[32, 32]}>
+                  <Col xs={24} xxl={12}>
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Typography.Title level={4} style={{ marginBottom: 0 }}>
+                        Recent Reviews
+                      </Typography.Title>
+                      <Card>
+                        <Space
+                          direction="vertical"
+                          style={{
+                            width: '100%'
+                          }}
+                        >
+                          <List
+                            bordered={false}
+                            dataSource={data}
+                            renderItem={(item, index) => (
+                              <List.Item>
+                                <List.Item.Meta
+                                  avatar={
+                                    <Avatar size={48} icon={<UserOutlined />} />
+                                  }
+                                  title={
+                                    <Typography.Title level={5}>
+                                      {item.name}
+                                    </Typography.Title>
+                                  }
+                                  description="Lorem ipsum dolor sit amet consectetur. pellentesque imperdiet euismod maecenas."
+                                />
+                                <Typography.Text>8 Jul</Typography.Text>
+                              </List.Item>
+                            )}
+                          />
+                          <Typography.Link>View All Reviews</Typography.Link>
+                        </Space>
+                      </Card>
+                    </Space>
+                  </Col>
+                  <Col xs={24} xxl={12}>
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Typography.Title level={4} style={{ marginBottom: 0 }}>
+                        Unanswered Messages
+                      </Typography.Title>
+                      <Card></Card>
+                    </Space>
+                  </Col>
+                </Row>
               </Space>
             </Col>
           </Row>
