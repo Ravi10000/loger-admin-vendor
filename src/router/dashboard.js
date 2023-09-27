@@ -35,6 +35,9 @@ const Finance = Loader(
 const SalesStatistics = Loader(
   lazy(() => import('src/content/Dashboard/Group/SalesStatistics'))
 );
+const ReservationDetails = Loader(
+  lazy(() => import('src/content/Dashboard/Group/ReservationDetails'))
+);
 
 const dashboardRoutes = [
   {
@@ -67,6 +70,10 @@ const dashboardRoutes = [
       {
         path: 'sales-statistics',
         element: <SalesStatistics />
+      },
+      {
+        path: 'reservation-details',
+        element: <ReservationDetails/>
       }
     ]
   },
