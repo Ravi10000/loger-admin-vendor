@@ -112,7 +112,7 @@ const Reservations = () => {
     <>
       <MainWrapper>
         <Container>
-          <Row gutter={[0, 48]}>
+          <Row>
             <Col xs={24}>
               <Space
                 align="center"
@@ -132,7 +132,11 @@ const Reservations = () => {
               </Space>
             </Col>
             <Col xs={24}>
-              <Space direction="vertical" style={{ width: '100%' }}>
+              <Space
+                direction="vertical"
+                size="middle"
+                style={{ width: '100%' }}
+              >
                 <Space
                   style={{ width: '100%', justifyContent: 'space-between' }}
                   align="end"
