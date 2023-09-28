@@ -11,16 +11,10 @@ import {
   Button,
   Form
 } from 'antd';
-import {
-  DeleteOutlined,
-  EditOutlined ,
-  SearchOutlined,
-  ExclamationCircleOutlined
-} from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Container, MainWrapper } from 'src/components/Global';
 
 import { DatePicker } from 'antd';
-import FormItem from 'antd/es/form/FormItem';
 const { RangePicker } = DatePicker;
 
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
@@ -193,7 +187,9 @@ const Reviews = () => {
                   style={{ width: '100%', marginLeft: '1.8rem' }}
                 >
                   <Button icon={<EditOutlined />}>Edit</Button>
-                  <Button icon={<DeleteOutlined />}danger>Delete</Button>
+                  <Button icon={<DeleteOutlined />} danger>
+                    Delete
+                  </Button>
                 </Space>
               </Space>
             </Col>
@@ -268,7 +264,9 @@ const Reviews = () => {
                   style={{ width: '100%', marginLeft: '1.8rem' }}
                 >
                   <Button icon={<EditOutlined />}>Edit</Button>
-                  <Button icon={<DeleteOutlined />}danger>Delete</Button>
+                  <Button icon={<DeleteOutlined />} danger>
+                    Delete
+                  </Button>
                 </Space>
               </Space>
             </Col>
@@ -343,7 +341,9 @@ const Reviews = () => {
                   style={{ width: '100%', marginLeft: '1.8rem' }}
                 >
                   <Button icon={<EditOutlined />}>Edit</Button>
-                  <Button icon={<DeleteOutlined />}danger>Delete</Button>
+                  <Button icon={<DeleteOutlined />} danger>
+                    Delete
+                  </Button>
                 </Space>
               </Space>
             </Col>
@@ -418,7 +418,9 @@ const Reviews = () => {
                   style={{ width: '100%', marginLeft: '1.8rem' }}
                 >
                   <Button icon={<EditOutlined />}>Edit</Button>
-                  <Button icon={<DeleteOutlined />}danger>Delete</Button>
+                  <Button icon={<DeleteOutlined />} danger>
+                    Delete
+                  </Button>
                 </Space>
               </Space>
             </Col>

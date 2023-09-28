@@ -35,8 +35,7 @@ const columns = [
     render: (_, record) => (
       <Space direction="vertical" size="small">
         <Typography.Text>104817</Typography.Text>
-
-        <a>Invoice </a>
+        <Typography.Link>Invoice </Typography.Link>
       </Space>
     )
   },
@@ -224,7 +223,7 @@ const Finance = () => {
               <DownloadOutlined
                 style={{ marginLeft: '48rem', marginRight: '0.5rem' }}
               />
-            <Button type="text">Downloaded</Button>
+              <Button type="text">Downloaded</Button>
             </Space>
 
             <Space direction="horizontal">
@@ -259,7 +258,7 @@ const Finance = () => {
             />
           </Space>
           <Table
-          pagination={false}
+            pagination={false}
             columns={columns}
             dataSource={data}
             size="middle"
