@@ -104,27 +104,27 @@ const items = [
     key: 'manageProperty',
     children: [
       {
-        path: '/dashboard/manage/general-info',
+        path: '/dashboard/manage/property/general-info',
         label: 'General Info',
         key: 'manageGeneralInfo'
       },
       {
-        path: '/dashboard/manage/charges',
+        path: '/dashboard/manage/property/charges',
         label: 'VAT/Tax/Charges',
         key: 'manageCharges'
       },
       {
-        path: '/dashboard/manage/photos',
+        path: '/dashboard/manage/property/photos',
         label: 'Photos',
         key: 'managePhotos'
       },
       {
-        path: '/dashboard/manage/policies',
+        path: '/dashboard/manage/property/policies',
         label: 'Policies',
         key: 'managePolicies'
       },
       {
-        path: '/dashboard/manage/facilities-and-services',
+        path: '/dashboard/manage/property/facilities-and-services',
         label: 'Facilities & Services',
         key: 'manageFacilitiesAndServices'
       }

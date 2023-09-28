@@ -293,7 +293,7 @@ const GroupHome = () => {
             Group Homepage
           </Typography.Title>
           <Row>
-            <Col xs={20}>
+            <Col xs={24} xl={20}>
               <Space direction="vertical" size={48} style={{ width: '100%' }}>
                 <Card>
                   <Space

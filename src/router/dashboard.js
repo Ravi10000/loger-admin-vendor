@@ -42,7 +42,7 @@ const GroupReservationDetails = Loader(
 const ManageReservationDetails = Loader(
   lazy(() => import('src/content/Dashboard/Manage/ReservationDetails'))
 );
-const Property = Loader(
+const ManageCharge = Loader(
   lazy(() => import('src/content/Dashboard/Manage/Property/Charge'))
 );
 
@@ -51,7 +51,7 @@ const GroupPromotions = Loader(
 );
 
 const GroupNewPromotion = Loader(
-  lazy(() => import('src/content/Dashboard/Manage/NewPromotion'))
+  lazy(() => import('src/content/Dashboard/Manage/Promotions/NewPromotion'))
 );
 const ManagePayment = Loader(
   lazy(() => import('src/content/Dashboard/Manage/ManagePayment'))
@@ -61,6 +61,17 @@ const ManageInvoice = Loader(
 );
 const ManageAllReservation = Loader(
   lazy(() => import('src/content/Dashboard/Manage/ManageAllReservation'))
+);
+const ManageGeneralInfo = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/Property/GeneralInfo'))
+);
+
+const ManagePolicy = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/Property/Policy'))
+);
+
+const ManageFacilityAndService = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/Property/Services'))
 );
 
 const dashboardRoutes = [
@@ -128,7 +139,28 @@ const dashboardRoutes = [
       },
       {
         path: 'property',
-        element: <Property />
+        children: [
+          {
+            path: '',
+            element: <ManageGeneralInfo />
+          },
+          {
+            path: 'charges',
+            element: <ManageCharge />
+          },
+          {
+            path: 'general-info',
+            element: <ManageGeneralInfo />
+          },
+          {
+            path: 'policies',
+            element: <ManagePolicy />
+          },
+          {
+            path: 'facilities-and-services',
+            element: <ManageFacilityAndService />
+          }
+        ]
       },
       {
         path: 'promotions',
@@ -145,21 +177,21 @@ const dashboardRoutes = [
       },
       {
         path: 'finance',
-        children:[
+        children: [
           {
-          path:'managepayment',
-          element:<ManagePayment/>
+            path: 'managepayment',
+            element: <ManagePayment />
           },
           {
-            path:'manageinvoice',
-            element:<ManageInvoice/>
+            path: 'manageinvoice',
+            element: <ManageInvoice />
           },
           {
-            path:'manageallreservation',
-            element:<ManageAllReservation/>
-          },
+            path: 'manageallreservation',
+            element: <ManageAllReservation />
+          }
         ]
-      },
+      }
     ]
   }
 ];

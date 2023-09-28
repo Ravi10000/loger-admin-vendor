@@ -1,26 +1,8 @@
-import {
-  Button,
-  Card,
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  Row,
-  Alert,
-  Select,
-  Table,
-  Divider,
-  Space,
-  Typography
-} from 'antd';
-import {
-  DownloadOutlined,
-  PrinterOutlined,
-  SearchOutlined,
-  ExclamationCircleOutlined
-} from '@ant-design/icons';
+import { Alert, Space, Table, Typography } from 'antd';
 import React from 'react';
 import { Container, MainWrapper } from 'src/components/Global';
+import { useTheme } from 'styled-components';
+
 const columns = [
   {
     title: '',
@@ -50,6 +32,7 @@ const data = [
   }
 ];
 const Property = () => {
+  const theme = useTheme();
   return (
     <>
       <MainWrapper>
@@ -57,42 +40,39 @@ const Property = () => {
           <Space direction="vertical" size={48}>
             <Alert
               message={
-                <>
-                  <Typography.Title level={5} style={{ color: 'blue' }}>
-                    Please Check Your Fees Configuration
-                  </Typography.Title>
-                </>
+                <Typography.Title
+                  level={5}
+                  style={{ color: theme.antd.colorPrimary }}
+                >
+                  Please Check Your Fees Configuration
+                </Typography.Title>
               }
               description={
                 <>
                   <Space direction="vertical">
-                    <Typography.Text>
+                    <Typography.Paragraph style={{ marginBottom: 0 }}>
                       Lorem ipsum dolor sit amet consectetur. Amet vestibulum
                       enim id diam nunc arcu tellus ornare. Sed diam
                       pellentesque sagittis nam. Tristique malesuada volutpat
                       platea ut rhoncus egestas dictum quam leo. Arcu montes
                       bibendum purus tortor.
-                    </Typography.Text>
-                    <Typography.Title level={5} style={{ color: 'blue' }}>
-                      Where You Can Reach Us
-                    </Typography.Title>
+                    </Typography.Paragraph>
+                    <Typography.Link>Where You Can Reach Us</Typography.Link>
                   </Space>
                 </>
               }
               type="info"
               showIcon
             />
-            <Typography.Title level={4}>VAT/Tax/Charges</Typography.Title>
-            <Table
-              pagination={false}
-              columns={columns}
-              dataSource={data}
-              size="large"
-            />
-            <Typography.Text>
-              (*) The Most Common Value ( VAT, City Tax, Service Charge ) Out of
-              a Total of 1223 Open Hotel ( s) in Tirath View, Haridwar
-            </Typography.Text>
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Typography.Title level={4}>VAT/Tax/Charges</Typography.Title>
+              <Table pagination={false} columns={columns} dataSource={data} />
+              <Typography.Text>
+                {
+                  '(*) The Most Common Value ( VAT, City Tax, Service Charge ) Out of a Total of 1223 Open Hotel(s) in Tirath View, Haridwar'
+                }
+              </Typography.Text>
+            </Space>
           </Space>
         </Container>
       </MainWrapper>
