@@ -53,6 +53,15 @@ const GroupPromotions = Loader(
 const GroupNewPromotion = Loader(
   lazy(() => import('src/content/Dashboard/Manage/NewPromotion'))
 );
+const ManagePayment = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/ManagePayment'))
+);
+const ManageInvoice = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/ManageInvoice'))
+);
+const ManageAllReservation = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/ManageAllReservation'))
+);
 
 const dashboardRoutes = [
   {
@@ -133,7 +142,24 @@ const dashboardRoutes = [
             element: <GroupNewPromotion />
           }
         ]
-      }
+      },
+      {
+        path: 'finance',
+        children:[
+          {
+          path:'managepayment',
+          element:<ManagePayment/>
+          },
+          {
+            path:'manageinvoice',
+            element:<ManageInvoice/>
+          },
+          {
+            path:'manageallreservation',
+            element:<ManageAllReservation/>
+          },
+        ]
+      },
     ]
   }
 ];
