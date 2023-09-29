@@ -73,6 +73,15 @@ const ManagePolicy = Loader(
 const ManageFacilityAndService = Loader(
   lazy(() => import('src/content/Dashboard/Manage/Property/Services'))
 );
+const ManageBank = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/ManageBank'))
+);
+const ManagePerformance = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/ManagePerformance'))
+);
+const Rate = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/Rate'))
+);
 
 const dashboardRoutes = [
   {
@@ -189,8 +198,31 @@ const dashboardRoutes = [
           {
             path: 'manageallreservation',
             element: <ManageAllReservation />
+          },
+          {
+            path: 'managebank',
+            element: <ManageBank/>
           }
         ]
+      },
+      {
+        path:'analytics',
+        children:[
+          {
+            path:'manageperformance',
+            element:<ManagePerformance/>
+          }
+        ]
+      },
+      {
+        path:'rate-and-availability',
+        children:[
+          {
+            path:'rate',
+            element:<Rate/>
+          }
+        ]
+
       }
     ]
   }
