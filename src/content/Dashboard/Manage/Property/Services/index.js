@@ -1,8 +1,28 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Card, Col, Input, List, Radio, Row, Space, Typography } from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  Collapse,
+  DatePicker,
+  Form,
+  Input,
+  List,
+  Radio,
+  Row,
+  Select,
+  Space,
+  Typography
+} from 'antd';
 import React from 'react';
 import { Container, MainWrapper } from 'src/components/Global';
 import { useTheme } from 'styled-components';
+
+const media = {
+  binIcon: '/assets/svg/bin.svg',
+  cableIcon: '/assets/svg/cable.svg',
+  locationAddIcon: '/assets/svg/location-add.svg'
+};
 
 const PoolAndWellness = [
   'Water Slide',
@@ -144,6 +164,38 @@ const EntertainmentAndFamilyServices = [
   "Children's Playground",
   'Babysitting/Child Services'
 ];
+
+const CleaningServices = [
+  'Dry Cleaning',
+  'Ironing Service',
+  'Laundry',
+  'Daily Housekeeping',
+  'Trouser Press'
+];
+
+const BusinessFacility = [
+  'Meeting/Banquet Facilities',
+  'Business Centre',
+  'Fax/Photocopying'
+];
+
+const Shops = ['Minimarket on Site', 'Business Centre', 'Fax/Photocopying'];
+
+const Miscellaneous = [
+  'Pet Basket',
+  'Pet Bowls',
+  'Key Access',
+  'Key Card Access',
+  'Adult Only',
+  'Allergy-Free Room'
+];
+
+const ReduceAndManageWaste = [
+  'Lorem ipsum dolor sit amet consectetur. Amet vestibulum enim id diam nunc arcu tellus ornare. Sed malesuada volutpat platea ut rhoncus egestas dictum quam leo. Arcu montes bibendum purus tortor.',
+  'Lorem ipsum dolor sit amet consectetur. Amet vestibulum enim id diam nunc arcu tellus ornare. Sed diam pellentesque malesuada volutpat platea ut rhoncus egestas dictum quam leo. Arcu montes bibendum purus tortor.'
+];
+
+const ReduceAndManageWastePlastic = ['Plastic Straws', 'Plastic Cups'];
 
 const Services = () => {
   const theme = useTheme();
@@ -529,6 +581,369 @@ const Services = () => {
                     />
                   </Card>
                 </Space>
+                <Space direction="vertical" style={{ width: '100%' }}>
+                  <Typography.Title level={4} style={{ marginBottom: 0 }}>
+                    Cleaning Services
+                  </Typography.Title>
+                  <Card>
+                    <List
+                      size="large"
+                      bordered
+                      dataSource={CleaningServices}
+                      renderItem={item => (
+                        <List.Item
+                          actions={[
+                            <Radio.Group
+                              optionType="button"
+                              buttonStyle="solid"
+                            >
+                              <Radio value="1">Yes</Radio>
+                              <Radio value="2">No</Radio>
+                            </Radio.Group>
+                          ]}
+                        >
+                          {item}
+                        </List.Item>
+                      )}
+                    />
+                  </Card>
+                </Space>
+                <Space direction="vertical" style={{ width: '100%' }}>
+                  <Typography.Title level={4} style={{ marginBottom: 0 }}>
+                    Business Facilities
+                  </Typography.Title>
+                  <Card>
+                    <List
+                      size="large"
+                      bordered
+                      dataSource={BusinessFacility}
+                      renderItem={item => (
+                        <List.Item
+                          actions={[
+                            <Radio.Group
+                              optionType="button"
+                              buttonStyle="solid"
+                            >
+                              <Radio value="1">Yes</Radio>
+                              <Radio value="2">No</Radio>
+                            </Radio.Group>
+                          ]}
+                        >
+                          {item}
+                        </List.Item>
+                      )}
+                    />
+                  </Card>
+                </Space>
+                <Space direction="vertical" style={{ width: '100%' }}>
+                  <Typography.Title level={4} style={{ marginBottom: 0 }}>
+                    Shops
+                  </Typography.Title>
+                  <Card>
+                    <List
+                      size="large"
+                      bordered
+                      dataSource={Shops}
+                      renderItem={item => (
+                        <List.Item
+                          actions={[
+                            <Radio.Group
+                              optionType="button"
+                              buttonStyle="solid"
+                            >
+                              <Radio value="1">Yes</Radio>
+                              <Radio value="2">No</Radio>
+                            </Radio.Group>
+                          ]}
+                        >
+                          {item}
+                        </List.Item>
+                      )}
+                    />
+                  </Card>
+                </Space>
+                <Space direction="vertical" style={{ width: '100%' }}>
+                  <Typography.Title level={4} style={{ marginBottom: 0 }}>
+                    Miscellaneous
+                  </Typography.Title>
+                  <Card>
+                    <List
+                      size="large"
+                      bordered
+                      dataSource={Miscellaneous}
+                      renderItem={item => (
+                        <List.Item
+                          actions={[
+                            <Radio.Group
+                              optionType="button"
+                              buttonStyle="solid"
+                            >
+                              <Radio value="1">Yes</Radio>
+                              <Radio value="2">No</Radio>
+                            </Radio.Group>
+                          ]}
+                        >
+                          {item}
+                        </List.Item>
+                      )}
+                    />
+                  </Card>
+                </Space>
+                <Space direction="vertical" style={{ width: '100%' }}>
+                  <Typography.Title level={4} style={{ marginBottom: 0 }}>
+                    Sustainability Practices
+                  </Typography.Title>
+                  <Typography.Paragraph>
+                    Lorem ipsum dolor sit amet consectetur. Amet vestibulum enim
+                    id diam nunc arcu tellus ornare. Sed diam pellentesque
+                    sagittis nam.
+                  </Typography.Paragraph>
+                  <Space
+                    direction="vertical"
+                    size="middle"
+                    style={{ width: '100%' }}
+                  >
+                    <Collapse
+                      items={[
+                        {
+                          key: '1',
+                          label: (
+                            <Space size="middle" style={{ width: '100%' }}>
+                              <img src={media.binIcon} alt="" />
+                              <Space direction="vertical" size={0}>
+                                <Typography.Title
+                                  level={5}
+                                  style={{ marginBottom: 0 }}
+                                >
+                                  Reduce and Manage Waste
+                                </Typography.Title>
+                                <Typography.Text>
+                                  Lorem ipsum dolor sit amet consectetur. Amet
+                                  vestibulum enim
+                                </Typography.Text>
+                              </Space>
+                            </Space>
+                          ),
+                          children: (
+                            <Space
+                              direction="vertical"
+                              style={{ width: '100%' }}
+                            >
+                              <Typography.Title level={5}>
+                                Have You Implemented any of These Practices to
+                                Reduce and Manage West?
+                              </Typography.Title>
+                              <List
+                                size="large"
+                                bordered
+                                dataSource={ReduceAndManageWaste}
+                                renderItem={item => (
+                                  <List.Item
+                                    actions={[
+                                      <Radio.Group
+                                        optionType="button"
+                                        buttonStyle="solid"
+                                      >
+                                        <Radio value="1">Yes</Radio>
+                                        <Radio value="2">No</Radio>
+                                      </Radio.Group>
+                                    ]}
+                                  >
+                                    {item}
+                                  </List.Item>
+                                )}
+                              />
+                            </Space>
+                          )
+                        }
+                      ]}
+                      expandIconPosition="end"
+                      defaultActiveKey={['1']}
+                    />
+                    <Collapse
+                      items={[
+                        {
+                          key: '1',
+                          label: (
+                            <Space size="middle" style={{ width: '100%' }}>
+                              <img src={media.binIcon} alt="" />
+                              <Space direction="vertical" size={0}>
+                                <Typography.Title
+                                  level={5}
+                                  style={{ marginBottom: 0 }}
+                                >
+                                  Reduce and Manage Waste - Singl-Use Plastics
+                                </Typography.Title>
+                                <Typography.Text>
+                                  Lorem ipsum dolor sit amet consectetur. Amet
+                                  vestibulum enim
+                                </Typography.Text>
+                              </Space>
+                            </Space>
+                          ),
+                          children: (
+                            <Space
+                              direction="vertical"
+                              style={{ width: '100%' }}
+                            >
+                              <Typography.Title level={5}>
+                                Do You Use any of These Single-Use Plastics at
+                                Your Property ?
+                              </Typography.Title>
+                              <List
+                                size="large"
+                                bordered
+                                dataSource={ReduceAndManageWastePlastic}
+                                renderItem={item => (
+                                  <List.Item
+                                    actions={[
+                                      <Radio.Group
+                                        optionType="button"
+                                        buttonStyle="solid"
+                                      >
+                                        <Radio value="1">Yes</Radio>
+                                        <Radio value="2">No</Radio>
+                                      </Radio.Group>
+                                    ]}
+                                  >
+                                    {item}
+                                  </List.Item>
+                                )}
+                              />
+                            </Space>
+                          )
+                        }
+                      ]}
+                      expandIconPosition="end"
+                      defaultActiveKey={['1']}
+                    />
+                    <Collapse
+                      items={[
+                        {
+                          key: '1',
+                          label: (
+                            <Space size="middle" style={{ width: '100%' }}>
+                              <img src={media.locationAddIcon} alt="" />
+                              <Space direction="vertical" size={0}>
+                                <Typography.Title
+                                  level={5}
+                                  style={{ marginBottom: 0 }}
+                                >
+                                  Promote Safety, Equity and Culture in Your
+                                  Local Community
+                                </Typography.Title>
+                                <Typography.Text>
+                                  Lorem ipsum dolor sit amet consectetur. Amet
+                                  vestibulum enim
+                                </Typography.Text>
+                              </Space>
+                            </Space>
+                          ),
+                          children: (
+                            <Space
+                              direction="vertical"
+                              style={{ width: '100%' }}
+                            >
+                              <Typography.Title level={5}>
+                                Have You Implemented any of These Practices to
+                                Reduce and Manage West ?
+                              </Typography.Title>
+                              <List
+                                size="large"
+                                bordered
+                                dataSource={ReduceAndManageWastePlastic}
+                                renderItem={item => (
+                                  <List.Item
+                                    actions={[
+                                      <Radio.Group
+                                        optionType="button"
+                                        buttonStyle="solid"
+                                      >
+                                        <Radio value="1">Yes</Radio>
+                                        <Radio value="2">No</Radio>
+                                      </Radio.Group>
+                                    ]}
+                                  >
+                                    {item}
+                                  </List.Item>
+                                )}
+                              />
+                            </Space>
+                          )
+                        }
+                      ]}
+                      expandIconPosition="end"
+                      defaultActiveKey={['1']}
+                    />
+                  </Space>
+                </Space>
+                <Space
+                  direction="vertical"
+                  size="middle"
+                  style={{ width: '100%' }}
+                >
+                  <Typography.Title level={4} style={{ marginBottom: 0 }}>
+                    Temprory Closure of Facilities
+                  </Typography.Title>
+                  <Space
+                    direction="vertical"
+                    size="middle"
+                    style={{ width: '100%' }}
+                  >
+                    <Form layout="vertical">
+                      <Row gutter={[16, 16]} align="bottom">
+                        <Col xs={24} sm={12} md={8} xl={6}>
+                          <Form.Item
+                            style={{ marginBottom: 0 }}
+                            label="Facility/Service"
+                          >
+                            <Select
+                              defaultValue="a1"
+                              placeholder="select"
+                              style={{
+                                width: '100%'
+                              }}
+                              options={[
+                                {
+                                  value: '1',
+                                  label: 'a11'
+                                }
+                              ]}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={12} md={8} xl={6}>
+                          <Form.Item style={{ marginBottom: 0 }} label="From">
+                            <DatePicker style={{ width: '100%' }} />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={12} md={8} xl={6}>
+                          <Form.Item style={{ marginBottom: 0 }} label="Until">
+                            <DatePicker style={{ width: '100%' }} />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={12} md={8} xl={6}>
+                          <Form.Item style={{ marginBottom: 0 }}>
+                            <Button type="primary" block>
+                              Add
+                            </Button>
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                    </Form>
+                    <Card>
+                      <List
+                        size="large"
+                        bordered
+                        dataSource={[]}
+                        renderItem={item => <List.Item>{item}</List.Item>}
+                      />
+                    </Card>
+                  </Space>
+                </Space>
+                <Button size="large" type="primary" block>
+                  Save
+                </Button>
               </Space>
             </Col>
           </Row>

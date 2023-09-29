@@ -347,9 +347,9 @@ const Home = () => {
                                     <Avatar size={48} icon={<UserOutlined />} />
                                   }
                                   title={
-                                    <Typography.Title level={5}>
+                                    <Typography.Text>
                                       {item.name}
-                                    </Typography.Title>
+                                    </Typography.Text>
                                   }
                                   description="Lorem ipsum dolor sit amet consectetur. pellentesque imperdiet euismod maecenas."
                                 />

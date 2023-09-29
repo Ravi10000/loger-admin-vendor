@@ -137,14 +137,14 @@ const items = [
     key: 'manageInbox',
     children: [
       {
-        path: '/dashboard/manage/reservation-message',
+        path: '/dashboard/manage/inbox/reservation-message',
         label: 'Reservation Message',
         key: 'manageReservationMessage'
       },
       {
-        path: '/dashboard/manage/Guests-faq',
+        path: '/dashboard/manage/inbox/guests-question-answer',
         label: 'Guests Q&A',
-        key: 'manageGuestsFAQ'
+        key: 'manageGuestsQ&A'
       }
     ]
   },

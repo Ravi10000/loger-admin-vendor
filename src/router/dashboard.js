@@ -79,8 +79,16 @@ const ManageBank = Loader(
 const ManagePerformance = Loader(
   lazy(() => import('src/content/Dashboard/Manage/ManagePerformance'))
 );
-const Rate = Loader(
+const ManageRatePlan = Loader(
   lazy(() => import('src/content/Dashboard/Manage/Rate'))
+);
+
+const ManageReservationMessage = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/Indox/ReservationMessage'))
+);
+
+const ManageGuestsQA = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/Indox/GuestQA'))
 );
 
 const dashboardRoutes = [
@@ -188,41 +196,57 @@ const dashboardRoutes = [
         path: 'finance',
         children: [
           {
-            path: 'managepayment',
+            path: 'manage-payment',
             element: <ManagePayment />
           },
           {
-            path: 'manageinvoice',
+            path: 'manage-invoice',
             element: <ManageInvoice />
           },
           {
-            path: 'manageallreservation',
+            path: 'manage-all-reservation',
             element: <ManageAllReservation />
           },
           {
-            path: 'managebank',
-            element: <ManageBank/>
+            path: 'manage-bank',
+            element: <ManageBank />
           }
         ]
       },
       {
-        path:'analytics',
-        children:[
+        path: 'analytics',
+        children: [
           {
-            path:'manageperformance',
-            element:<ManagePerformance/>
+            path: 'manage-performance',
+            element: <ManagePerformance />
           }
         ]
       },
       {
-        path:'rate-and-availability',
-        children:[
+        path: 'rate-and-availability',
+        children: [
           {
-            path:'rate',
-            element:<Rate/>
+            path: 'rate-plan',
+            element: <ManageRatePlan />
           }
         ]
-
+      },
+      {
+        path: 'inbox',
+        children: [
+          {
+            path: '',
+            element: <ManageReservationMessage />
+          },
+          {
+            path: 'reservation-message',
+            element: <ManageReservationMessage />
+          },
+          {
+            path: 'guests-question-answer',
+            element: <ManageGuestsQA />
+          }
+        ]
       }
     ]
   }
