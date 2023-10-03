@@ -82,6 +82,18 @@ const ManagePerformance = Loader(
 const ManageRatePlan = Loader(
   lazy(() => import('src/content/Dashboard/Manage/Rate'))
 );
+const ManageNewRatePlan = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/ManageNewRatePlan'))
+);
+const ManageSyncCalender = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/ManageSyncCalender'))
+);
+const ManageConnectionCalender = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/ManageConnectionCalender'))
+);
+const ManagePrice = Loader(
+  lazy(() => import('src/content/Dashboard/Manage/ManagePrice'))
+);
 
 const ManageReservationMessage = Loader(
   lazy(() => import('src/content/Dashboard/Manage/Indox/ReservationMessage'))
@@ -228,6 +240,22 @@ const dashboardRoutes = [
           {
             path: 'rate-plan',
             element: <ManageRatePlan />
+          },
+          {
+            path:'new-rate-plan',
+            element:<ManageNewRatePlan/>
+          },
+          {
+            path:'sync-calender',
+            element:<ManageSyncCalender/>
+          },
+          {
+            path: 'connection-calender',
+            element:<ManageConnectionCalender/>
+          },
+          {
+            path:'price',
+            element:<ManagePrice/>
           }
         ]
       },

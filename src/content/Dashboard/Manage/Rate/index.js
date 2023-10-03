@@ -306,7 +306,7 @@ const options = [
   }
 ];
 
-const ManageBank = () => {
+const ManageRatePlan = () => {
   const [value3, setValue3] = useState('Apple');
   const onChange3 = ({ target: { value } }) => {
     console.log('radio3 checked', value);
@@ -391,4 +391,4 @@ const ManageBank = () => {
   );
 };
 
-export default ManageBank;
+export default ManageRatePlan;
