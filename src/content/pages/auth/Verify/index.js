@@ -52,12 +52,14 @@ const Verify = () => {
             Verify Your Email Address
           </Typography.Title>
           <Typography.Paragraph style={{ marginBottom: '2rem' }}>
-            Thanks for signup with us. Click on the button below to verify your
-            email address.
+            Thanks for signing up with us.<br/> An Email with verification link is sent
+            to your provided email address.
+            {/* Click on the button below to verify your
+            email address. */}
           </Typography.Paragraph>
-          <Button size="large" type="primary" block>
+          {/* <Button size="large" type="primary" block>
             Verify your email
-          </Button>
+          </Button> */}
         </Space>
       </Container>
     </ContentWrapper>

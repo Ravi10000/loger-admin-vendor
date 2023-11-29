@@ -110,6 +110,7 @@ const dashboardRoutes = [
   },
   {
     path: 'groups',
+    // element: <Navigate to="/dashboard/groups/groups-home" replace />,
     children: [
       {
         path: 'groups-home',
@@ -242,20 +243,20 @@ const dashboardRoutes = [
             element: <ManageRatePlan />
           },
           {
-            path:'new-rate-plan',
-            element:<ManageNewRatePlan/>
+            path: 'new-rate-plan',
+            element: <ManageNewRatePlan />
           },
           {
-            path:'sync-calender',
-            element:<ManageSyncCalender/>
+            path: 'sync-calender',
+            element: <ManageSyncCalender />
           },
           {
             path: 'connection-calender',
-            element:<ManageConnectionCalender/>
+            element: <ManageConnectionCalender />
           },
           {
-            path:'price',
-            element:<ManagePrice/>
+            path: 'price',
+            element: <ManagePrice />
           }
         ]
       },

@@ -2,6 +2,7 @@ import { QuestionCircleOutlined, DownOutlined } from '@ant-design/icons';
 import { Avatar, Button, Dropdown, Layout, Space, Typography } from 'antd';
 import React from 'react';
 import { styled } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const flagIcon = {
   deFlag: 'http://purecatamphetamine.github.io/country-flag-icons/3x2/DE.svg',
@@ -43,6 +44,7 @@ const LangSwitcher = styled(Button)`
 `;
 
 const Header = () => {
+  const navigate = useNavigate();
   return (
     <>
       <DefaultHeader
@@ -66,8 +68,33 @@ const Header = () => {
               justifyContent: 'space-between'
             }}
           >
-            <img src={media.logo} alt="" />
+            <img
+              src={media.logo}
+              alt=""
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                navigate('/dashboard/groups/groups-home');
+              }}
+            />
             <Space size="large">
+              <Button
+                ghost
+                type="primary"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  fontSize: '1rem',
+                  padding: '25px 25px',
+                  borderRadius: '10px',
+                  color: '#000',
+                  fontWeight: 600
+                }}
+                onClick={() => {
+                  navigate('/apartment');
+                }}
+              >
+                Add a new property
+              </Button>
               <Dropdown
                 menu={{
                   items: [

@@ -5,6 +5,8 @@ import hotelRoutes from './hotel';
 import BaseLayout from 'src/layout/BaseLayout';
 import SideBarLayout from 'src/layout/SidebarLayout';
 import dashboardRoutes from './dashboard';
+import { useUserStore } from 'src/store/user';
+import WithAuth from 'src/components/with-auth';
 
 const router = [
   {

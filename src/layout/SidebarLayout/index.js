@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from 'src/components/Header';
 import SideBar from './Sidebar';
+import WithAuth from 'src/components/with-auth';
 
 const { Content, Footer } = Layout;
 
@@ -15,7 +16,7 @@ const SideBarLayout = () => {
   }, []);
 
   return (
-    <>
+    <WithAuth redirectTo={'/auth/login'}>
       <Layout>
         <Header />
         <Layout>
@@ -33,7 +34,7 @@ const SideBarLayout = () => {
           </Content>
         </Layout>
       </Layout>
-    </>
+    </WithAuth>
   );
 };
 

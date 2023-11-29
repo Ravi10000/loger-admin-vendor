@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import WithNoAuth from 'src/components/with-no-auth';
 
 const Loader = Component => props =>
   (
@@ -26,19 +27,35 @@ const authRoutes = [
   },
   {
     path: 'login',
-    element: <Login />
+    element: (
+      <WithNoAuth redirectTo={'/dashboard/groups/groups-home'}>
+        <Login />
+      </WithNoAuth>
+    )
   },
   {
     path: 'forgot-password',
-    element: <ForgotPassword />
+    element: (
+      <WithNoAuth redirectTo={'/dashboard/groups/groups-home'}>
+        <ForgotPassword />
+      </WithNoAuth>
+    )
   },
   {
     path: 'registration',
-    element: <Registration />
+    element: (
+      <WithNoAuth redirectTo={'/dashboard/groups/groups-home'}>
+        <Registration />
+      </WithNoAuth>
+    )
   },
   {
     path: 'verify',
-    element: <Verify />
+    element: (
+      <WithNoAuth redirectTo={'/dashboard/groups/groups-home'}>
+        <Verify />
+      </WithNoAuth>
+    )
   }
 ];
 

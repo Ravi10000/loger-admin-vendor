@@ -1,6 +1,7 @@
 import { Button, Card, Col, Form, Input, Row, Space, Typography } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 
 import {
   ArrowLeftOutlined,
@@ -9,9 +10,19 @@ import {
   CloseOutlined
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
+import api from 'src/api';
 
 const Place = () => {
   const navigate = useNavigate();
+
+  const apartmentMutation = useMutation({
+    mutationFn: async () => {
+      const res = await api.post('/properties', {
+        propertyType: 'apartment',
+        propertyName: 'Test'
+      });
+    }
+  });
 
   return (
     <>
@@ -24,7 +35,12 @@ const Place = () => {
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
                 <Form layout="vertical">
-                  <Form.Item label="Property Name">
+                  <Form.Item
+                    label="Property Name"
+                    rules={[
+                      { required: true, message: 'Property name required' }
+                    ]}
+                  >
                     <Input size="large" />
                   </Form.Item>
                   <CardBottom direction="horizontal">
@@ -47,9 +63,9 @@ const Place = () => {
                       size="large"
                       type="primary"
                       block
-                      onClick={() => {
-                        navigate('/apartment/property');
-                      }}
+                      // onClick={() => {
+                      //   navigate('/apartment/property');
+                      // }}
                     >
                       Continue
                     </Button>
