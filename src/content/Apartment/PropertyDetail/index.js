@@ -6,12 +6,13 @@ import {
   Radio,
   Row,
   Space,
-  Typography
+  Typography,
+  Form
 } from 'antd';
 import React, { useState } from 'react';
 import { styled } from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import {
   ArrowLeftOutlined,
   MinusOutlined,
@@ -20,6 +21,10 @@ import {
 } from '@ant-design/icons';
 import { Container, MainWrapper, CardBottom } from 'src/components/Global';
 
+import { updateApartment } from 'src/api/property.req';
+import { useMutation } from '@tanstack/react-query';
+import onError from 'src/utils/onError';
+
 const ControlButton = styled(Button)`
   display: inline-flex;
   align-items: center;
@@ -27,19 +32,35 @@ const ControlButton = styled(Button)`
 `;
 
 const PropertyDetail = () => {
+  const { propertyId } = useParams();
   const navigate = useNavigate();
+  const [childrenAllowed, setChildrenAllowed] = useState(true);
+  const [cribOffered, setCribOffered] = useState(true);
+  const [maxGuests, setMaxGuests] = useState(1);
+  const [bathroomsCount, setBathroomsCount] = useState(1);
 
-  const [allowChild, setAllowChild] = useState(1);
-  const [allowCribs, setAllowCribs] = useState(1);
-  const [numberOfGuest, setNumberOfGuest] = useState(0);
-  const [numberOfBathroom, setNumberOfBathroom] = useState(0);
+  const { status, mutate, data } = useMutation({
+    mutationFn: async data => {
+      data = { ...data, childrenAllowed, cribOffered, maxGuests, propertyId };
+      console.log({ data });
+      if (typeof maxGuests !== 'number') {
+        toast.error('invalid max guests value');
+        return;
+      }
+      const res = await updateApartment(data);
+      console.log({ res });
+      navigate(`/apartment/${propertyId}/breakfast-detail`);
+    },
+    onError: (...props) => onError(...props, 'Something Went Wrong')
+  });
 
   const handleAllowChild = e => {
-    setAllowChild(e.target.value);
+    console.log({ e });
+    setChildrenAllowed(e.target.value);
   };
 
   const handleAllowCribs = e => {
-    setAllowCribs(e.target.value);
+    setCribOffered(e.target.value);
   };
 
   return (
@@ -51,12 +72,179 @@ const PropertyDetail = () => {
           </Typography.Title>
           <Row>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
-              <Space
-                direction="vertical"
-                size="large"
-                style={{ width: '100%' }}
-              >
-                <Card>
+              <Form onFinish={mutate} initialValues={{ apartmentSize: 100 }}>
+                <Space
+                  direction="vertical"
+                  size="large"
+                  style={{ width: '100%' }}
+                >
+                  <Card>
+                    <Space
+                      direction="vertical"
+                      size="middle"
+                      style={{ width: '100%' }}
+                    >
+                      <Space direction="vertical" style={{ width: '100%' }}>
+                        <Typography.Title level={5}>
+                          How many guests can stay ?
+                        </Typography.Title>
+                        <Space.Compact>
+                          <ControlButton
+                            icon={
+                              <MinusOutlined style={{ fontSize: '0.8rem' }} />
+                            }
+                            onClick={() => {
+                              if (maxGuests > 1) setMaxGuests(prev => --prev);
+                            }}
+                          />
+                          <InputNumber
+                            min={0}
+                            value={maxGuests}
+                            controls={false}
+                            style={{
+                              width: '3rem',
+                              textAlign: 'center'
+                            }}
+                            onChange={setMaxGuests}
+                          />
+                          <ControlButton
+                            icon={
+                              <PlusOutlined style={{ fontSize: '0.8rem' }} />
+                            }
+                            onClick={() => {
+                              setMaxGuests(prev => ++prev);
+                            }}
+                          />
+                        </Space.Compact>
+                      </Space>
+                      <Space direction="vertical" style={{ width: '100%' }}>
+                        <Typography.Title level={5}>
+                          How many bathrooms are there ?
+                        </Typography.Title>
+                        <Space.Compact>
+                          <ControlButton
+                            icon={
+                              <MinusOutlined style={{ fontSize: '0.8rem' }} />
+                            }
+                            onClick={() => setBathroomsCount(prev => --prev)}
+                          />
+                          <InputNumber
+                            onChange={setBathroomsCount}
+                            min={0}
+                            value={bathroomsCount}
+                            controls={false}
+                            style={{ width: '3rem', textAlign: 'center' }}
+                          />
+                          <ControlButton
+                            icon={
+                              <PlusOutlined style={{ fontSize: '0.8rem' }} />
+                            }
+                            onClick={() => setBathroomsCount(prev => ++prev)}
+                          />
+                        </Space.Compact>
+                      </Space>
+                    </Space>
+                  </Card>
+                  <Card>
+                    <Space
+                      direction="vertical"
+                      size="large"
+                      style={{ width: '100%' }}
+                    >
+                      <Space direction="vertical" style={{ width: '100%' }}>
+                        <Typography.Title level={5}>
+                          Do you allow children?
+                        </Typography.Title>
+                        <Radio.Group
+                          onChange={handleAllowChild}
+                          value={childrenAllowed}
+                        >
+                          <Radio value={true}>Yes</Radio>
+                          <Radio value={false}>No</Radio>
+                        </Radio.Group>
+                      </Space>
+                      <Space direction="vertical" style={{ width: '100%' }}>
+                        <Typography.Title level={5}>
+                          Do you offer cribs?
+                        </Typography.Title>
+                        <Typography.Paragraph>
+                          Cribs sleep most infants 0-3 years old and are
+                          available to guests on request.
+                        </Typography.Paragraph>
+                        <Radio.Group
+                          onChange={handleAllowCribs}
+                          value={cribOffered}
+                        >
+                          <Radio value={true}>Yes</Radio>
+                          <Radio value={false}>No</Radio>
+                        </Radio.Group>
+                      </Space>
+                    </Space>
+                  </Card>
+                  <Card>
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Typography.Title level={5}>
+                        How big is this apartment?
+                      </Typography.Title>
+                      <Typography.Paragraph>
+                        Apartment size - optional
+                      </Typography.Paragraph>
+                      <Form.Item
+                        name="apartmentSize"
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Please mention apartment size'
+                          }
+                        ]}
+                      >
+                        <InputNumber size="large" addonAfter="sq" />
+                      </Form.Item>
+                    </Space>
+                  </Card>
+
+                  <CardBottom direction="horizontal">
+                    <Button
+                      size="large"
+                      type="primary"
+                      ghost
+                      icon={<ArrowLeftOutlined />}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center'
+                      }}
+                      onClick={() => {
+                        navigate('/apartment/location');
+                      }}
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      size="large"
+                      type="primary"
+                      block
+                      htmlType="submit"
+                      // onClick={() => {
+                      //   navigate('/apartment/breakfast-detail');
+                      // }}
+                    >
+                      Continue
+                    </Button>
+                  </CardBottom>
+                </Space>
+              </Form>
+            </Col>
+          </Row>
+        </Container>
+      </MainWrapper>
+    </>
+  );
+};
+
+export default PropertyDetail;
+
+{
+  /* <Card>
                   <Space
                     direction="vertical"
                     size="middle"
@@ -99,148 +287,5 @@ const PropertyDetail = () => {
                       Add Bedroom
                     </Button>
                   </Space>
-                </Card>
-                <Card>
-                  <Space
-                    direction="vertical"
-                    size="large"
-                    style={{ width: '100%' }}
-                  >
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      <Typography.Title level={5}>
-                        Do you allow children?
-                      </Typography.Title>
-                      <Radio.Group
-                        onChange={handleAllowChild}
-                        value={allowChild}
-                      >
-                        <Radio value={1}>Yes</Radio>
-                        <Radio value={2}>No</Radio>
-                      </Radio.Group>
-                    </Space>
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      <Typography.Title level={5}>
-                        Do you offer cribs?
-                      </Typography.Title>
-                      <Typography.Paragraph>
-                        Cribs sleep most infants 0-3 years old and are available
-                        to guests on request.
-                      </Typography.Paragraph>
-                      <Radio.Group
-                        onChange={handleAllowCribs}
-                        value={allowCribs}
-                      >
-                        <Radio value={1}>Yes</Radio>
-                        <Radio value={2}>No</Radio>
-                      </Radio.Group>
-                    </Space>
-                  </Space>
-                </Card>
-                <Card>
-                  <Space direction="vertical" style={{ width: '100%' }}>
-                    <Typography.Title level={5}>
-                      How big is this apartment?
-                    </Typography.Title>
-                    <Typography.Paragraph>
-                      Apartment size - optional
-                    </Typography.Paragraph>
-                    <InputNumber
-                      size="large"
-                      addonAfter="sq"
-                      defaultValue={100}
-                    />
-                  </Space>
-                </Card>
-                <Card>
-                  <Space
-                    direction="vertical"
-                    size="middle"
-                    style={{ width: '100%' }}
-                  >
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      <Typography.Title level={5}>
-                        How many guests can stay ?
-                      </Typography.Title>
-                      <Space.Compact>
-                        <ControlButton
-                          icon={
-                            <MinusOutlined style={{ fontSize: '0.8rem' }} />
-                          }
-                          onClick={() => setNumberOfGuest(prev => --prev)}
-                        />
-                        <InputNumber
-                          onChange={setNumberOfGuest}
-                          min={0}
-                          value={numberOfGuest}
-                          controls={false}
-                          style={{ width: '3rem', textAlign: 'center' }}
-                        />
-                        <ControlButton
-                          icon={<PlusOutlined style={{ fontSize: '0.8rem' }} />}
-                          onClick={() => setNumberOfGuest(prev => ++prev)}
-                        />
-                      </Space.Compact>
-                    </Space>
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      <Typography.Title level={5}>
-                        How many bathrooms are there ?
-                      </Typography.Title>
-                      <Space.Compact>
-                        <ControlButton
-                          icon={
-                            <MinusOutlined style={{ fontSize: '0.8rem' }} />
-                          }
-                          onClick={() => setNumberOfBathroom(prev => --prev)}
-                        />
-                        <InputNumber
-                          onChange={setNumberOfBathroom}
-                          min={0}
-                          value={numberOfBathroom}
-                          controls={false}
-                          style={{ width: '3rem', textAlign: 'center' }}
-                        />
-                        <ControlButton
-                          icon={<PlusOutlined style={{ fontSize: '0.8rem' }} />}
-                          onClick={() => setNumberOfBathroom(prev => ++prev)}
-                        />
-                      </Space.Compact>
-                    </Space>
-                  </Space>
-                </Card>
-                <CardBottom direction="horizontal">
-                  <Button
-                    size="large"
-                    type="primary"
-                    ghost
-                    icon={<ArrowLeftOutlined />}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center'
-                    }}
-                    onClick={() => {
-                      navigate('/apartment/location');
-                    }}
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    size="large"
-                    type="primary"
-                    block
-                    onClick={() => {
-                      navigate('/apartment/breakfast-detail');
-                    }}
-                  >
-                    Continue
-                  </Button>
-                </CardBottom>
-              </Space>
-            </Col>
-          </Row>
-        </Container>
-      </MainWrapper>
-    </>
-  );
-};
-
-export default PropertyDetail;
+                </Card> */
+}

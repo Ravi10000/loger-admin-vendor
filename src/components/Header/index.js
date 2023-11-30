@@ -73,7 +73,7 @@ const Header = () => {
               alt=""
               style={{ cursor: 'pointer' }}
               onClick={() => {
-                navigate('/dashboard/groups/groups-home');
+                navigate('/property/new');
               }}
             />
             <Space size="large">
@@ -90,7 +90,7 @@ const Header = () => {
                   fontWeight: 600
                 }}
                 onClick={() => {
-                  navigate('/apartment');
+                  navigate('/property/new');
                 }}
               >
                 Add a new property

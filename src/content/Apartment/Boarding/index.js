@@ -1,5 +1,5 @@
 import { Button, Card, Col, Divider, Row, Space, Typography } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -15,6 +15,8 @@ const media = {
 
 const Boarding = () => {
   const navigate = useNavigate();
+  const [selected, setSelected] = useState(null);
+  console.log({ selected });
 
   return (
     <>
@@ -31,11 +33,36 @@ const Boarding = () => {
                   size="middle"
                   style={{ width: '100%' }}
                 >
-                  <CheckboxLabel>
+                  <CheckboxLabel
+                    style={{
+                      outline: selected === 'one' ? '1px solid #0868f8' : 'none'
+                    }}
+                    checked={selected === 'one'}
+                    onChange={e => {
+                      if (e.target.checked) {
+                        setSelected('one');
+                      } else {
+                        setSelected(null);
+                      }
+                    }}
+                  >
                     <img src={media.checkIcon} alt="" />
                     <span>One Apartment</span>
                   </CheckboxLabel>
-                  <CheckboxLabel>
+                  <CheckboxLabel
+                    style={{
+                      outline:
+                        selected === 'many' ? '1px solid #0868f8' : 'none'
+                    }}
+                    checked={selected === 'many'}
+                    onChange={e => {
+                      if (e.target.checked) {
+                        setSelected('many');
+                      } else {
+                        setSelected(null);
+                      }
+                    }}
+                  >
                     <img src={media.checkIcon} alt="" />
                     <span>Multiple Apartment</span>
                   </CheckboxLabel>

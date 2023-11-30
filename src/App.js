@@ -13,7 +13,13 @@ const App = () => {
   // const user = useUserStore(state => state.user);
   return (
     <>
-      <Toaster />
+      <Toaster
+        toastOptions={{
+          style: {
+            fontFamily: 'Montserrat'
+          }
+        }}
+      />
       <ConfigProvider theme={theme}>
         <AppThemeProvider>
           <AppWrapper>{content}</AppWrapper>

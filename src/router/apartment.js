@@ -38,10 +38,10 @@ const Complete = Loader(lazy(() => import('src/content/Apartment/Complete')));
 const Payment = Loader(lazy(() => import('src/content/Apartment/Payment')));
 
 const apartmentRoutes = [
-  {
-    path: '',
-    element: <MainPage />
-  },
+  // {
+  //   path: '',
+  //   element: <MainPage />
+  // },
   {
     path: 'boarding',
     element: <Boarding />

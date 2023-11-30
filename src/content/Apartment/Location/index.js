@@ -1,16 +1,35 @@
 import { Button, Card, Col, Row, Space, Typography } from 'antd';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { ArrowLeftOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
-
+import { useMutation } from '@tanstack/react-query';
+import { updateProperty } from 'src/api/property.req';
+import onError from 'src/utils/onError';
 const media = {
   mapImg: '/assets/images/map-img.png'
 };
 
 const Location = () => {
+  const { propertyId } = useParams();
   const navigate = useNavigate();
+  const { status, mutate, data } = useMutation({
+    mutationFn: async () => {
+      const data = {
+        propertyId,
+        geoLocation: {
+          lat: 1232,
+          lng: 123
+        }
+      };
+      console.log({ data });
+      const res = await updateProperty(data);
+      console.log({ res });
+      navigate(`/apartment/${propertyId}/property-detail`);
+    },
+    onError: (...props) => onError(...props, 'Something Went Wrong')
+  });
 
   return (
     <>
@@ -62,9 +81,10 @@ const Location = () => {
                       size="large"
                       type="primary"
                       block
-                      onClick={() => {
-                        navigate('/apartment/property-detail');
-                      }}
+                      onClick={mutate}
+                      // onClick={() => {
+                      //   navigate('/apartment/property-detail');
+                      // }}
                     >
                       Continue
                     </Button>

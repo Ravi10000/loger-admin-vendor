@@ -28,33 +28,33 @@ const authRoutes = [
   {
     path: 'login',
     element: (
-      <WithNoAuth redirectTo={'/dashboard/groups/groups-home'}>
+      // <WithNoAuth redirectTo={'/property/new'}>
         <Login />
-      </WithNoAuth>
+      // </WithNoAuth>
     )
   },
   {
     path: 'forgot-password',
     element: (
-      <WithNoAuth redirectTo={'/dashboard/groups/groups-home'}>
+      // <WithNoAuth redirectTo={'/property/new'}>
         <ForgotPassword />
-      </WithNoAuth>
+      // </WithNoAuth>
     )
   },
   {
     path: 'registration',
     element: (
-      <WithNoAuth redirectTo={'/dashboard/groups/groups-home'}>
+      // <WithNoAuth redirectTo={'/property/new'}>
         <Registration />
-      </WithNoAuth>
+      // </WithNoAuth>
     )
   },
   {
     path: 'verify',
     element: (
-      <WithNoAuth redirectTo={'/dashboard/groups/groups-home'}>
+      // <WithNoAuth redirectTo={'/property/new'}>
         <Verify />
-      </WithNoAuth>
+      // </WithNoAuth>
     )
   }
 ];

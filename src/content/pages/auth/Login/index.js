@@ -66,8 +66,8 @@ const Login = () => {
     mutationFn: async data => {
       const response = await api.post('/vendor/auth/login', data);
       console.log({ response });
-      if (response?.data?.message !== 'logged in successfully') {
-        toast.success(response?.data?.message || 'Something went wrong');
+      if (response?.data?.message == 'verification link sent to email') {
+        // toast.success(response?.data?.message || 'Something went wrong');
         return navigate('/auth/verify');
       }
       setUser(response?.data?.user);
@@ -76,7 +76,7 @@ const Login = () => {
         'Authorization'
       ] = `Bearer ${response?.data?.accessToken}`;
       toast.success('Login Successfull');
-      navigate('/dashboard/groups/groups-home');
+      navigate('/property/new');
     },
     onError: err => {
       console.log({ err });

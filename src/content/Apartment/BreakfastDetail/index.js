@@ -1,10 +1,14 @@
 import { Button, Card, Col, Radio, Row, Space, Typography, Tag } from 'antd';
 import React, { useState } from 'react';
 import { styled } from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Container, MainWrapper, CardBottom } from 'src/components/Global';
+import { useMutation } from '@tanstack/react-query';
+import onError from 'src/utils/onError';
+import { updateProperty } from 'src/api/property.req';
+import { toast } from 'react-hot-toast';
 
 const CheckableTag = styled(Tag.CheckableTag)`
   font-size: 1rem;
@@ -33,14 +37,44 @@ const tagsData = [
 
 const BreakfastDetail = () => {
   const navigate = useNavigate();
-  const [selectedTags, setSelectedTags] = useState([]);
+  const { propertyId } = useParams();
+  const [typesOfBreakfast, setTypesOfBreakfast] = useState([]);
+  const [breakfastServed, setBreakfastServed] = useState(null);
+  const [breakfastIncluded, setBreakfastIncluded] = useState(null);
 
   const handleTagChange = (tag, checked) => {
     const nextSelectedTags = checked
-      ? [...selectedTags, tag]
-      : selectedTags.filter(t => t !== tag);
-    setSelectedTags(nextSelectedTags);
+      ? [...typesOfBreakfast, tag]
+      : typesOfBreakfast.filter(t => t !== tag);
+    setTypesOfBreakfast(nextSelectedTags);
   };
+
+  const { status, mutate, data } = useMutation({
+    mutationFn: async () => {
+      const data = {
+        propertyId,
+        ...(breakfastIncluded && { breakfastIncluded }),
+        ...(breakfastServed && { breakfastServed }),
+        ...(typesOfBreakfast && { typesOfBreakfast })
+      };
+      if (breakfastServed === null) {
+        toast.error('please select if breakfast is served or not');
+        return;
+      }
+      if (breakfastServed && breakfastIncluded === null) {
+        toast.error('please select if breakfast is included or not');
+        return;
+      }
+      if (breakfastServed && !typesOfBreakfast?.length) {
+        toast.error('Please select types of breakfast provided');
+        return;
+      }
+      const res = await updateProperty(data);
+      console.log({ res });
+      navigate(`/apartment/${propertyId}/parking`);
+    },
+    onError: (...props) => onError(...props, 'Something Went Wrong')
+  });
 
   return (
     <>
@@ -62,11 +96,11 @@ const BreakfastDetail = () => {
                       Do You Serve Guests Breakfast?
                     </Typography.Title>
                     <Radio.Group
-                    // onChange={handleAllowChild}
-                    // value={allowChild}
+                      onChange={e => setBreakfastServed(e.target.value)}
+                      value={breakfastServed}
                     >
-                      <Radio value={1}>Yes</Radio>
-                      <Radio value={2}>No</Radio>
+                      <Radio value={true}>Yes</Radio>
+                      <Radio value={false}>No</Radio>
                     </Radio.Group>
                   </Space>
                   <Space direction="vertical" style={{ width: '100%' }}>
@@ -74,11 +108,11 @@ const BreakfastDetail = () => {
                       Is Breakfast Included in the Price Guests Pay?
                     </Typography.Title>
                     <Radio.Group
-                    // onChange={handleAllowChild}
-                    // value={allowChild}
+                      onChange={e => setBreakfastIncluded(e.target.value)}
+                      value={breakfastIncluded}
                     >
-                      <Radio value={1}>Yes</Radio>
-                      <Radio value={2}>No</Radio>
+                      <Radio value={true}>Yes</Radio>
+                      <Radio value={false}>No</Radio>
                     </Radio.Group>
                   </Space>
                   <Space direction="vertical" style={{ width: '100%' }}>
@@ -89,9 +123,9 @@ const BreakfastDetail = () => {
                       <Space size={[0, 8]} wrap>
                         {tagsData.map(tag => (
                           <CheckableTag
-                            bordered
+                            // bordered
                             key={tag}
-                            checked={selectedTags.includes(tag)}
+                            checked={typesOfBreakfast.includes(tag)}
                             onChange={checked => handleTagChange(tag, checked)}
                           >
                             {tag}
@@ -111,7 +145,7 @@ const BreakfastDetail = () => {
                         alignItems: 'center'
                       }}
                       onClick={() => {
-                        navigate('/apartment/property-detail');
+                        navigate(-1);
                       }}
                     >
                       Back
@@ -120,9 +154,10 @@ const BreakfastDetail = () => {
                       size="large"
                       type="primary"
                       block
-                      onClick={() => {
-                        navigate('/apartment/parking');
-                      }}
+                      onClick={mutate}
+                      // onClick={() => {
+                      //   navigate('/apartment/parking');
+                      // }}
                     >
                       Continue
                     </Button>

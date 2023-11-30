@@ -2,7 +2,7 @@ import { Button, Card, Col, Form, Input, Row, Space, Typography } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-
+import { toast } from 'react-hot-toast';
 import {
   ArrowLeftOutlined,
   LikeOutlined,
@@ -11,19 +11,24 @@ import {
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import api from 'src/api';
+import onError from 'src/utils/onError';
 
 const Place = () => {
   const navigate = useNavigate();
 
   const apartmentMutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async data => {
       const res = await api.post('/properties', {
         propertyType: 'apartment',
-        propertyName: 'Test'
+        propertyName: data?.propertyName
       });
-    }
+      // console.log({ res });
+      navigate(`/apartment/${res?.data?.property?._id}/property`);
+    },
+    onError: (...props) => onError(...props, 'Something Went Wrong')
   });
-
+  console.log({ apartmentMutation });
+  const { status } = apartmentMutation;
   return (
     <>
       <MainWrapper>
@@ -34,12 +39,13 @@ const Place = () => {
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
-                <Form layout="vertical">
+                <Form layout="vertical" onFinish={apartmentMutation.mutate}>
                   <Form.Item
                     label="Property Name"
                     rules={[
                       { required: true, message: 'Property name required' }
                     ]}
+                    name="propertyName"
                   >
                     <Input size="large" />
                   </Form.Item>
@@ -54,7 +60,7 @@ const Place = () => {
                         alignItems: 'center'
                       }}
                       onClick={() => {
-                        navigate('/apartment/listing');
+                        navigate(-1);
                       }}
                     >
                       Back
@@ -63,6 +69,8 @@ const Place = () => {
                       size="large"
                       type="primary"
                       block
+                      htmlType="submit"
+                      disabled={status === 'pending'}
                       // onClick={() => {
                       //   navigate('/apartment/property');
                       // }}

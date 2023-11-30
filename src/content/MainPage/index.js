@@ -3,7 +3,9 @@ import React from 'react';
 import { Container, MainWrapper } from 'src/components/Global';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-
+import { Layout } from 'antd';
+import Header from 'src/components/Header';
+const { Content, Footer } = Layout;
 // const media = {
 //   flatLogo: '/assets/images/flat-logo.png',
 //   apartmentLogo: '/assets/images/apartment-logo.png',
@@ -17,14 +19,14 @@ const properties = [
     title: 'Flats',
     description:
       'Furnished and self-categing Accomadation, where guests rent the entire place',
-    navigateTo: '/apartment/boarding'
+    navigateTo: '/apartment/new/place'
   },
   {
     image: '/assets/images/apartment-logo.png',
     title: 'Apartment',
     description:
       'Furnished and self-categing Accomadation, where guests rent the entire place',
-    navigateTo: '/apartment/boarding'
+    navigateTo: '/apartment/new/place'
   },
   {
     image: '/assets/images/hotel-logo.png',
@@ -38,7 +40,7 @@ const properties = [
     title: 'Villa',
     description:
       'Furnished and self-categing Accomadation, where guests rent the entire place',
-    navigateTo: '/apartment/boarding'
+    navigateTo: '/apartment/new/place'
   }
 ];
 
@@ -57,29 +59,35 @@ const StyledCard = styled(Card)`
 const MainPage = () => {
   const navigate = useNavigate();
   return (
-    <>
-      <MainWrapper>
-        <Row style={{}}>
-          <Col span={24}>
-            <Container>
-              <Typography.Title level={2}>
-                Lorem ipsum dolor sit amet consectetur. Etiam volutpat a cursus
-                donec gravida !
-              </Typography.Title>
-              <Typography.Paragraph style={{ marginBottom: '2.5rem' }}>
-                Lorem ipsum dolor sit amet consectetur. Etiam volutp
-              </Typography.Paragraph>
-              <Row gutter={[32, 32]} justify={{ md: 'start', sm: 'center' }}>
-                {properties?.map(property => (
-                  <PropertyCard
-                    key={property?.title}
-                    {...property}
-                    onClick={() => {
-                      navigate(property?.navigateTo);
-                    }}
-                  />
-                ))}
-                {/* <Col xs={24} sm={16} md={12} lg={8} xl={6} xxl={5}>
+    <Layout>
+      <Header />
+      <Layout>
+        <Content>
+          <MainWrapper>
+            <Row style={{}}>
+              <Col span={24}>
+                <Container>
+                  <Typography.Title level={2}>
+                    Lorem ipsum dolor sit amet consectetur. Etiam volutpat a
+                    cursus donec gravida !
+                  </Typography.Title>
+                  <Typography.Paragraph style={{ marginBottom: '2.5rem' }}>
+                    Lorem ipsum dolor sit amet consectetur. Etiam volutp
+                  </Typography.Paragraph>
+                  <Row
+                    gutter={[32, 32]}
+                    justify={{ md: 'start', sm: 'center' }}
+                  >
+                    {properties?.map(property => (
+                      <PropertyCard
+                        key={property?.title}
+                        {...property}
+                        onClick={() => {
+                          navigate(property?.navigateTo);
+                        }}
+                      />
+                    ))}
+                    {/* <Col xs={24} sm={16} md={12} lg={8} xl={6} xxl={5}>
                   <StyledCard>
                     <Space
                       direction="vertical"
@@ -181,12 +189,15 @@ const MainPage = () => {
                     </Space>
                   </StyledCard>
                 </Col> */}
-              </Row>
-            </Container>
-          </Col>
-        </Row>
-      </MainWrapper>
-    </>
+                  </Row>
+                </Container>
+              </Col>
+            </Row>
+          </MainWrapper>
+        </Content>
+      </Layout>
+      <Footer />
+    </Layout>
   );
 };
 

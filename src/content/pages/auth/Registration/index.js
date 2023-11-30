@@ -64,7 +64,6 @@ const Registration = () => {
 
   const register = useMutation({
     mutationFn: async data => {
-      data.countryCode = data.countryCode ?? '+91';
       if (data.password !== data.confirmPassword) {
         toast.error("Password and Confirm Password doesn't match");
         return;
@@ -77,7 +76,11 @@ const Registration = () => {
     },
     onError: err => {
       console.log({ err });
-      toast.error(err?.response?.data?.message ?? 'Something went wrong');
+      err = err?.response?.data;
+      if (!(err?.message === 'validation error'))
+        toast.error(err?.message ?? 'Something went wrong');
+      const firstError = Object.keys(err?.errors);
+      toast.error(err?.errors?.[firstError]);
     }
   });
   return (
@@ -93,6 +96,7 @@ const Registration = () => {
               style={{ marginTop: '2rem' }}
               id="registration-form"
               onFinish={register.mutate}
+              initialValues={{ countryCode: '+91' }}
             >
               <Row gutter={[16]}>
                 <Col xs={24} sm={12}>
@@ -119,11 +123,19 @@ const Registration = () => {
                 <span style={{ color: '#ff4d4f' }}>*</span> Mobile Number
               </label>
               <Space.Compact style={{ width: '100%' }}>
-                <Form.Item name="countryCode">
+                <Form.Item
+                  name="countryCode"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Country Code required'
+                    }
+                  ]}
+                >
                   <Select
                     style={{ width: 'auto' }}
                     size="large"
-                    defaultValue="+91"
+                    // defaultValue="+91"
                     options={countryCodes}
                   />
                 </Form.Item>
@@ -137,7 +149,13 @@ const Registration = () => {
                     }
                   ]}
                 >
-                  <Input size="large" />
+                  <Input
+                    size="large"
+                    onInput={e =>
+                      (e.target.value = e.target.value.replace(/[^0-9]/g, ''))
+                    }
+                    maxLength={10}
+                  />
                 </Form.Item>
               </Space.Compact>
               <Form.Item
@@ -147,6 +165,10 @@ const Registration = () => {
                   {
                     required: true,
                     message: 'Email required'
+                  },
+                  {
+                    type: 'email',
+                    message: 'Invalid Email'
                   }
                 ]}
               >

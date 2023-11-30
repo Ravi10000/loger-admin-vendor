@@ -24,7 +24,7 @@ function useFetchUser() {
   console.log({ user });
   const { isError, data } = useQuery({
     queryKey: ['user'],
-    enabled: !!getAuthToken() && !user,
+    // enabled: !!getAuthToken() && !user,
     retry: 0,
     queryFn: async () => {
       const { data } = await fetchUserDetails();
@@ -32,6 +32,7 @@ function useFetchUser() {
       return data?.user;
     }
   });
+  // console.log(data.isError, );
   useEffect(() => {
     if (isError) setIsFetching(false);
   }, [isError]);
