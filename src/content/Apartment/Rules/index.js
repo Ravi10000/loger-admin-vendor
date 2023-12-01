@@ -6,10 +6,11 @@ import {
   Row,
   Space,
   TimePicker,
-  Typography
+  Typography,
+  Form
 } from 'antd';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   ArrowLeftOutlined,
@@ -17,9 +18,47 @@ import {
   CloseOutlined
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
+import { toast } from 'react-hot-toast';
+import { useMutation } from '@tanstack/react-query';
+import api from 'src/api';
+import onError from 'src/utils/onError';
+import { updateProperty } from 'src/api/property.req';
+import dayjs from 'dayjs';
 
 const Rules = () => {
   const navigate = useNavigate();
+  const { propertyId } = useParams();
+  const { mutate } = useMutation({
+    mutationFn: async data => {
+      if (data.checkIn?.length !== 2) {
+        toast.error('please provide both check in start and end time');
+        return;
+      }
+      if (data.checkOut?.length !== 2) {
+        toast.error('please provide both check out start and end time');
+        return;
+      }
+      const propertyData = {
+        propertyId,
+        checkInStartTime: dayjs(data.checkIn[0]).format('HH:mm'),
+        checkInEndTime: dayjs(data.checkIn[1]).format('HH:mm'),
+        checkOutStartTime: dayjs(data.checkOut[0]).format('HH:mm'),
+        checkOutEndTime: dayjs(data.checkOut[1]).format('HH:mm')
+      };
+      console.log({ data });
+
+      const res = await updateProperty(propertyData);
+      const apartmentRes = await api.put('/apartments', {
+        propertyId,
+        petsAllowed: data.activities.includes('pets'),
+        smokingAllowed: data.activities.includes('smoking'),
+        partiesEventsAllowed: data.activities.includes('parties')
+      });
+      console.log({ res, apartmentRes });
+      navigate(`/apartment/${propertyId}/host-profile`);
+    },
+    onError: (...props) => onError(...props, 'Something Went Wrong')
+  });
 
   return (
     <>
@@ -31,67 +70,76 @@ const Rules = () => {
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
-                <Space
-                  direction="vertical"
-                  size="large"
-                  style={{ width: '100%' }}
+                <Form
+                  onFinish={mutate}
+                  defaultValue={{ checkIn: [], checkOut: [] }}
                 >
-                  <Checkbox.Group>
+                  <Space
+                    direction="vertical"
+                    size="large"
+                    style={{ width: '100%' }}
+                  >
+                    <Form.Item name="activities">
+                      <Checkbox.Group>
+                        <Space direction="vertical" style={{ width: '100%' }}>
+                          <Checkbox value="smoking">
+                            Smoking is shared area allowed
+                          </Checkbox>
+                          <Checkbox value="pets">Pets allowed</Checkbox>
+                          <Checkbox value="parties">
+                            Parties/ events allowed
+                          </Checkbox>
+                        </Space>
+                      </Checkbox.Group>
+                    </Form.Item>
+
                     <Space direction="vertical" style={{ width: '100%' }}>
-                      <Checkbox value="english">
-                        Smoking is shared area allowed
-                      </Checkbox>
-                      <Checkbox value="french">Pets allowed</Checkbox>
-                      <Checkbox value="arabic">Children allowed</Checkbox>
-                      <Checkbox value="spanish">
-                        Parties/ events allowed
-                      </Checkbox>
+                      <Typography.Title level={5}>Check in</Typography.Title>
+                      <Form.Item name="checkIn">
+                        <TimePicker.RangePicker
+                          size="large"
+                          style={{ width: '100%' }}
+                          placeholder={['From', 'Until']}
+                        />
+                      </Form.Item>
                     </Space>
-                  </Checkbox.Group>
-                  <Space direction="vertical" style={{ width: '100%' }}>
-                    <Typography.Title level={5}>Check in</Typography.Title>
-                    <TimePicker.RangePicker
-                      size="large"
-                      style={{ width: '100%' }}
-                      placeholder={['From', 'Until']}
-                    />
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Typography.Title level={5}>Check Out</Typography.Title>
+                      <Form.Item name="checkOut">
+                        <TimePicker.RangePicker
+                          size="large"
+                          style={{ width: '100%' }}
+                          placeholder={['From', 'Until']}
+                        />
+                      </Form.Item>
+                    </Space>
+                    <CardBottom direction="horizontal">
+                      <Button
+                        size="large"
+                        type="primary"
+                        ghost
+                        icon={<ArrowLeftOutlined />}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center'
+                        }}
+                        onClick={() => {
+                          navigate(-1);
+                        }}
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        size="large"
+                        type="primary"
+                        block
+                        htmlType="submit"
+                      >
+                        Continue
+                      </Button>
+                    </CardBottom>
                   </Space>
-                  <Space direction="vertical" style={{ width: '100%' }}>
-                    <Typography.Title level={5}>Check Out</Typography.Title>
-                    <TimePicker.RangePicker
-                      size="large"
-                      style={{ width: '100%' }}
-                      placeholder={['From', 'Until']}
-                    />
-                  </Space>
-                  <CardBottom direction="horizontal">
-                    <Button
-                      size="large"
-                      type="primary"
-                      ghost
-                      icon={<ArrowLeftOutlined />}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center'
-                      }}
-                      onClick={() => {
-                        navigate('/apartment/language');
-                      }}
-                    >
-                      Back
-                    </Button>
-                    <Button
-                      size="large"
-                      type="primary"
-                      block
-                      onClick={() => {
-                        navigate('/apartment/host-profile');
-                      }}
-                    >
-                      Continue
-                    </Button>
-                  </CardBottom>
-                </Space>
+                </Form>
               </Card>
             </Col>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>

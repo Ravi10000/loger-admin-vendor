@@ -33,15 +33,24 @@ const ControlButton = styled(Button)`
 
 const PropertyDetail = () => {
   const { propertyId } = useParams();
+  console.log({ propertyId });
   const navigate = useNavigate();
-  const [childrenAllowed, setChildrenAllowed] = useState(true);
-  const [cribOffered, setCribOffered] = useState(true);
+  const [childrenAllowed, setChildrenAllowed] = useState(null);
+  const [cribOffered, setCribOffered] = useState(null);
   const [maxGuests, setMaxGuests] = useState(1);
   const [bathroomsCount, setBathroomsCount] = useState(1);
 
+  const isCribOptionRequired = childrenAllowed === true;
+
   const { status, mutate, data } = useMutation({
     mutationFn: async data => {
-      data = { ...data, childrenAllowed, cribOffered, maxGuests, propertyId };
+      if (typeof cribOffered !== 'boolean') delete data.cribOffered;
+      delete data.cribOffered;
+      data = {
+        ...data,
+        maxGuests,
+        propertyId
+      };
       console.log({ data });
       if (typeof maxGuests !== 'number') {
         toast.error('invalid max guests value');
@@ -155,13 +164,24 @@ const PropertyDetail = () => {
                         <Typography.Title level={5}>
                           Do you allow children?
                         </Typography.Title>
-                        <Radio.Group
-                          onChange={handleAllowChild}
-                          value={childrenAllowed}
+                        <Form.Item
+                          name="childrenAllowed"
+                          rules={[
+                            {
+                              required: true,
+                              message:
+                                'Please select if you allow children or not'
+                            }
+                          ]}
                         >
-                          <Radio value={true}>Yes</Radio>
-                          <Radio value={false}>No</Radio>
-                        </Radio.Group>
+                          <Radio.Group
+                            onChange={handleAllowChild}
+                            value={childrenAllowed}
+                          >
+                            <Radio value={true}>Yes</Radio>
+                            <Radio value={false}>No</Radio>
+                          </Radio.Group>
+                        </Form.Item>
                       </Space>
                       <Space direction="vertical" style={{ width: '100%' }}>
                         <Typography.Title level={5}>
@@ -171,13 +191,24 @@ const PropertyDetail = () => {
                           Cribs sleep most infants 0-3 years old and are
                           available to guests on request.
                         </Typography.Paragraph>
-                        <Radio.Group
-                          onChange={handleAllowCribs}
-                          value={cribOffered}
+                        <Form.Item
+                          name="cribOffered"
+                          rules={[
+                            {
+                              required: isCribOptionRequired,
+                              message:
+                                'Please select if crib is offered or not in this property'
+                            }
+                          ]}
                         >
-                          <Radio value={true}>Yes</Radio>
-                          <Radio value={false}>No</Radio>
-                        </Radio.Group>
+                          <Radio.Group
+                            onChange={handleAllowCribs}
+                            value={cribOffered}
+                          >
+                            <Radio value={true}>Yes</Radio>
+                            <Radio value={false}>No</Radio>
+                          </Radio.Group>
+                        </Form.Item>
                       </Space>
                     </Space>
                   </Card>

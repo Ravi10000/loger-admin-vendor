@@ -106,7 +106,15 @@ export const SortablePhoto = ({ id, faded, index, onDelete, ...props }) => {
         {...listeners}
       />
       {props?.isMainPhoto && <p className="_main-photo-text">Main Photo</p>}
-      <RemoveButton shape="circle" onClick={() => onDelete(id)}>
+      <RemoveButton
+        shape="circle"
+        onClick={async () => {
+          if (props?.photoUrl) {
+            await props.deletePhoto(id);
+          }
+          onDelete(id);
+        }}
+      >
         <DeleteOutlined />
       </RemoveButton>
     </div>
@@ -114,9 +122,17 @@ export const SortablePhoto = ({ id, faded, index, onDelete, ...props }) => {
 };
 
 export const Photo = forwardRef(
-  ({ url, style, className, isMainPhoto, setMainPhotoIdx, ...props }, ref) => {
+  (
+    { url, photoUrl, style, className, isMainPhoto, setMainPhotoIdx, ...props },
+    ref
+  ) => {
+    // console.log(process.env.REACT_APP_SERVER_URL + '/images/' + photoUrl);
     const inlineStyles = {
-      backgroundImage: `url("${url}")`,
+      backgroundImage: `url("${
+        photoUrl
+          ? process.env.REACT_APP_SERVER_URL + '/images/' + photoUrl
+          : url
+      }")`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundColor: 'grey',
@@ -145,18 +161,34 @@ export const Photo = forwardRef(
   }
 );
 
-const Gallery = () => {
+const PreviewGallery = () => {
   const navigate = useNavigate();
   const { propertyId } = useParams();
-
   const [fileList, setFileList] = useState([]);
+  console.log({ fileList });
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const [mainPhotoIdx, setMainPhotoIdx] = useState(0);
-  console.log({ mainPhotoIdx });
   const { message } = App.useApp();
+  const { data: property, error: propertyError } = useQuery({
+    queryKey: ['property', propertyId],
+    enabled: !!propertyId,
+    initialData: {},
+    queryFn: async () => {
+      const res = await api.get(`/properties/${propertyId}`);
+      setFileList(res?.data?.property?.photos || []);
+      const mainPhotoIdx = res?.data?.property?.photos?.findIndex(
+        photo => photo.isMain
+      );
+      setMainPhotoIdx(mainPhotoIdx);
+      return res?.data?.property;
+    }
+  });
+
+  console.log({ property, propertyError });
   console.log({ fileList });
+  console.log({ mainPhoto: fileList?.[mainPhotoIdx] });
 
   const { status, mutate, data, error } = useMutation({
     mutationFn: async () => {
@@ -165,13 +197,17 @@ const Gallery = () => {
       formData.append('propertyId', propertyId);
       formData.append('mainPhotoIdx', mainPhotoIdx);
       fileList.forEach(file => {
-        formData.append('photos', file);
+        if (file.url) formData.append('photos', file);
       });
       // data.photos = fileList;
-      // console.log({ data });
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
+      }
+      return;
+
       const res = await updateProperty(formData);
       console.log({ res });
-      navigate(`/apartment/${propertyId}/preview-gallery`);
+      // navigate(`/apartment/${propertyId}/language`);
     },
     onError: err => {
       console.log(err);
@@ -183,10 +219,19 @@ const Gallery = () => {
     // onError: (...props) => onError(...props, 'Something Went Wrong')
   });
 
+  const { mutateAsync: deletePhoto, error: deletePhotoError } = useMutation({
+    mutationFn: async photoId => {
+      const res = await api.delete(
+        `/properties/photos/${propertyId}/${photoId}`
+      );
+      console.log({ res });
+    }
+  });
+
   // console.log({ error, status, data });
 
-  const [activeId, setActiveId] = useState(null);
-  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+  //   const [activeId, setActiveId] = useState(null);
+  //   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
   const uploadProps = {
     onRemove: file => {
@@ -232,28 +277,28 @@ const Gallery = () => {
     return () => fileList.forEach(file => URL.revokeObjectURL(file.url));
   }, [fileList]);
 
-  function handleDragStart(event) {
-    setActiveId(event.active.id);
-  }
+  //   function handleDragStart(event) {
+  //     setActiveId(event.active.id);
+  //   }
 
-  function handleDragEnd(event) {
-    const { active, over } = event;
+  //   function handleDragEnd(event) {
+  //     const { active, over } = event;
 
-    if (active.id !== over.id) {
-      setFileList(items => {
-        const oldIndex = items.findIndex(item => item.uid === active.id);
-        const newIndex = items.findIndex(item => item.uid === over.id);
+  //     if (active.id !== over.id) {
+  //       setFileList(items => {
+  //         const oldIndex = items.findIndex(item => item.uid === active.id);
+  //         const newIndex = items.findIndex(item => item.uid === over.id);
 
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
+  //         return arrayMove(items, oldIndex, newIndex);
+  //       });
+  //     }
 
-    setActiveId(null);
-  }
+  //     setActiveId(null);
+  //   }
 
-  function handleDragCancel() {
-    setActiveId(null);
-  }
+  //   function handleDragCancel() {
+  //     setActiveId(null);
+  //   }
 
   function handleDeletePhoto(id) {
     setFileList([...fileList.filter(item => item.uid !== id)]);
@@ -282,121 +327,135 @@ const Gallery = () => {
                   style={{ width: '100%' }}
                 >
                   <Upload.Dragger {...uploadProps} style={{ marginBottom: 8 }}>
-                    <UploadIconWrapper style={{ marginBottom: 0 }}>
-                      <FileImageOutlined />
-                    </UploadIconWrapper>
-                    <Typography.Text>Add images</Typography.Text>
-                    <Typography.Paragraph
-                      style={{ marginTop: '2rem', marginBottom: 0 }}
-                    >
-                      Drag and Drop Your Photos Here
-                    </Typography.Paragraph>
-                    <div
-                      style={{
-                        width: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginTop: '20px'
-                      }}
-                    >
-                      <button
+                    <div className="_upload-input">
+                      <div>
+                        <UploadIconWrapper style={{ marginBottom: 0 }}>
+                          <img
+                            src="/assets/images/image-upload-lg.png"
+                            alt=""
+                            width="60px"
+                          />
+                        </UploadIconWrapper>
+                        <Typography.Text>Add images</Typography.Text>
+                      </div>
+                      <Typography.Paragraph
                         style={{
-                          border: '1px dashed #0868f8',
-                          borderRadius: '5px',
-                          backgroundColor: '#fff',
-                          width: '200px',
-                          height: '50px',
+                          marginTop: '2rem',
+                          marginBottom: 0,
+                          maxWidth: '200px',
+                          color: '#8d9297',
+                          fontWeight: '600'
+                        }}
+                      >
+                        Drag and Drop Your Photos Here
+                      </Typography.Paragraph>
+                      <div
+                        style={{
+                          //   width: '100%',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          gap: '10px'
+                          marginTop: '20px'
                         }}
                       >
-                        <img
-                          src="/assets/images/image-upload.png"
-                          alt="upload"
-                          width={20}
-                        />
-                        <span
+                        <button
                           style={{
-                            color: '#0868f8',
-                            fontWeight: 600,
-                            fontFamily: 'Montserrat',
-                            fontSize: '1rem'
+                            border: '1px dashed #0868f8',
+                            borderRadius: '5px',
+                            backgroundColor: '#fff',
+                            width: '200px',
+                            height: '50px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '10px'
                           }}
                         >
-                          Upload
-                        </span>
-                      </button>
+                          <img
+                            src="/assets/images/image-upload.png"
+                            alt="upload"
+                            width={20}
+                          />
+                          <span
+                            style={{
+                              color: '#0868f8',
+                              fontWeight: 600,
+                              fontFamily: 'Montserrat',
+                              fontSize: '1rem'
+                            }}
+                          >
+                            Upload
+                          </span>
+                        </button>
+                      </div>
                     </div>
                   </Upload.Dragger>
                   {/* {fileList.length > 0 && (
-                    <DndContext
-                      sensors={sensors}
-                      collisionDetection={closestCenter}
-                      onDragStart={handleDragStart}
-                      onDragEnd={handleDragEnd}
-                      onDragCancel={handleDragCancel}
-                    >
-                      <SortableContext
-                        items={fileList}
-                        strategy={rectSortingStrategy}
+                      <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragStart={handleDragStart}
+                        onDragEnd={handleDragEnd}
+                        onDragCancel={handleDragCancel}
                       >
-                        <Grid $columns={3}>
-                          {fileList.map((item, index) => (
-                            <SortablePhoto
-                              id={item.uid}
-                              key={item.uid}
-                              url={item.url}
-                              index={index}
-                              onDelete={handleDeletePhoto}
+                        <SortableContext
+                          items={fileList}
+                          strategy={rectSortingStrategy}
+                        >
+                          <Grid $columns={3}>
+                            {fileList.map((item, index) => (
+                              <SortablePhoto
+                                id={item.uid}
+                                key={item.uid}
+                                url={item.url}
+                                index={index}
+                                onDelete={handleDeletePhoto}
+                              />
+                            ))}
+                          </Grid>
+                        </SortableContext>
+                        <DragOverlay adjustScale={true}>
+                          {activeId ? (
+                            <Photo
+                              url={
+                                fileList.find(item => item.uid === activeId).url
+                              }
+                              index={fileList.findIndex(
+                                item => item.uid === activeId
+                              )}
                             />
-                          ))}
-                        </Grid>
-                      </SortableContext>
-                      <DragOverlay adjustScale={true}>
-                        {activeId ? (
-                          <Photo
-                            url={
-                              fileList.find(item => item.uid === activeId).url
-                            }
-                            index={fileList.findIndex(
-                              item => item.uid === activeId
-                            )}
-                          />
-                        ) : null}
-                      </DragOverlay>
-                    </DndContext>
-                  )} */}
+                          ) : null}
+                        </DragOverlay>
+                      </DndContext>
+                    )} */}
                   {/* <CardBottom direction="horizontal">
-                    <Button
-                      size="large"
-                      type="primary"
-                      ghost
-                      icon={<ArrowLeftOutlined />}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center'
-                      }}
-                      onClick={() => {
-                        // navigate('/apartment/host-profile');
-                        navigate(-1);
-                      }}
-                    >
-                      Back
-                    </Button>
-                    <Button
-                      size="large"
-                      type="primary"
-                      block
-                      onClick={() => {
-                        navigate(`/apartment/${propertyId}/guest`);
-                      }}
-                    >
-                      Continue
-                    </Button>
-                  </CardBottom> */}
+                      <Button
+                        size="large"
+                        type="primary"
+                        ghost
+                        icon={<ArrowLeftOutlined />}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center'
+                        }}
+                        onClick={() => {
+                          // navigate('/apartment/host-profile');
+                          navigate(-1);
+                        }}
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        size="large"
+                        type="primary"
+                        block
+                        onClick={() => {
+                          navigate(`/apartment/${propertyId}/guest`);
+                        }}
+                      >
+                        Continue
+                      </Button>
+                    </CardBottom> */}
                 </Space>
               </Card>
             </Col>
@@ -470,20 +529,25 @@ const Gallery = () => {
               <SortablePhoto
                 key={fileList[mainPhotoIdx]?.name}
                 url={fileList[mainPhotoIdx]?.url}
+                photoUrl={fileList[mainPhotoIdx]?.photoUrl}
                 index={mainPhotoIdx}
                 onDelete={handleDeletePhoto}
                 setMainPhotoIdx={setMainPhotoIdx}
                 isMainPhoto={true}
+                deletePhoto={deletePhoto}
               />
               {fileList.map((item, index) => {
+                // console.log({ item, index, mainPhotoIdx });
                 if (index === mainPhotoIdx) return null;
                 return (
                   <SortablePhoto
-                    id={item.uid}
-                    key={item.uid}
+                    id={item.uid ?? item._id}
+                    key={item.uid ?? item._id}
                     url={item.url}
+                    photoUrl={item.photoUrl}
                     index={index}
                     onDelete={handleDeletePhoto}
+                    deletePhoto={deletePhoto}
                     setMainPhotoIdx={setMainPhotoIdx}
                     isMainPhoto={mainPhotoIdx === index}
                   />
@@ -547,4 +611,4 @@ const Gallery = () => {
   );
 };
 
-export default Gallery;
+export default PreviewGallery;

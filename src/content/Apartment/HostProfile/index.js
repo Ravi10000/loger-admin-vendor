@@ -6,10 +6,11 @@ import {
   Input,
   Row,
   Space,
-  Typography
+  Typography,
+  Form
 } from 'antd';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   ArrowLeftOutlined,
@@ -17,10 +18,35 @@ import {
   CloseOutlined
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
+import { useMutation } from '@tanstack/react-query';
+import api from 'src/api';
+import onError from 'src/utils/onError';
+import { updateProperty } from 'src/api/property.req';
+import { toast } from 'react-hot-toast';
 
 const HostProfile = () => {
   const navigate = useNavigate();
+  const { propertyId } = useParams();
   const [checkList, setCheckList] = useState([]);
+
+  const { mutate } = useMutation({
+    mutationFn: async data => {
+      // console.log({ data });
+      // console.log({ checkList });
+      if (!checkList.length) {
+        toast.error('please select at least one option');
+        return;
+      }
+      if (!checkList.includes('none')) {
+        console.log({ data });
+        data.propertyId = propertyId;
+        const res = await api.put('/apartments', data);
+        console.log({ res });
+      }
+      navigate(`/apartment/${propertyId}/gallery`);
+    },
+    onError: (...props) => onError(...props, 'Something Went Wrong')
+  });
 
   const handleChange = item => {
     if (item.includes('none') && !!item.indexOf('none')) {
@@ -42,90 +68,119 @@ const HostProfile = () => {
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
-                <Space
-                  direction="vertical"
-                  size="large"
-                  style={{ width: '100%' }}
+                <Form
+                  onFinish={mutate}
+                  initialValues={{
+                    hostName: '',
+                    aboutHost: '',
+                    aboutProperty: '',
+                    aboutNeighborhood: ''
+                  }}
                 >
-                  <Typography.Paragraph style={{ marginBottom: 0 }}>
-                    Lorem ipsum dolor sit amet consectetur. Eget non ac nascetur
-                    facilisi arcu integer ut. Eget lectus amet ipsum
-                    pellentesque leo ac. Vulputate eget in tortor orci quam
-                    ultricies viverra ipsum pellentesque leo ac. Vulputate eget
-                    in tortor orci quam ultricies viverra.
-                  </Typography.Paragraph>
-                  <Checkbox.Group
-                    onChange={handleChange}
-                    value={checkList}
+                  <Space
+                    direction="vertical"
+                    size="large"
                     style={{ width: '100%' }}
                   >
-                    <Space
-                      direction="vertical"
+                    <Typography.Paragraph style={{ marginBottom: 0 }}>
+                      Lorem ipsum dolor sit amet consectetur. Eget non ac
+                      nascetur facilisi arcu integer ut. Eget lectus amet ipsum
+                      pellentesque leo ac. Vulputate eget in tortor orci quam
+                      ultricies viverra ipsum pellentesque leo ac. Vulputate
+                      eget in tortor orci quam ultricies viverra.
+                    </Typography.Paragraph>
+                    <Checkbox.Group
+                      onChange={handleChange}
+                      value={checkList}
                       style={{ width: '100%' }}
-                      size="large"
                     >
-                      <Checkbox value="property">The Property</Checkbox>
-                      {checkList.includes('property') && (
-                        <Space direction="vertical" style={{ width: '100%' }}>
-                          <Typography.Text>About The Property</Typography.Text>
-                          <Input.TextArea placeholder="Lorem ipsum dolor sit amet consectetur. Eget non ac nascetur facilisi arcu integ i" />
-                        </Space>
-                      )}
-                      <Checkbox value="host">The Host</Checkbox>
-                      {checkList.includes('host') && (
-                        <>
+                      <Space
+                        direction="vertical"
+                        style={{ width: '100%' }}
+                        size="large"
+                      >
+                        <Checkbox value="property">The Property</Checkbox>
+                        {checkList.includes('property') && (
                           <Space direction="vertical" style={{ width: '100%' }}>
-                            <Typography.Text>Host Name</Typography.Text>
-                            <Input />
+                            <Typography.Text>
+                              About The Property
+                            </Typography.Text>
+                            <Form.Item name="aboutProperty">
+                              <Input.TextArea placeholder="Lorem ipsum dolor sit amet consectetur. Eget non ac nascetur facilisi arcu integ i" />
+                            </Form.Item>
                           </Space>
+                        )}
+                        <Checkbox value="host">The Host</Checkbox>
+                        {checkList.includes('host') && (
+                          <>
+                            <Space
+                              direction="vertical"
+                              style={{ width: '100%' }}
+                            >
+                              <Typography.Text>Host Name</Typography.Text>
+                              <Form.Item name="hostName">
+                                <Input />
+                              </Form.Item>
+                            </Space>
+                            <Space
+                              direction="vertical"
+                              style={{ width: '100%' }}
+                            >
+                              <Typography.Text>About The Host</Typography.Text>
+                              <Form.Item name="aboutHost">
+                                <Input.TextArea placeholder="Lorem ipsum dolor sit amet consectetur. Eget non ac nascetur facilisi arcu integ i" />
+                              </Form.Item>
+                            </Space>
+                          </>
+                        )}
+                        <Checkbox value="neighborhood">
+                          The Neighborhood
+                        </Checkbox>
+                        {checkList.includes('neighborhood') && (
                           <Space direction="vertical" style={{ width: '100%' }}>
-                            <Typography.Text>About The Host</Typography.Text>
-                            <Input.TextArea placeholder="Lorem ipsum dolor sit amet consectetur. Eget non ac nascetur facilisi arcu integ i" />
+                            <Typography.Text>
+                              About The Neighborhood
+                            </Typography.Text>
+                            <Form.Item name="aboutNeighborhood">
+                              <Input.TextArea placeholder="Lorem ipsum dolor sit amet consectetur. Eget non ac nascetur facilisi arcu integ i" />
+                            </Form.Item>
                           </Space>
-                        </>
-                      )}
-                      <Checkbox value="neighborhood">The Neighborhood</Checkbox>
-                      {checkList.includes('neighborhood') && (
-                        <Space direction="vertical" style={{ width: '100%' }}>
-                          <Typography.Text>
-                            About The Neighborhood
-                          </Typography.Text>
-                          <Input.TextArea placeholder="Lorem ipsum dolor sit amet consectetur. Eget non ac nascetur facilisi arcu integ i" />
-                        </Space>
-                      )}
-                      <Checkbox value="none">
-                        None of the Above / I'll Add These Later
-                      </Checkbox>
-                    </Space>
-                  </Checkbox.Group>
-                  <CardBottom direction="horizontal">
-                    <Button
-                      size="large"
-                      type="primary"
-                      ghost
-                      icon={<ArrowLeftOutlined />}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center'
-                      }}
-                      onClick={() => {
-                        navigate('/apartment/rules');
-                      }}
-                    >
-                      Back
-                    </Button>
-                    <Button
-                      size="large"
-                      type="primary"
-                      block
-                      onClick={() => {
-                        navigate('/apartment/gallery');
-                      }}
-                    >
-                      Continue
-                    </Button>
-                  </CardBottom>
-                </Space>
+                        )}
+                        <Checkbox value="none">
+                          None of the Above / I'll Add These Later
+                        </Checkbox>
+                      </Space>
+                    </Checkbox.Group>
+                    <CardBottom direction="horizontal">
+                      <Button
+                        size="large"
+                        type="primary"
+                        ghost
+                        icon={<ArrowLeftOutlined />}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center'
+                        }}
+                        onClick={() => {
+                          navigate(-1);
+                        }}
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        size="large"
+                        type="primary"
+                        block
+                        htmlType="submit"
+                        // onClick={() => {
+                        //   navigate('/apartment/gallery');
+                        // }}
+                      >
+                        Continue
+                      </Button>
+                    </CardBottom>
+                  </Space>
+                </Form>
               </Card>
             </Col>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>

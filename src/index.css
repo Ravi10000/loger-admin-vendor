@@ -1,0 +1,43 @@
+._main-photo-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #fff;
+  background: #3a86f9;
+  padding: 10px 20px;
+  transform: translateY(-100%);
+}
+._change-main-photo {
+  display: none;
+}
+._photo:hover ._change-main-photo {
+  cursor: pointer;
+  background: #00000033;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+._photo:hover ._change-main-photo button {
+  font-family: Montserrat;
+  width: 100%;
+  padding: 10px 20px;
+  background-color: #000000b0;
+  border: none;
+  color: #fff;
+}
+
+._upload-input {
+  /* outline: auto; */
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 20px;
+}
+/* ._upload-input * {
+  outline: auto;
+} */

@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import PreviewGallery from 'src/content/Apartment/preview-gallery';
 
 const Loader = Component => props =>
   (
@@ -89,6 +90,10 @@ const apartmentRoutes = [
   {
     path: 'gallery',
     element: <Gallery />
+  },
+  {
+    path: 'preview-gallery',
+    element: <PreviewGallery />
   },
   {
     path: 'guest',
