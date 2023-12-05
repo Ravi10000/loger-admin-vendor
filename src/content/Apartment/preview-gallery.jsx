@@ -7,7 +7,8 @@ import {
   Space,
   Typography,
   Upload,
-  App
+  App,
+  Spin
 } from 'antd';
 import React, { forwardRef, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -62,7 +63,14 @@ const RemoveButton = styled(Button)`
   right: 10px;
 `;
 
-export const SortablePhoto = ({ id, faded, index, onDelete, ...props }) => {
+export const SortablePhoto = ({
+  id,
+  faded,
+  index,
+  removeFromFileList,
+  deletePhotoFromDB,
+  ...props
+}) => {
   const sortable = useSortable({ id });
   const {
     attributes,
@@ -109,10 +117,8 @@ export const SortablePhoto = ({ id, faded, index, onDelete, ...props }) => {
       <RemoveButton
         shape="circle"
         onClick={async () => {
-          if (props?.photoUrl) {
-            await props.deletePhoto(id);
-          }
-          onDelete(id);
+          removeFromFileList(id);
+          if (props?.photoUrl) await deletePhotoFromDB();
         }}
       >
         <DeleteOutlined />
@@ -170,10 +176,16 @@ const PreviewGallery = () => {
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const [mainPhotoIdx, setMainPhotoIdx] = useState(0);
+  console.log({ mainPhotoIdx });
   const { message } = App.useApp();
-  const { data: property, error: propertyError } = useQuery({
+  const {
+    data: property,
+    error: propertyError,
+    isFetching
+  } = useQuery({
     queryKey: ['property', propertyId],
     enabled: !!propertyId,
+    refetchOnWindowFocus: false,
     initialData: {},
     queryFn: async () => {
       const res = await api.get(`/properties/${propertyId}`);
@@ -181,7 +193,9 @@ const PreviewGallery = () => {
       const mainPhotoIdx = res?.data?.property?.photos?.findIndex(
         photo => photo.isMain
       );
-      setMainPhotoIdx(mainPhotoIdx);
+      if (mainPhotoIdx !== -1) {
+        setMainPhotoIdx(mainPhotoIdx);
+      }
       return res?.data?.property;
     }
   });
@@ -199,15 +213,11 @@ const PreviewGallery = () => {
       fileList.forEach(file => {
         if (file.url) formData.append('photos', file);
       });
-      // data.photos = fileList;
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ', ' + pair[1]);
+      if (formData.get('photos')) {
+        const res = await updateProperty(formData);
+        console.log({ res });
       }
-      return;
-
-      const res = await updateProperty(formData);
-      console.log({ res });
-      // navigate(`/apartment/${propertyId}/language`);
+      navigate(`/apartment/${propertyId}/guest`);
     },
     onError: err => {
       console.log(err);
@@ -219,14 +229,18 @@ const PreviewGallery = () => {
     // onError: (...props) => onError(...props, 'Something Went Wrong')
   });
 
-  const { mutateAsync: deletePhoto, error: deletePhotoError } = useMutation({
-    mutationFn: async photoId => {
-      const res = await api.delete(
-        `/properties/photos/${propertyId}/${photoId}`
-      );
-      console.log({ res });
-    }
-  });
+  const { mutateAsync: deletePhotoFromDB, error: deletePhotoError } =
+    useMutation({
+      mutationFn: async photoId => {
+        const res = await api.delete(
+          `/properties/photos/${propertyId}/${photoId}`
+        );
+        console.log({ res });
+      },
+      onError: err => {
+        console.log(err);
+      }
+    });
 
   // console.log({ error, status, data });
 
@@ -301,7 +315,12 @@ const PreviewGallery = () => {
   //   }
 
   function handleDeletePhoto(id) {
-    setFileList([...fileList.filter(item => item.uid !== id)]);
+    setFileList([
+      ...fileList.filter(item => {
+        if (item.photoUrl) return item._id !== id;
+        return item.uid !== id;
+      })
+    ]);
   }
 
   return (
@@ -320,77 +339,150 @@ const PreviewGallery = () => {
           </Space>
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
-              <Card>
-                <Space
-                  direction="vertical"
-                  size="large"
-                  style={{ width: '100%' }}
-                >
-                  <Upload.Dragger {...uploadProps} style={{ marginBottom: 8 }}>
-                    <div className="_upload-input">
-                      <div>
-                        <UploadIconWrapper style={{ marginBottom: 0 }}>
-                          <img
-                            src="/assets/images/image-upload-lg.png"
-                            alt=""
-                            width="60px"
-                          />
-                        </UploadIconWrapper>
-                        <Typography.Text>Add images</Typography.Text>
-                      </div>
-                      <Typography.Paragraph
-                        style={{
-                          marginTop: '2rem',
-                          marginBottom: 0,
-                          maxWidth: '200px',
-                          color: '#8d9297',
-                          fontWeight: '600'
-                        }}
-                      >
-                        Drag and Drop Your Photos Here
-                      </Typography.Paragraph>
-                      <div
-                        style={{
-                          //   width: '100%',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          marginTop: '20px'
-                        }}
-                      >
-                        <button
-                          style={{
-                            border: '1px dashed #0868f8',
-                            borderRadius: '5px',
-                            backgroundColor: '#fff',
-                            width: '200px',
-                            height: '50px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '10px'
-                          }}
-                        >
-                          <img
-                            src="/assets/images/image-upload.png"
-                            alt="upload"
-                            width={20}
-                          />
-                          <span
+              <Card style={{ minHeight: '200px', position: 'relative' }}>
+                {isFetching ? (
+                  <Spin
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)'
+                    }}
+                  />
+                ) : (
+                  <Space
+                    direction="vertical"
+                    size="large"
+                    style={{ width: '100%' }}
+                  >
+                    <Upload.Dragger
+                      {...uploadProps}
+                      style={{
+                        marginBottom: 8,
+                        background: 'transparent'
+                      }}
+                    >
+                      {fileList?.length ? (
+                        <div className="_upload-input">
+                          <div>
+                            <UploadIconWrapper style={{ marginBottom: 0 }}>
+                              <img
+                                src="/assets/images/image-upload-lg.png"
+                                alt=""
+                                width="60px"
+                              />
+                            </UploadIconWrapper>
+                            <Typography.Text>Add images</Typography.Text>
+                          </div>
+                          <Typography.Paragraph
                             style={{
-                              color: '#0868f8',
-                              fontWeight: 600,
-                              fontFamily: 'Montserrat',
-                              fontSize: '1rem'
+                              marginTop: '2rem',
+                              marginBottom: 0,
+                              maxWidth: '200px',
+                              color: '#8d9297',
+                              fontWeight: '600'
                             }}
                           >
-                            Upload
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-                  </Upload.Dragger>
-                  {/* {fileList.length > 0 && (
+                            Drag and Drop Your Photos Here
+                          </Typography.Paragraph>
+                          <div
+                            style={{
+                              //   width: '100%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              marginTop: '20px'
+                            }}
+                          >
+                            <button
+                              style={{
+                                border: '1px dashed #0868f8',
+                                borderRadius: '5px',
+                                backgroundColor: '#fff',
+                                width: '200px',
+                                height: '50px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '10px'
+                              }}
+                            >
+                              <img
+                                src="/assets/images/image-upload.png"
+                                alt="upload"
+                                width={20}
+                              />
+                              <span
+                                style={{
+                                  color: '#0868f8',
+                                  fontWeight: 600,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: '1rem'
+                                }}
+                              >
+                                Upload
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <UploadIconWrapper>
+                            {/* <FileImageOutlined /> */}
+                            <img
+                              src="/assets/images/image-upload.png"
+                              alt="upload"
+                              width={50}
+                            />
+                          </UploadIconWrapper>
+                          <Typography.Text>Add images</Typography.Text>
+                          <Typography.Paragraph style={{ marginTop: '2rem' }}>
+                            Drag and Drop Your Photos Here
+                          </Typography.Paragraph>
+                          <div
+                            style={{
+                              width: '100%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              marginTop: '20px'
+                            }}
+                          >
+                            <button
+                              style={{
+                                border: '1px dashed #0868f8',
+                                borderRadius: '5px',
+                                backgroundColor: '#fff',
+                                width: '200px',
+                                height: '50px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '10px'
+                              }}
+                            >
+                              <img
+                                src="/assets/images/image-upload.png"
+                                alt="upload"
+                                width={20}
+                              />
+                              <span
+                                style={{
+                                  color: '#0868f8',
+                                  fontWeight: 600,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: '1rem'
+                                }}
+                              >
+                                Upload
+                              </span>
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </Upload.Dragger>
+
+                    {/* {fileList.length > 0 && (
                       <DndContext
                         sensors={sensors}
                         collisionDetection={closestCenter}
@@ -428,7 +520,7 @@ const PreviewGallery = () => {
                         </DragOverlay>
                       </DndContext>
                     )} */}
-                  {/* <CardBottom direction="horizontal">
+                    {/* <CardBottom direction="horizontal">
                       <Button
                         size="large"
                         type="primary"
@@ -456,7 +548,8 @@ const PreviewGallery = () => {
                         Continue
                       </Button>
                     </CardBottom> */}
-                </Space>
+                  </Space>
+                )}
               </Card>
             </Col>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
@@ -473,7 +566,7 @@ const PreviewGallery = () => {
                       </Typography.Text>
                       <Space direction="vertical">
                         <Typography.Title level={4}>
-                          What if I Don’t Have Professional Photos?
+                          What if I Don't Have Professional Photos?
                         </Typography.Title>
                         <Typography.Paragraph>
                           Lorem ipsum dolor sit amet consectetur. Non in quis
@@ -520,34 +613,36 @@ const PreviewGallery = () => {
               </div>
             </Col>
           </Row>
-
           {!!fileList?.length && (
             <Grid
               $columns={4}
               style={{ marginTop: '50px', maxWidth: '1200px' }}
             >
               <SortablePhoto
-                key={fileList[mainPhotoIdx]?.name}
-                url={fileList[mainPhotoIdx]?.url}
-                photoUrl={fileList[mainPhotoIdx]?.photoUrl}
+                id={fileList[mainPhotoIdx]?._id ?? fileList[mainPhotoIdx]?.uid}
+                key={fileList[mainPhotoIdx]?._id ?? fileList[mainPhotoIdx]?.uid}
+                url={fileList?.[mainPhotoIdx]?.url}
+                photoUrl={fileList?.[mainPhotoIdx]?.photoUrl}
                 index={mainPhotoIdx}
-                onDelete={handleDeletePhoto}
+                removeFromFileList={handleDeletePhoto}
                 setMainPhotoIdx={setMainPhotoIdx}
                 isMainPhoto={true}
-                deletePhoto={deletePhoto}
+                deletePhotoFromDB={() =>
+                  deletePhotoFromDB(fileList?.[mainPhotoIdx]?._id)
+                }
               />
               {fileList.map((item, index) => {
                 // console.log({ item, index, mainPhotoIdx });
                 if (index === mainPhotoIdx) return null;
                 return (
                   <SortablePhoto
-                    id={item.uid ?? item._id}
-                    key={item.uid ?? item._id}
+                    id={item._id ?? item.uid}
+                    key={item._id ?? item.uid}
                     url={item.url}
                     photoUrl={item.photoUrl}
                     index={index}
-                    onDelete={handleDeletePhoto}
-                    deletePhoto={deletePhoto}
+                    removeFromFileList={handleDeletePhoto}
+                    deletePhotoFromDB={() => deletePhotoFromDB(item?._id)}
                     setMainPhotoIdx={setMainPhotoIdx}
                     isMainPhoto={mainPhotoIdx === index}
                   />
@@ -584,6 +679,7 @@ const PreviewGallery = () => {
               type="primary"
               block
               onClick={mutate}
+              disabled={status === 'pending' || isFetching}
               // onClick={() => {
               //   navigate(`/apartment/${propertyId}/guest`);
               // }}
@@ -593,6 +689,7 @@ const PreviewGallery = () => {
           </div>
         </Container>
       </MainWrapper>
+
       <Modal
         open={previewOpen}
         title={previewTitle}

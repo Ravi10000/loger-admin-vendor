@@ -1,8 +1,38 @@
-import { Button, Card, Col, Form, Input, Row, Space, Typography } from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Input,
+  Row,
+  Space,
+  Typography,
+  Spin
+} from 'antd';
 import React from 'react';
 import { Container, MainWrapper } from 'src/components/Global';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import api from 'src/api';
 
 const Payment = () => {
+  const { data: entity, isFetching } = useQuery({
+    queryKey: ['entity'],
+    queryFn: async () => {
+      const res = await api.get('/legal-entity');
+      const entity = res?.data?.entity;
+      return entity;
+    }
+  });
+  const { mutate, status } = useMutation({
+    mutationFn: async data => {
+      console.log({ data });
+      const res = await api.put('/legal-entity', data);
+      console.log({ res });
+      return res;
+    },
+    onError: console.log
+  });
+
   return (
     <>
       <MainWrapper>
@@ -36,49 +66,85 @@ const Payment = () => {
               <Row gutter={[32, 32]}>
                 <Col xs={24}>
                   <Card>
-                    <Space
-                      direction="vertical"
-                      size="large"
-                      style={{ width: '100%' }}
-                    >
-                      <Typography.Title level={5} style={{ marginBottom: 0 }}>
-                        New Bank Details
-                      </Typography.Title>
-                      <Form layout="vertical">
-                        <Form.Item label="Bank" name="bank">
-                          <Input.Search allowClear size="large" />
-                        </Form.Item>
-                        <Form.Item label="Account number" name="acNumber">
-                          <Input size="large" />
-                        </Form.Item>
-                        <Form.Item
-                          label="Account holder name"
-                          name="holderName"
-                          extra="The account holder's name must match the bank's records."
+                    {isFetching ? (
+                      <Spin />
+                    ) : (
+                      <Space
+                        direction="vertical"
+                        size="large"
+                        style={{ width: '100%' }}
+                      >
+                        <Typography.Title level={5} style={{ marginBottom: 0 }}>
+                          New Bank Details
+                        </Typography.Title>
+                        <Form
+                          layout="vertical"
+                          initialValues={entity}
+                          onFinish={mutate}
                         >
-                          <Input size="large" />
-                        </Form.Item>
-                        <Form.Item label="Address" name="address">
-                          <Input size="large" />
-                        </Form.Item>
-                        <Form.Item style={{ marginBottom: 0 }}>
-                          <Space
-                            style={{
-                              width: '100%',
-                              justifyContent: 'flex-end'
-                            }}
+                          <Form.Item
+                            label="Bank"
+                            name="bankName"
+                            rules={[
+                              { required: true, message: 'Bank name required' }
+                            ]}
                           >
-                            <Button
-                              type="primary"
-                              htmlType="submit"
-                              size="large"
+                            <Input.Search allowClear size="large" />
+                          </Form.Item>
+                          <Form.Item
+                            label="Account number"
+                            name="bankAccountNumber"
+                            rules={[
+                              {
+                                required: true,
+                                message: 'Bank account number required'
+                              }
+                            ]}
+                          >
+                            <Input size="large" />
+                          </Form.Item>
+                          <Form.Item
+                            label="Account holder name"
+                            name="accountHolderName"
+                            extra="The account holder's name must match the bank's records."
+                            rules={[
+                              {
+                                required: true,
+                                message: 'Accountholder name required'
+                              }
+                            ]}
+                          >
+                            <Input size="large" />
+                          </Form.Item>
+                          <Form.Item
+                            label="Address"
+                            name="address"
+                            rules={[
+                              { required: true, message: 'Address required' }
+                            ]}
+                          >
+                            <Input size="large" />
+                          </Form.Item>
+                          <Form.Item style={{ marginBottom: 0 }}>
+                            <Space
+                              style={{
+                                width: '100%',
+                                justifyContent: 'flex-end'
+                              }}
                             >
-                              Update bank details
-                            </Button>
-                          </Space>
-                        </Form.Item>
-                      </Form>
-                    </Space>
+                              <Button
+                                type="primary"
+                                htmlType="submit"
+                                size="large"
+                                disabled={status === 'pending' || isFetching}
+                              >
+                                Update bank details
+                              </Button>
+                            </Space>
+                          </Form.Item>
+                        </Form>
+                      </Space>
+                    )}
                   </Card>
                 </Col>
               </Row>

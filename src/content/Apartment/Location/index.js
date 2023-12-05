@@ -7,6 +7,7 @@ import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { useMutation } from '@tanstack/react-query';
 import { updateProperty } from 'src/api/property.req';
 import onError from 'src/utils/onError';
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 const media = {
   mapImg: '/assets/images/map-img.png'
 };
@@ -14,7 +15,11 @@ const media = {
 const Location = () => {
   const { propertyId } = useParams();
   const navigate = useNavigate();
-  const { status, mutate, data } = useMutation({
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: 'YOUR_API_KEY'
+  });
+  const { status, mutate } = useMutation({
     mutationFn: async () => {
       const data = {
         propertyId,
@@ -71,9 +76,7 @@ const Location = () => {
                         display: 'inline-flex',
                         alignItems: 'center'
                       }}
-                      onClick={() => {
-                        navigate('/apartment/property');
-                      }}
+                      onClick={() => navigate(-1)}
                     >
                       Back
                     </Button>
@@ -82,6 +85,7 @@ const Location = () => {
                       type="primary"
                       block
                       onClick={mutate}
+                      disabled={status === 'pending'}
                       // onClick={() => {
                       //   navigate('/apartment/property-detail');
                       // }}

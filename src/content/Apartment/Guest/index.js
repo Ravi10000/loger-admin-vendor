@@ -1,6 +1,16 @@
-import { Button, Card, Checkbox, Col, Row, Space, Typography } from 'antd';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  Row,
+  Space,
+  Typography,
+  Form,
+  Spin
+} from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   ArrowLeftOutlined,
@@ -8,21 +18,71 @@ import {
   CloseOutlined
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
-
+import { useQuery, useMutation } from '@tanstack/react-query';
+import api from 'src/api';
+import { findProperty, updateProperty } from 'src/api/property.req';
+import { toast } from 'react-hot-toast';
 const Guest = () => {
   const navigate = useNavigate();
-  const [checkList, setCheckList] = useState([]);
+  const { propertyId } = useParams();
+  const [selectedFacilities, setSelectedFacilities] = useState([]);
+  console.log({ selectedFacilities });
 
-  const handleChange = item => {
-    if (item.includes('none') && !!item.indexOf('none')) {
-      setCheckList(['none']);
-    } else if (item[0] === 'none' && checkList.length) {
-      setCheckList(item.filter(item => item !== 'none'));
-    } else {
-      setCheckList(item);
+  const {
+    data: property,
+    error: propertyError,
+    isFetching
+  } = useQuery({
+    queryKey: ['property', propertyId, ['facilities']],
+    enabled: propertyId?.length === 24,
+    initialData: {},
+    queryFn: async () => {
+      const res = await findProperty(propertyId, 'facilities');
+      const property = res?.data?.property;
+      if (property?.facilities?.length)
+        setSelectedFacilities(property?.facilities);
+      return property;
     }
-  };
+  });
+  console.log({ property });
+  const {
+    data: facilityList,
+    isFetching: isFetchingFacility,
+    error: facilityError
+  } = useQuery({
+    queryKey: ['facilities', { status: 'active' }],
+    initialData: [],
+    queryFn: async () => {
+      const res = await api.get('/facilities?status=active');
+      return res?.data?.facilities;
+    }
+  });
 
+  const { mutate, status } = useMutation({
+    mutationFn: async () => {
+      if (!selectedFacilities?.length) {
+        toast.error('Please select facilities');
+        return;
+      }
+      const data = {
+        facilities: selectedFacilities,
+        propertyId
+      };
+      const res = await updateProperty(data);
+      console.log({ res });
+      navigate(`/apartment/${propertyId}/charge`);
+    },
+    onError: err => {
+      console.log({ err });
+    }
+  });
+
+  // useEffect(() => {
+  //   if (property?.facilities?.length)
+  //     setSelectedFacilities(
+  //       property?.facilities?.map(facility => facility._id)
+  //     );
+  // }, [property]);
   return (
     <>
       <MainWrapper>
@@ -33,97 +93,76 @@ const Guest = () => {
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
-                <Space
-                  direction="vertical"
-                  size="large"
-                  style={{ width: '100%' }}
-                >
-                  <Checkbox.Group
-                    onChange={handleChange}
-                    value={checkList}
+                {isFetching ? (
+                  <Spin />
+                ) : (
+                  <Space
+                    direction="vertical"
+                    size="large"
                     style={{ width: '100%' }}
                   >
-                    <Row>
-                      <Col xs={12}>
-                        <Space
-                          direction="vertical"
-                          style={{ width: '100%' }}
-                          size="large"
-                        >
-                          <Checkbox value="property">Clothes rack</Checkbox>
-                          <Checkbox value="host">Flat-screen TV</Checkbox>
-                          <Checkbox value="neighborhood">Free WiFi</Checkbox>
-                          <Checkbox value="none">Air Conditioner</Checkbox>
-                          <Checkbox value="property">Linens</Checkbox>
-                          <Checkbox value="host">Desk</Checkbox>
-                          <Checkbox value="neighborhood">
-                            Swimming Pool
-                          </Checkbox>
-                          <Checkbox value="none">24/7 Support</Checkbox>
-                          <Checkbox value="none">Free Parking</Checkbox>
-                          <Checkbox value="none">
-                            Breakfast/Lunch/Dinner
-                          </Checkbox>
-                          <Checkbox value="none">Room Service</Checkbox>
-                          <Checkbox value="none">Smoking Zone</Checkbox>
-                          <Checkbox value="none">Outdoor Pool</Checkbox>
-                        </Space>
-                      </Col>
-                      <Col xs={12}>
-                        <Space
-                          direction="vertical"
-                          style={{ width: '100%' }}
-                          size="large"
-                        >
-                          <Checkbox value="property">
-                            Fitness Facilities
-                          </Checkbox>
-                          <Checkbox value="host">Flat-screen TV</Checkbox>
-                          <Checkbox value="neighborhood">
-                            Business Center
-                          </Checkbox>
-                          <Checkbox value="none">Arcade /game Room</Checkbox>
-                          <Checkbox value="property">Casino</Checkbox>
-                          <Checkbox value="host">Self Parking</Checkbox>
-                          <Checkbox value="neighborhood">Elevator</Checkbox>
-                          <Checkbox value="none">Wood Stove</Checkbox>
-                          <Checkbox value="none">Golf Clubs</Checkbox>
-                          <Checkbox value="none">Child Tub</Checkbox>
-                          <Checkbox value="none">Fireplace</Checkbox>
-                          <Checkbox value="none">Fishing Equipment</Checkbox>
-                          <Checkbox value="none">Hot Tub</Checkbox>
-                        </Space>
-                      </Col>
-                    </Row>
-                  </Checkbox.Group>
-                  <CardBottom direction="horizontal">
-                    <Button
-                      size="large"
-                      type="primary"
-                      ghost
-                      icon={<ArrowLeftOutlined />}
+                    <div
                       style={{
-                        display: 'inline-flex',
-                        alignItems: 'center'
-                      }}
-                      onClick={() => {
-                        navigate('/apartment/gallery');
-                      }}
-                    >
-                      Back
-                    </Button>
-                    <Button
-                      size="large"
-                      type="primary"
-                      block
-                      onClick={() => {
-                        navigate('/apartment/charge');
+                        width: '100%',
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr',
+                        gap: '15px'
                       }}
                     >
-                      Continue
-                    </Button>
-                  </CardBottom>
-                </Space>
+                      {facilityList?.map(facility => (
+                        <Checkbox
+                          key={facility._id}
+                          value={facility._id}
+                          onChange={() => {
+                            if (selectedFacilities.includes(facility._id)) {
+                              setSelectedFacilities(ps =>
+                                ps.filter(item => item !== facility._id)
+                              );
+                            } else {
+                              setSelectedFacilities(ps => [
+                                ...ps,
+                                facility._id
+                              ]);
+                            }
+                          }}
+                          checked={selectedFacilities.includes(facility._id)}
+                        >
+                          {facility.name}
+                        </Checkbox>
+                      ))}
+                    </div>
+
+                    <CardBottom direction="horizontal">
+                      <Button
+                        size="large"
+                        type="primary"
+                        ghost
+                        icon={<ArrowLeftOutlined />}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center'
+                        }}
+                        onClick={() => {
+                          navigate(-1);
+                        }}
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        size="large"
+                        type="primary"
+                        block
+                        onClick={mutate}
+                        disabled={status === 'pending'}
+                        // onClick={() => {
+                        //   navigate('/apartment/charge');
+                        // }}
+                      >
+                        Continue
+                      </Button>
+                    </CardBottom>
+                  </Space>
+                )}
               </Card>
             </Col>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>

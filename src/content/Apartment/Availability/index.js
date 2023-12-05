@@ -3,17 +3,109 @@ import {
   CloseOutlined,
   BulbOutlined
 } from '@ant-design/icons';
-import { Button, Card, Col, Radio, Row, Select, Space, Typography } from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  Radio,
+  Row,
+  Space,
+  Typography,
+  DatePicker,
+  InputNumber,
+  Spin
+} from 'antd';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
-
+import dayjs from 'dayjs';
+import {
+  findApartment,
+  findProperty,
+  updateApartment,
+  updateProperty
+} from 'src/api/property.req';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { AiOutlinePercentage } from 'react-icons/ai';
+import { toast } from 'react-hot-toast';
+import api from 'src/api';
 const Availability = () => {
   const navigate = useNavigate();
-  const [value, setValue] = useState(1);
+  const [checkInStartDate, setCheckInStartDate] = useState(dayjs());
+  const [isDateRequired, setIsDateRequired] = useState(null);
+  const [isAbove30Accepted, setIsAbove30Accepted] = useState(null);
+  const [monthlyPlanDiscount, setMonthlyPlanDiscount] = useState(0);
+  const { propertyId } = useParams();
+
+  const { data: apartment, isFetching: isFetchingApartment } = useQuery({
+    queryKey: ['apartment', propertyId, ['monthlyPlanDiscount']],
+    enabled: propertyId?.length === 24,
+    initialData: {},
+    queryFn: async ({ queryKey }) => {
+      const res = await findApartment(
+        propertyId,
+        queryKey?.[2]?.join?.(' ') ?? ''
+      );
+      const apartment = res?.data?.apartment;
+      if (apartment?.monthlyPlanDiscount) {
+        setIsAbove30Accepted(true);
+        setMonthlyPlanDiscount(apartment?.monthlyPlanDiscount);
+      }
+      return apartment;
+    }
+  });
+  const { data: property, isFetching: isFetchingProperty } = useQuery({
+    queryKey: ['property', propertyId, ['checkInStartDate']],
+    enabled: propertyId?.length === 24,
+    initialData: {},
+    queryFn: async ({ queryKey }) => {
+      const res = await findProperty(
+        propertyId,
+        queryKey?.[2]?.join?.(' ') ?? ''
+      );
+      const property = res?.data?.property;
+      if (property?.checkInStartDate) {
+        setIsDateRequired(true);
+        setCheckInStartDate(dayjs(property?.checkInStartDate));
+      }
+      return property;
+    }
+  });
+
+  const { mutate, status } = useMutation({
+    mutationFn: async () => {
+      if (typeof isDateRequired !== 'boolean') {
+        toast.error('Please select a check in start date');
+        return;
+      }
+      if (
+        monthlyPlanDiscount &&
+        (typeof monthlyPlanDiscount !== 'number' || monthlyPlanDiscount > 100)
+      ) {
+        toast.error('Weekly plan discount should be a discount less than 100');
+        return;
+      }
+      const data = {
+        propertyId,
+        monthlyPlanDiscount
+      };
+
+      const res = await updateApartment(data);
+      const propertyRes = await updateProperty({
+        propertyId,
+        checkInStartDate: checkInStartDate.format('YYYY-MM-DD')
+      });
+      console.log({ res, propertyRes });
+      navigate(`/apartment/${propertyId}/review-and-complete`);
+    },
+    onError: console.log
+  });
 
   const onChange = e => {
-    setValue(e.target.value);
+    setIsDateRequired(e.target.value);
+    if (!e.target.value) {
+      setCheckInStartDate(dayjs());
+    }
   };
 
   return (
@@ -27,21 +119,38 @@ const Availability = () => {
             <Row gutter={[32, 32]}>
               <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
                 <Card>
-                  <Space direction="vertical" style={{ width: '100%' }}>
-                    <Typography.Title level={5}>
-                      What's the first date when guests can check in?
-                    </Typography.Title>
-                    <Radio.Group onChange={onChange} value={value}>
-                      <Space direction="vertical">
-                        <Radio value={1}>As soon possible</Radio>
-                        <Radio value={2}>On specific date</Radio>
-                      </Space>
-                    </Radio.Group>
-                  </Space>
+                  {isFetchingProperty ? (
+                    <Spin />
+                  ) : (
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Typography.Title level={5}>
+                        What's the first date when guests can check in?
+                      </Typography.Title>
+                      <Radio.Group onChange={onChange} value={isDateRequired}>
+                        <Space direction="vertical">
+                          <Radio value={false}>As soon possible</Radio>
+                          <Radio value={true}>On specific date</Radio>
+                        </Space>
+                      </Radio.Group>
+                      {isDateRequired && (
+                        <DatePicker
+                          style={{
+                            padding: '10px 15px',
+                            borderRadius: '10px',
+                            marginTop: '10px',
+                            cursor: 'pointer'
+                          }}
+                          allowClear={false}
+                          onChange={setCheckInStartDate}
+                          value={checkInStartDate}
+                        />
+                      )}
+                    </Space>
+                  )}
                 </Card>
               </Col>
             </Row>
-            <Row gutter={[32, 32]}>
+            {/* <Row gutter={[32, 32]}>
               <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
                 <Card>
                   <Space
@@ -74,7 +183,7 @@ const Availability = () => {
                       size="large"
                       style={{ width: '100%' }}
                     >
-                      <Radio.Group onChange={onChange} value={value}>
+                      <Radio.Group onChange={onChange} value={isDateRequired}>
                         <Space direction="vertical" style={{ width: '100%' }}>
                           <Radio value={1}>
                             Lorem ipsum dolor sit amet consectetur.
@@ -126,40 +235,77 @@ const Availability = () => {
                   </Space>
                 </Card>
               </Col>
-            </Row>
+            </Row> */}
             <Row gutter={[32, 32]}>
               <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
                 <Card>
-                  <Space
-                    style={{ width: '100%' }}
-                    direction="vertical"
-                    size="large"
-                  >
-                    <Space style={{ width: '100%' }} direction="vertical">
-                      <Typography.Title level={5}>
-                        Do you want to allow 30+ night stays?
-                      </Typography.Title>
-                      <Typography.Text>
-                        Lorem ipsum dolor sit amet consectetur. Eget non ac
-                        nascetur facilisi arcu integer ut. Eget lectus amet
-                        ipsum pellentesc.
-                      </Typography.Text>
-                    </Space>
-                    <Space style={{ width: '100%' }} direction="vertical">
-                      <Typography.Title level={5}>
-                        Will you accept reservations for stays over 30 nights?
-                      </Typography.Title>
-                      <Radio.Group value={value} onChange={onChange}>
-                        <Radio value={1}>Yes</Radio>
-                        <Radio value={2}>No</Radio>
-                      </Radio.Group>
-                    </Space>
-                    <Space style={{ width: '100%' }} direction="vertical">
-                      <Typography.Title level={5}>
-                        What's the maximum number of nights you want guest able
-                        to book?
-                      </Typography.Title>
-                      <Select
+                  {isFetchingApartment ? (
+                    <Spin />
+                  ) : (
+                    <Space
+                      style={{ width: '100%' }}
+                      direction="vertical"
+                      size="large"
+                    >
+                      <Space style={{ width: '100%' }} direction="vertical">
+                        <Typography.Title level={5}>
+                          Do you want to allow 30+ night stays?
+                        </Typography.Title>
+                        <Typography.Text>
+                          Lorem ipsum dolor sit amet consectetur. Eget non ac
+                          nascetur facilisi arcu integer ut. Eget lectus amet
+                          ipsum pellentesc.
+                        </Typography.Text>
+                      </Space>
+                      <Space style={{ width: '100%' }} direction="vertical">
+                        <Typography.Title level={5}>
+                          Will you accept reservations for stays over 30 nights?
+                        </Typography.Title>
+                        <Radio.Group
+                          value={isAbove30Accepted}
+                          onChange={e => setIsAbove30Accepted(e.target.value)}
+                        >
+                          <Radio value={true}>Yes</Radio>
+                          <Radio value={false}>No</Radio>
+                        </Radio.Group>
+                      </Space>
+                      {isAbove30Accepted && (
+                        <Space style={{ width: '100%' }} direction="vertical">
+                          <Typography.Title level={5}>
+                            What's the discount &#40;in %&#41; for booking 30+
+                            days?
+                          </Typography.Title>
+                          <div
+                            style={{
+                              width: 'fit-content',
+                              position: 'relative',
+                              marginTop: '10px'
+                            }}
+                          >
+                            <AiOutlinePercentage
+                              style={{
+                                position: 'absolute',
+                                top: '50%',
+                                right: '10px',
+                                transform: 'translateY(-50%)',
+                                zIndex: '10',
+                                background: '#fff'
+                              }}
+                            />
+                            <InputNumber
+                              max={Infinity}
+                              value={monthlyPlanDiscount}
+                              style={{ padding: '5px', fontSize: '20px' }}
+                              onChange={value => {
+                                console.log({ value });
+                                if (typeof value !== 'number')
+                                  setMonthlyPlanDiscount(0);
+                                else setMonthlyPlanDiscount(parseFloat(value));
+                              }}
+                              controls={false}
+                            />
+                          </div>
+                          {/* <Select
                         size="large"
                         style={{ width: '100%' }}
                         options={[
@@ -180,9 +326,11 @@ const Availability = () => {
                             value: 45
                           }
                         ]}
-                      />
+                      /> */}
+                        </Space>
+                      )}
                     </Space>
-                  </Space>
+                  )}
                 </Card>
               </Col>
               <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
@@ -237,7 +385,7 @@ const Availability = () => {
                       alignItems: 'center'
                     }}
                     onClick={() => {
-                      navigate('/apartment/cancellation-policy');
+                      navigate(-1);
                     }}
                   >
                     Back
@@ -246,9 +394,15 @@ const Availability = () => {
                     size="large"
                     type="primary"
                     block
-                    onClick={() => {
-                      navigate('/apartment/review-and-complete');
-                    }}
+                    disabled={
+                      status === 'pending' ||
+                      isFetchingApartment ||
+                      isFetchingProperty
+                    }
+                    onClick={mutate}
+                    // onClick={() => {
+                    //   navigate(`/apartment/${propertyId}/review-and-complete`);
+                    // }}
                   >
                     Continue
                   </Button>

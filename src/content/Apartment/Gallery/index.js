@@ -42,6 +42,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { updateProperty } from 'src/api/property.req';
 import onError from 'src/utils/onError';
 import api from 'src/api';
+import LoadingPage from 'src/pages/loading.page';
 
 const UploadIconWrapper = styled(Typography.Paragraph)`
   color: ${props => props.theme.antd.colorPrimary};
@@ -183,6 +184,21 @@ const Gallery = () => {
     // onError: (...props) => onError(...props, 'Something Went Wrong')
   });
 
+  const {
+    data: property,
+    error: propertyError,
+    isFetching: isPropertyFetching
+  } = useQuery({
+    queryKey: ['property', propertyId],
+    queryFn: async () => {
+      const res = await api.get(`/properties/${propertyId}`);
+      setFileList(res?.data?.property?.photos || []);
+      return res?.data?.property;
+    }
+  });
+
+  console.log({ property, propertyError });
+
   // console.log({ error, status, data });
 
   const [activeId, setActiveId] = useState(null);
@@ -261,77 +277,84 @@ const Gallery = () => {
 
   return (
     <>
-      <MainWrapper>
-        <Container>
-          <Space direction="vertical">
-            <Typography.Title level={2}>
-              What Does Your Place Look Like ?
-            </Typography.Title>
-            <Typography.Paragraph style={{ marginBottom: '1.5rem' }}>
-              <b>Upload at Least 12 Photos of your Property.</b> The More Your
-              Upload. the More Likely You Are to Get Bookings. Your Add More
-              Later.
-            </Typography.Paragraph>
-          </Space>
-          <Row gutter={[32, 32]}>
-            <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
-              <Card>
-                <Space
-                  direction="vertical"
-                  size="large"
-                  style={{ width: '100%' }}
-                >
-                  <Upload.Dragger {...uploadProps} style={{ marginBottom: 8 }}>
-                    <UploadIconWrapper style={{ marginBottom: 0 }}>
-                      <FileImageOutlined />
-                    </UploadIconWrapper>
-                    <Typography.Text>Add images</Typography.Text>
-                    <Typography.Paragraph
-                      style={{ marginTop: '2rem', marginBottom: 0 }}
+      {isPropertyFetching ? (
+        <LoadingPage />
+      ) : (
+        <>
+          <MainWrapper>
+            <Container>
+              <Space direction="vertical">
+                <Typography.Title level={2}>
+                  What Does Your Place Look Like ?
+                </Typography.Title>
+                <Typography.Paragraph style={{ marginBottom: '1.5rem' }}>
+                  <b>Upload at Least 12 Photos of your Property.</b> The More
+                  Your Upload. the More Likely You Are to Get Bookings. Your Add
+                  More Later.
+                </Typography.Paragraph>
+              </Space>
+              <Row gutter={[32, 32]}>
+                <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
+                  <Card>
+                    <Space
+                      direction="vertical"
+                      size="large"
+                      style={{ width: '100%' }}
                     >
-                      Drag and Drop Your Photos Here
-                    </Typography.Paragraph>
-                    <div
-                      style={{
-                        width: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginTop: '20px'
-                      }}
-                    >
-                      <button
-                        style={{
-                          border: '1px dashed #0868f8',
-                          borderRadius: '5px',
-                          backgroundColor: '#fff',
-                          width: '200px',
-                          height: '50px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '10px'
-                        }}
+                      <Upload.Dragger
+                        {...uploadProps}
+                        style={{ marginBottom: 8 }}
                       >
-                        <img
-                          src="/assets/images/image-upload.png"
-                          alt="upload"
-                          width={20}
-                        />
-                        <span
+                        <UploadIconWrapper style={{ marginBottom: 0 }}>
+                          <FileImageOutlined />
+                        </UploadIconWrapper>
+                        <Typography.Text>Add images</Typography.Text>
+                        <Typography.Paragraph
+                          style={{ marginTop: '2rem', marginBottom: 0 }}
+                        >
+                          Drag and Drop Your Photos Here
+                        </Typography.Paragraph>
+                        <div
                           style={{
-                            color: '#0868f8',
-                            fontWeight: 600,
-                            fontFamily: 'Montserrat',
-                            fontSize: '1rem'
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginTop: '20px'
                           }}
                         >
-                          Upload
-                        </span>
-                      </button>
-                    </div>
-                  </Upload.Dragger>
-                  {/* {fileList.length > 0 && (
+                          <button
+                            style={{
+                              border: '1px dashed #0868f8',
+                              borderRadius: '5px',
+                              backgroundColor: '#fff',
+                              width: '200px',
+                              height: '50px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '10px'
+                            }}
+                          >
+                            <img
+                              src="/assets/images/image-upload.png"
+                              alt="upload"
+                              width={20}
+                            />
+                            <span
+                              style={{
+                                color: '#0868f8',
+                                fontWeight: 600,
+                                fontFamily: 'Montserrat',
+                                fontSize: '1rem'
+                              }}
+                            >
+                              Upload
+                            </span>
+                          </button>
+                        </div>
+                      </Upload.Dragger>
+                      {/* {fileList.length > 0 && (
                     <DndContext
                       sensors={sensors}
                       collisionDetection={closestCenter}
@@ -369,7 +392,7 @@ const Gallery = () => {
                       </DragOverlay>
                     </DndContext>
                   )} */}
-                  {/* <CardBottom direction="horizontal">
+                      {/* <CardBottom direction="horizontal">
                     <Button
                       size="large"
                       type="primary"
@@ -397,152 +420,154 @@ const Gallery = () => {
                       Continue
                     </Button>
                   </CardBottom> */}
-                </Space>
-              </Card>
-            </Col>
-            <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
-              <Row gutter={[32, 32]}>
-                <Col xs={24}>
-                  <Card>
-                    <Space
-                      size="middle"
-                      direction="horizontal"
-                      style={{ alignItems: 'flex-start', width: '100%' }}
-                    >
-                      <Typography.Text style={{ fontSize: '2rem' }}>
-                        <LikeOutlined />
-                      </Typography.Text>
-                      <Space direction="vertical">
-                        <Typography.Title level={4}>
-                          What if I Don’t Have Professional Photos?
-                        </Typography.Title>
-                        <Typography.Paragraph>
-                          Lorem ipsum dolor sit amet consectetur. Non in quis
-                          ante porttitor praesent volutpat neque. Metus in neque
-                          montes id mattis molestie aliquet. Lorem eget vivamus
-                          id et lacus nulla risus adipiscing
-                        </Typography.Paragraph>
-                      </Space>
-                      <Button
-                        type="text"
-                        icon={<CloseOutlined />}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                      />
                     </Space>
                   </Card>
                 </Col>
+                <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
+                  <Row gutter={[32, 32]}>
+                    <Col xs={24}>
+                      <Card>
+                        <Space
+                          size="middle"
+                          direction="horizontal"
+                          style={{ alignItems: 'flex-start', width: '100%' }}
+                        >
+                          <Typography.Text style={{ fontSize: '2rem' }}>
+                            <LikeOutlined />
+                          </Typography.Text>
+                          <Space direction="vertical">
+                            <Typography.Title level={4}>
+                              What if I Don’t Have Professional Photos?
+                            </Typography.Title>
+                            <Typography.Paragraph>
+                              Lorem ipsum dolor sit amet consectetur. Non in
+                              quis ante porttitor praesent volutpat neque. Metus
+                              in neque montes id mattis molestie aliquet. Lorem
+                              eget vivamus id et lacus nulla risus adipiscing
+                            </Typography.Paragraph>
+                          </Space>
+                          <Button
+                            type="text"
+                            icon={<CloseOutlined />}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                          />
+                        </Space>
+                      </Card>
+                    </Col>
+                  </Row>
+                </Col>
               </Row>
-            </Col>
-          </Row>
-          <Row gutter={[32, 32]}>
-            <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
-              <div
-                style={{
-                  marginTop: '20px',
-                  color: '#0868f8',
-                  fontWeight: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '20px'
-                  // width: '50%'
-                }}
-              >
-                <img
-                  src="/assets/images/image-upload-2.png"
-                  alt="upload"
-                  width={30}
-                />
-                <span>Import Photos From Your Loger.ma Listing</span>
-              </div>
-            </Col>
-          </Row>
+              <Row gutter={[32, 32]}>
+                <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
+                  <div
+                    style={{
+                      marginTop: '20px',
+                      color: '#0868f8',
+                      fontWeight: 600,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '20px'
+                      // width: '50%'
+                    }}
+                  >
+                    <img
+                      src="/assets/images/image-upload-2.png"
+                      alt="upload"
+                      width={30}
+                    />
+                    <span>Upload Photos For Your Loger.ma Listing</span>
+                  </div>
+                </Col>
+              </Row>
 
-          {!!fileList?.length && (
-            <Grid
-              $columns={4}
-              style={{ marginTop: '50px', maxWidth: '1200px' }}
-            >
-              <SortablePhoto
-                key={fileList[mainPhotoIdx]?.name}
-                url={fileList[mainPhotoIdx]?.url}
-                index={mainPhotoIdx}
-                onDelete={handleDeletePhoto}
-                setMainPhotoIdx={setMainPhotoIdx}
-                isMainPhoto={true}
-              />
-              {fileList.map((item, index) => {
-                if (index === mainPhotoIdx) return null;
-                return (
+              {!!fileList?.length && (
+                <Grid
+                  $columns={4}
+                  style={{ marginTop: '50px', maxWidth: '1200px' }}
+                >
                   <SortablePhoto
-                    id={item.uid}
-                    key={item.uid}
-                    url={item.url}
-                    index={index}
+                    key={fileList[mainPhotoIdx]?.name}
+                    url={fileList[mainPhotoIdx]?.url}
+                    index={mainPhotoIdx}
                     onDelete={handleDeletePhoto}
                     setMainPhotoIdx={setMainPhotoIdx}
-                    isMainPhoto={mainPhotoIdx === index}
+                    isMainPhoto={true}
                   />
-                );
-              })}
-            </Grid>
-          )}
-          <div
-            style={{
-              display: 'flex',
-              gap: '10px',
-              maxWidth: '600px',
-              marginTop: '30px'
-            }}
+                  {fileList.map((item, index) => {
+                    if (index === mainPhotoIdx) return null;
+                    return (
+                      <SortablePhoto
+                        id={item.uid}
+                        key={item.uid}
+                        url={item.url}
+                        index={index}
+                        onDelete={handleDeletePhoto}
+                        setMainPhotoIdx={setMainPhotoIdx}
+                        isMainPhoto={mainPhotoIdx === index}
+                      />
+                    );
+                  })}
+                </Grid>
+              )}
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '10px',
+                  maxWidth: '600px',
+                  marginTop: '30px'
+                }}
+              >
+                <Button
+                  size="large"
+                  type="primary"
+                  ghost
+                  icon={<ArrowLeftOutlined />}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center'
+                  }}
+                  onClick={() => {
+                    // navigate('/apartment/host-profile');
+                    navigate(-1);
+                  }}
+                >
+                  Back
+                </Button>
+                <Button
+                  size="large"
+                  type="primary"
+                  block
+                  onClick={mutate}
+                  // onClick={() => {
+                  //   navigate(`/apartment/${propertyId}/guest`);
+                  // }}
+                >
+                  Continue
+                </Button>
+              </div>
+            </Container>
+          </MainWrapper>
+          <Modal
+            open={previewOpen}
+            title={previewTitle}
+            footer={null}
+            onCancel={() => setPreviewOpen(false)}
           >
-            <Button
-              size="large"
-              type="primary"
-              ghost
-              icon={<ArrowLeftOutlined />}
+            <img
+              alt={previewTitle}
               style={{
-                display: 'inline-flex',
-                alignItems: 'center'
+                width: '100%'
               }}
-              onClick={() => {
-                // navigate('/apartment/host-profile');
-                navigate(-1);
-              }}
-            >
-              Back
-            </Button>
-            <Button
-              size="large"
-              type="primary"
-              block
-              onClick={mutate}
-              // onClick={() => {
-              //   navigate(`/apartment/${propertyId}/guest`);
-              // }}
-            >
-              Continue
-            </Button>
-          </div>
-        </Container>
-      </MainWrapper>
-      <Modal
-        open={previewOpen}
-        title={previewTitle}
-        footer={null}
-        onCancel={() => setPreviewOpen(false)}
-      >
-        <img
-          alt={previewTitle}
-          style={{
-            width: '100%'
-          }}
-          src={previewImage}
-        />
-      </Modal>
+              src={previewImage}
+            />
+          </Modal>
+        </>
+      )}
     </>
   );
 };

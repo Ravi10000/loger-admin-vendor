@@ -7,7 +7,8 @@ import {
   Space,
   Typography,
   Tag,
-  Form
+  Form,
+  Spin
 } from 'antd';
 import React, { useState } from 'react';
 import { styled } from 'styled-components';
@@ -17,7 +18,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Container, MainWrapper, CardBottom } from 'src/components/Global';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import onError from 'src/utils/onError';
-import { updateProperty } from 'src/api/property.req';
+import { findProperty, updateProperty } from 'src/api/property.req';
 import { toast } from 'react-hot-toast';
 import api from 'src/api';
 
@@ -52,6 +53,7 @@ const BreakfastDetail = () => {
   const [typesOfBreakfast, setTypesOfBreakfast] = useState([]);
   const [breakfastServed, setBreakfastServed] = useState(null);
   const [breakfastIncluded, setBreakfastIncluded] = useState(null);
+  console.log({ breakfastServed });
 
   const isBreakfastIncludedOptionRequired = breakfastServed === true;
 
@@ -62,13 +64,38 @@ const BreakfastDetail = () => {
     setTypesOfBreakfast(nextSelectedTags);
   };
 
+  const { data: property, isFetching } = useQuery({
+    queryKey: [
+      'property',
+      propertyId,
+      [
+        'typesOfBreakfast',
+        'breakfastPrice',
+        'breakfastIncluded',
+        'breakfastServed'
+      ]
+    ],
+    enabled: propertyId?.length === 24,
+    initialData: {},
+    queryFn: async () => {
+      const res = await findProperty(
+        propertyId,
+        'typesOfBreakfast breakfastPrice breakfastIncluded breakfastServed'
+      );
+      const property = res?.data?.property;
+      setBreakfastIncluded(property?.breakfastServed);
+      setBreakfastServed(property?.breakfastIncluded);
+      setTypesOfBreakfast(property?.typesOfBreakfast);
+      return property;
+    }
+  });
   const { status, mutate } = useMutation({
     mutationFn: async () => {
       const data = {
         propertyId,
-        ...(breakfastIncluded && { breakfastIncluded }),
-        ...(breakfastServed && { breakfastServed }),
-        ...(typesOfBreakfast && { typesOfBreakfast })
+        ...(typeof breakfastIncluded === 'boolean' && { breakfastIncluded }),
+        ...(typeof breakfastServed === 'boolean' && { breakfastServed }),
+        ...(typesOfBreakfast?.length && { typesOfBreakfast })
       };
       if (breakfastServed === null) {
         toast.error('please select if breakfast is served or not');
@@ -114,108 +141,126 @@ const BreakfastDetail = () => {
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
-                <Form onFinish={mutate}>
-                  <Space
-                    direction="vertical"
-                    size="large"
-                    style={{ width: '100%' }}
+                {isFetching ? (
+                  <Spin />
+                ) : (
+                  <Form
+                    onFinish={mutate}
+                    initialValues={
+                      typeof property?.breakfastServed !== 'undefined'
+                        ? property
+                        : {}
+                    }
                   >
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      <Typography.Title level={5}>
-                        Do You Serve Guests Breakfast?
-                      </Typography.Title>
-                      <Form.Item
-                        name="breakfastServed"
-                        rules={[
-                          {
-                            required: true,
-                            message:
-                              'Please select if breakfast is provided or not'
-                          }
-                        ]}
-                      >
-                        <Radio.Group
-                          onChange={e => setBreakfastServed(e.target.value)}
-                          value={breakfastServed}
-                        >
-                          <Radio value={true}>Yes</Radio>
-                          <Radio value={false}>No</Radio>
-                        </Radio.Group>
-                      </Form.Item>
-                    </Space>
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      <Typography.Title level={5}>
-                        Is Breakfast Included in the Price Guests Pay?
-                      </Typography.Title>
-                      <Form.Item
-                        name="breakfastIncluded"
-                        rules={[
-                          {
-                            required: isBreakfastIncludedOptionRequired,
-                            message:
-                              'Please select if breakfast is included or not'
-                          }
-                        ]}
-                      >
-                        <Radio.Group
-                          onChange={e => setBreakfastIncluded(e.target.value)}
-                          value={breakfastIncluded}
-                        >
-                          <Radio value={true}>Yes</Radio>
-                          <Radio value={false}>No</Radio>
-                        </Radio.Group>
-                      </Form.Item>
-                    </Space>
-                    <Space direction="vertical" style={{ width: '100%' }}>
+                    <Space
+                      direction="vertical"
+                      size="large"
+                      style={{ width: '100%' }}
+                    >
                       <Space direction="vertical" style={{ width: '100%' }}>
                         <Typography.Title level={5}>
-                          What type of breakfast do you offer?
+                          Do You Serve Guests Breakfast?
                         </Typography.Title>
-                        <Space size={[0, 8]} wrap>
-                          {cuisineList.map(cuisine => (
-                            <CheckableTag
-                              checked={typesOfBreakfast.includes(cuisine.text)}
-                              onChange={checked =>
-                                handleTagChange(cuisine.text, checked)
-                              }
-                            >
-                              {cuisine.text}
-                            </CheckableTag>
-                          ))}
+                        <Form.Item
+                          name="breakfastServed"
+                          rules={[
+                            {
+                              required: true,
+                              message:
+                                'Please select if breakfast is provided or not'
+                            }
+                          ]}
+                        >
+                          <Radio.Group
+                            onChange={e => {
+                              // console.log(e.taget.value);
+                              setBreakfastServed(e.target.value);
+                            }}
+                            value={breakfastServed}
+                          >
+                            <Radio value={true}>Yes</Radio>
+                            <Radio value={false}>No</Radio>
+                          </Radio.Group>
+                        </Form.Item>
+                      </Space>
+                      <Space direction="vertical" style={{ width: '100%' }}>
+                        <Typography.Title level={5}>
+                          Is Breakfast Included in the Price Guests Pay?
+                        </Typography.Title>
+                        <Form.Item
+                          name="breakfastIncluded"
+                          rules={[
+                            {
+                              required: isBreakfastIncludedOptionRequired,
+                              message:
+                                'Please select if breakfast is included or not'
+                            }
+                          ]}
+                        >
+                          <Radio.Group
+                            onChange={e => setBreakfastIncluded(e.target.value)}
+                            value={breakfastIncluded}
+                          >
+                            <Radio value={true}>Yes</Radio>
+                            <Radio value={false}>No</Radio>
+                          </Radio.Group>
+                        </Form.Item>
+                      </Space>
+                      <Space direction="vertical" style={{ width: '100%' }}>
+                        <Space direction="vertical" style={{ width: '100%' }}>
+                          <Typography.Title level={5}>
+                            What type of breakfast do you offer?
+                          </Typography.Title>
+                          <Space size={[0, 8]} wrap>
+                            {cuisineList.map(cuisine => (
+                              <CheckableTag
+                                key={cuisine._id}
+                                checked={typesOfBreakfast.includes(
+                                  cuisine.text
+                                )}
+                                onChange={checked =>
+                                  handleTagChange(cuisine.text, checked)
+                                }
+                              >
+                                {cuisine.text}
+                              </CheckableTag>
+                            ))}
+                          </Space>
                         </Space>
                       </Space>
+                      <CardBottom direction="horizontal">
+                        <Button
+                          size="large"
+                          type="primary"
+                          ghost
+                          icon={<ArrowLeftOutlined />}
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center'
+                          }}
+                          onClick={() => {
+                            navigate(-1);
+                          }}
+                        >
+                          Back
+                        </Button>
+                        <Button
+                          size="large"
+                          type="primary"
+                          block
+                          htmlType="submit"
+                          disabled={status === 'pending'}
+                          // onClick={mutate}
+                          // onClick={() => {
+                          //   navigate('/apartment/parking');
+                          // }}
+                        >
+                          Continue
+                        </Button>
+                      </CardBottom>
                     </Space>
-                    <CardBottom direction="horizontal">
-                      <Button
-                        size="large"
-                        type="primary"
-                        ghost
-                        icon={<ArrowLeftOutlined />}
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center'
-                        }}
-                        onClick={() => {
-                          navigate(-1);
-                        }}
-                      >
-                        Back
-                      </Button>
-                      <Button
-                        size="large"
-                        type="primary"
-                        block
-                        htmlType="submit"
-                        // onClick={mutate}
-                        // onClick={() => {
-                        //   navigate('/apartment/parking');
-                        // }}
-                      >
-                        Continue
-                      </Button>
-                    </CardBottom>
-                  </Space>
-                </Form>
+                  </Form>
+                )}
               </Card>
             </Col>
           </Row>

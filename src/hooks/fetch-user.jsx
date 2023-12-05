@@ -20,8 +20,8 @@ const fetchUserDetails = async () => {
   return response;
 };
 function useFetchUser() {
-  const { setUser, setIsFetching, user } = useUserStore(state => state);
-  console.log({ user });
+  const { setUser, setIsFetching } = useUserStore(state => state);
+  // console.log({ user });
   const { isError, data } = useQuery({
     queryKey: ['user'],
     // enabled: !!getAuthToken() && !user,
@@ -35,7 +35,7 @@ function useFetchUser() {
   // console.log(data.isError, );
   useEffect(() => {
     if (isError) setIsFetching(false);
-  }, [isError]);
+  }, [isError, setIsFetching]);
   return data;
 }
 

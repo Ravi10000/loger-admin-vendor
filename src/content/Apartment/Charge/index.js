@@ -14,12 +14,17 @@ import {
   Row,
   Select,
   Space,
-  Typography
+  Typography,
+  Spin
 } from 'antd';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { useTheme } from 'styled-components';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import api from 'src/api';
+import { findApartment, updateProperty } from 'src/api/property.req';
+import { toast } from 'react-hot-toast';
 
 const options = [
   {
@@ -33,8 +38,71 @@ const options = [
 ];
 
 const Charge = () => {
+  const { propertyId } = useParams();
+
   const navigate = useNavigate();
   const theme = useTheme();
+  const [price, setPrice] = useState('');
+  const {
+    data: apartment,
+    error: apartmentError,
+    isFetching
+  } = useQuery({
+    queryKey: ['apartment', propertyId, ['prices']],
+    enabled: propertyId?.length === 24,
+    initialData: {},
+    queryFn: async () => {
+      const res = await findApartment(propertyId, 'prices');
+      const apartment = res?.data?.apartment;
+      if (apartment?.prices?.length) {
+        const occupancy1Price = apartment.prices.find(
+          priceObj => priceObj.occupancy === 1
+        )?.price;
+        if (occupancy1Price) {
+          setPrice(occupancy1Price);
+        }
+      }
+      return apartment;
+    }
+  });
+
+  const { mutate, status } = useMutation({
+    mutationFn: async () => {
+      if (!price) {
+        toast.error('Please enter price for ocupancy 1');
+        return;
+      }
+      const apartmentPrices = apartment?.prices.filter(
+        priceObj => priceObj.occupancy !== 1
+      );
+      const data = {
+        propertyId,
+        prices: [
+          {
+            occupancy: 1,
+            price: parseFloat(price),
+            discountedPrice: parseFloat(price)
+          },
+          ...apartmentPrices
+        ]
+      };
+      const res = await api.put('/apartments', data);
+      console.log({ res });
+      navigate(`/apartment/${propertyId}/plans`);
+    },
+    onError: console.error
+  });
+
+  // useEffect(() => {
+  //   if (property?.apartment) {
+  //     const occupancy1Price = property.apartment.prices.find(
+  //       priceObj => priceObj.occupancy === 1
+  //     )?.price;
+  //     if (occupancy1Price) {
+  //       setPrice(occupancy1Price);
+  //     }
+  //   }
+  // }, [property]);
 
   return (
     <>
@@ -51,69 +119,80 @@ const Charge = () => {
                 style={{ width: '100%' }}
               >
                 <Card>
-                  <Space
-                    direction="vertical"
-                    size="large"
-                    style={{ width: '100%' }}
-                  >
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      <Typography.Title level={5}>
-                        Price guests pay
-                      </Typography.Title>
-                      <Space.Compact style={{ width: '100%' }}>
-                        <Select
-                          style={{ width: 'auto' }}
-                          size="large"
-                          defaultValue="INR"
-                          options={options}
-                        />
-                        <Input size="large" />
-                      </Space.Compact>
+                  {isFetching ? (
+                    <Spin />
+                  ) : (
+                    <Space
+                      direction="vertical"
+                      size="large"
+                      style={{ width: '100%' }}
+                    >
+                      <Space direction="vertical" style={{ width: '100%' }}>
+                        <Typography.Title level={5}>
+                          Price guests pay
+                        </Typography.Title>
+                        <Space.Compact style={{ width: '100%' }}>
+                          <Select
+                            style={{ width: 'auto' }}
+                            size="large"
+                            defaultValue="INR"
+                            options={options}
+                          />
+                          <Input
+                            size="large"
+                            value={price}
+                            onChange={e => {
+                              if (!isNaN(e.target.value))
+                                setPrice(e.target.value);
+                            }}
+                          />
+                        </Space.Compact>
+                        <Typography.Text>
+                          Including taxes, commsion and charges
+                        </Typography.Text>
+                      </Space>
+                      <Space direction="vertical" style={{ width: '100%' }}>
+                        <Typography.Title level={5}>
+                          Price guests pay
+                        </Typography.Title>
+                        <ul style={{ listStyle: 'none' }}>
+                          <li>
+                            <Typography.Paragraph>
+                              <CheckOutlined style={{ marginRight: '1rem' }} />
+                              Lorem ipsum dolor sit amet consectetur.
+                            </Typography.Paragraph>
+                          </li>
+                          <li>
+                            <Typography.Paragraph>
+                              <CheckOutlined style={{ marginRight: '1rem' }} />
+                              Lorem ipsum dolor sit amet consectetur.
+                            </Typography.Paragraph>
+                          </li>
+                          <li>
+                            <Typography.Paragraph>
+                              <CheckOutlined style={{ marginRight: '1rem' }} />
+                              Lorem ipsum dolor sit amet consectetur.
+                            </Typography.Paragraph>
+                          </li>
+                          <li>
+                            <Typography.Paragraph>
+                              <CheckOutlined style={{ marginRight: '1rem' }} />
+                              Lorem ipsum dolor sit amet consectetur.
+                            </Typography.Paragraph>
+                          </li>
+                        </ul>
+                      </Space>
+                      <Divider style={{ marginBlock: 0 }} />
                       <Typography.Text>
-                        Including taxes, commsion and charges
+                        <Typography.Text
+                          style={{ color: theme.antd.colorPrimary }}
+                        >
+                          INR 400.00
+                        </Typography.Text>{' '}
+                        Your earning(including taxes)
                       </Typography.Text>
                     </Space>
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      <Typography.Title level={5}>
-                        Price guests pay
-                      </Typography.Title>
-                      <ul style={{ listStyle: 'none' }}>
-                        <li>
-                          <Typography.Paragraph>
-                            <CheckOutlined style={{ marginRight: '1rem' }} />
-                            Lorem ipsum dolor sit amet consectetur.
-                          </Typography.Paragraph>
-                        </li>
-                        <li>
-                          <Typography.Paragraph>
-                            <CheckOutlined style={{ marginRight: '1rem' }} />
-                            Lorem ipsum dolor sit amet consectetur.
-                          </Typography.Paragraph>
-                        </li>
-                        <li>
-                          <Typography.Paragraph>
-                            <CheckOutlined style={{ marginRight: '1rem' }} />
-                            Lorem ipsum dolor sit amet consectetur.
-                          </Typography.Paragraph>
-                        </li>
-                        <li>
-                          <Typography.Paragraph>
-                            <CheckOutlined style={{ marginRight: '1rem' }} />
-                            Lorem ipsum dolor sit amet consectetur.
-                          </Typography.Paragraph>
-                        </li>
-                      </ul>
-                    </Space>
-                    <Divider style={{ marginBlock: 0 }} />
-                    <Typography.Text>
-                      <Typography.Text
-                        style={{ color: theme.antd.colorPrimary }}
-                      >
-                        INR 400.00
-                      </Typography.Text>{' '}
-                      Your earning(including taxes)
-                    </Typography.Text>
-                  </Space>
+                  )}
                 </Card>
                 <Card>
                   <Space direction="vertical" style={{ width: '100%' }}>
@@ -151,7 +230,7 @@ const Charge = () => {
                       alignItems: 'center'
                     }}
                     onClick={() => {
-                      navigate('/apartment/guest');
+                      navigate(-1);
                     }}
                   >
                     Back
@@ -160,9 +239,11 @@ const Charge = () => {
                     size="large"
                     type="primary"
                     block
-                    onClick={() => {
-                      navigate('/apartment/plans');
-                    }}
+                    disabled={status === 'pending' || isFetching}
+                    onClick={mutate}
+                    // onClick={() => {
+                    //   navigate('/apartment/plans');
+                    // }}
                   >
                     Continue
                   </Button>

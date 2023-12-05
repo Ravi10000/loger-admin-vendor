@@ -5,11 +5,12 @@ import {
 } from '@ant-design/icons';
 import { Button, Card, Checkbox, Col, Row, Space, Typography } from 'antd';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Container, MainWrapper } from 'src/components/Global';
 
 const Complete = () => {
   const navigate = useNavigate();
+  const { propertyId } = useParams();
 
   return (
     <>
@@ -127,7 +128,7 @@ const Complete = () => {
                     type="primary"
                     block
                     onClick={() => {
-                      //   navigate('/apartment/place');
+                      navigate(`/apartment/${propertyId}/Payment`);
                     }}
                   >
                     Open for bookings
@@ -137,7 +138,7 @@ const Complete = () => {
                     type="link"
                     block
                     onClick={() => {
-                      navigate('/apartment/availability');
+                      navigate(-1);
                     }}
                   >
                     I'm not ready

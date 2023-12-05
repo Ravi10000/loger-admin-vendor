@@ -7,7 +7,8 @@ import {
   Space,
   TimePicker,
   Typography,
-  Form
+  Form,
+  Spin
 } from 'antd';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -19,16 +20,64 @@ import {
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { toast } from 'react-hot-toast';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import api from 'src/api';
 import onError from 'src/utils/onError';
-import { updateProperty } from 'src/api/property.req';
+import {
+  findApartment,
+  findProperty,
+  updateProperty
+} from 'src/api/property.req';
 import dayjs from 'dayjs';
 
 const Rules = () => {
   const navigate = useNavigate();
   const { propertyId } = useParams();
-  const { mutate } = useMutation({
+
+  const { data: apartment, isFetching: isFetchingApartment } = useQuery({
+    queryKey: [
+      'apartment',
+      propertyId,
+      ['partiesEventsAllowed', 'petsAllowed', 'smokingAllowed']
+    ],
+    enabled: propertyId?.length === 24,
+    initialData: {},
+    queryFn: async ({ queryKey }) => {
+      const res = await findApartment(
+        propertyId,
+        queryKey?.[2]?.join?.(' ') ?? ''
+      );
+      const apartment = res?.data?.apartment;
+      return apartment;
+    }
+  });
+  const { data: property, isFetching: isFetchingProperty } = useQuery({
+    queryKey: [
+      'property',
+      propertyId,
+      [
+        'checkOutEndTime',
+        'checkOutStartTime',
+        'checkInEndTime',
+        'checkInStartTime'
+      ]
+    ],
+    enabled: propertyId?.length === 24,
+    initialData: {},
+    queryFn: async ({ queryKey }) => {
+      const res = await findProperty(
+        propertyId,
+        queryKey?.[2]?.join?.(' ') ?? ''
+      );
+      const property = res?.data?.property;
+
+      return property;
+    }
+  });
+
+  // console.log({ apartment });
+
+  const { mutate, status } = useMutation({
     mutationFn: async data => {
       if (data.checkIn?.length !== 2) {
         toast.error('please provide both check in start and end time');
@@ -45,16 +94,18 @@ const Rules = () => {
         checkOutStartTime: dayjs(data.checkOut[0]).format('HH:mm'),
         checkOutEndTime: dayjs(data.checkOut[1]).format('HH:mm')
       };
-      console.log({ data });
+      // console.log({ data, propertyData });
 
-      const res = await updateProperty(propertyData);
-      const apartmentRes = await api.put('/apartments', {
+      // const res =
+      await updateProperty(propertyData);
+      // const apartmentRes =
+      await api.put('/apartments', {
         propertyId,
         petsAllowed: data.activities.includes('pets'),
         smokingAllowed: data.activities.includes('smoking'),
         partiesEventsAllowed: data.activities.includes('parties')
       });
-      console.log({ res, apartmentRes });
+      // console.log({ res, apartmentRes });
       navigate(`/apartment/${propertyId}/host-profile`);
     },
     onError: (...props) => onError(...props, 'Something Went Wrong')
@@ -70,76 +121,137 @@ const Rules = () => {
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
-                <Form
-                  onFinish={mutate}
-                  defaultValue={{ checkIn: [], checkOut: [] }}
-                >
-                  <Space
-                    direction="vertical"
-                    size="large"
-                    style={{ width: '100%' }}
+                {isFetchingApartment || isFetchingProperty ? (
+                  <Spin />
+                ) : (
+                  <Form
+                    onFinish={mutate}
+                    initialValues={{
+                      checkIn:
+                        property.checkInStartTime && property.checkInEndTime
+                          ? [
+                              dayjs()
+                                .set(
+                                  'hour',
+                                  property.checkInStartTime.split(':')[0]
+                                )
+                                .set(
+                                  'minute',
+                                  property.checkInStartTime.split(':')[1]
+                                )
+                                .set('second', 0),
+                              dayjs()
+                                .set(
+                                  'hour',
+                                  property.checkInEndTime.split(':')[0]
+                                )
+                                .set(
+                                  'minute',
+                                  property.checkInEndTime.split(':')[1]
+                                )
+                                .set('second', 0)
+                            ]
+                          : [],
+                      checkOut:
+                        property.checkOutStartTime && property.checkOutEndTime
+                          ? [
+                              dayjs()
+                                .set(
+                                  'hour',
+                                  property.checkOutStartTime.split(':')[0]
+                                )
+                                .set(
+                                  'minute',
+                                  property.checkOutStartTime.split(':')[1]
+                                )
+                                .set('second', 0),
+                              dayjs()
+                                .set(
+                                  'hour',
+                                  property.checkOutEndTime.split(':')[0]
+                                )
+                                .set(
+                                  'minute',
+                                  property.checkOutEndTime.split(':')[1]
+                                )
+                                .set('second', 0)
+                            ]
+                          : [],
+                      activities: [
+                        ...(apartment?.petsAllowed ? ['pets'] : []),
+                        ...(apartment?.smokingAllowed ? ['smoking'] : []),
+                        ...(apartment?.partiesEventsAllowed ? ['parties'] : [])
+                      ]
+                    }}
                   >
-                    <Form.Item name="activities">
-                      <Checkbox.Group>
-                        <Space direction="vertical" style={{ width: '100%' }}>
-                          <Checkbox value="smoking">
-                            Smoking is shared area allowed
-                          </Checkbox>
-                          <Checkbox value="pets">Pets allowed</Checkbox>
-                          <Checkbox value="parties">
-                            Parties/ events allowed
-                          </Checkbox>
-                        </Space>
-                      </Checkbox.Group>
-                    </Form.Item>
+                    <Space
+                      direction="vertical"
+                      size="large"
+                      style={{ width: '100%' }}
+                    >
+                      <Form.Item name="activities">
+                        <Checkbox.Group>
+                          <Space direction="vertical" style={{ width: '100%' }}>
+                            <Checkbox value="smoking">
+                              Smoking is shared area allowed
+                            </Checkbox>
+                            <Checkbox value="pets">Pets allowed</Checkbox>
+                            <Checkbox value="parties">
+                              Parties/ events allowed
+                            </Checkbox>
+                          </Space>
+                        </Checkbox.Group>
+                      </Form.Item>
 
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      <Typography.Title level={5}>Check in</Typography.Title>
-                      <Form.Item name="checkIn">
-                        <TimePicker.RangePicker
+                      <Space direction="vertical" style={{ width: '100%' }}>
+                        <Typography.Title level={5}>Check in</Typography.Title>
+                        <Form.Item name="checkIn">
+                          <TimePicker.RangePicker
+                            size="large"
+                            style={{ width: '100%' }}
+                            placeholder={['From', 'Until']}
+                          />
+                        </Form.Item>
+                      </Space>
+                      <Space direction="vertical" style={{ width: '100%' }}>
+                        <Typography.Title level={5}>Check Out</Typography.Title>
+                        <Form.Item name="checkOut">
+                          <TimePicker.RangePicker
+                            size="large"
+                            style={{ width: '100%' }}
+                            placeholder={['From', 'Until']}
+                          />
+                        </Form.Item>
+                      </Space>
+                      <CardBottom direction="horizontal">
+                        <Button
                           size="large"
-                          style={{ width: '100%' }}
-                          placeholder={['From', 'Until']}
-                        />
-                      </Form.Item>
-                    </Space>
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      <Typography.Title level={5}>Check Out</Typography.Title>
-                      <Form.Item name="checkOut">
-                        <TimePicker.RangePicker
+                          type="primary"
+                          ghost
+                          icon={<ArrowLeftOutlined />}
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center'
+                          }}
+                          onClick={() => {
+                            navigate(-1);
+                          }}
+                        >
+                          Back
+                        </Button>
+                        <Button
                           size="large"
-                          style={{ width: '100%' }}
-                          placeholder={['From', 'Until']}
-                        />
-                      </Form.Item>
+                          type="primary"
+                          block
+                          htmlType="submit"
+                          disabled={status === 'pending'}
+                        >
+                          Continue
+                        </Button>
+                      </CardBottom>
                     </Space>
-                    <CardBottom direction="horizontal">
-                      <Button
-                        size="large"
-                        type="primary"
-                        ghost
-                        icon={<ArrowLeftOutlined />}
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center'
-                        }}
-                        onClick={() => {
-                          navigate(-1);
-                        }}
-                      >
-                        Back
-                      </Button>
-                      <Button
-                        size="large"
-                        type="primary"
-                        block
-                        htmlType="submit"
-                      >
-                        Continue
-                      </Button>
-                    </CardBottom>
-                  </Space>
-                </Form>
+                  </Form>
+                )}
               </Card>
             </Col>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>

@@ -1,8 +1,17 @@
-import { Button, Card, Col, Form, Input, Row, Space, Typography } from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Input,
+  Row,
+  Space,
+  Typography,
+  Spin
+} from 'antd';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
-import { toast } from 'react-hot-toast';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   ArrowLeftOutlined,
   LikeOutlined,
@@ -12,23 +21,40 @@ import {
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import api from 'src/api';
 import onError from 'src/utils/onError';
+import { findProperty, updateProperty } from 'src/api/property.req';
 
 const Place = () => {
   const navigate = useNavigate();
-
-  const apartmentMutation = useMutation({
+  const { propertyId } = useParams();
+  const propertyExists = propertyId?.length === 24;
+  const { data: property, isFetching } = useQuery({
+    queryKey: ['property', propertyId, ['propertyName']],
+    enabled: propertyId?.length === 24,
+    initialData: {},
+    queryFn: async () => {
+      const res = await findProperty(propertyId, 'propertyName');
+      return res?.data?.property;
+    }
+  });
+  const { mutate, status } = useMutation({
     mutationFn: async data => {
-      const res = await api.post('/properties', {
-        propertyType: 'apartment',
-        propertyName: data?.propertyName
-      });
-      // console.log({ res });
-      navigate(`/apartment/${res?.data?.property?._id}/property`);
+      let res;
+
+      if (propertyExists) {
+        data.propertyId = propertyId;
+        res = await updateProperty(data);
+      } else {
+        data.propertyType = 'apartment';
+        res = await api.post('/properties', data);
+      }
+      navigate(
+        `/apartment/${
+          propertyExists ? propertyId : res?.data?.property?._id
+        }/property`
+      );
     },
     onError: (...props) => onError(...props, 'Something Went Wrong')
   });
-  console.log({ apartmentMutation });
-  const { status } = apartmentMutation;
   return (
     <>
       <MainWrapper>
@@ -39,46 +65,51 @@ const Place = () => {
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
-                <Form layout="vertical" onFinish={apartmentMutation.mutate}>
-                  <Form.Item
-                    label="Property Name"
-                    rules={[
-                      { required: true, message: 'Property name required' }
-                    ]}
-                    name="propertyName"
+                {!isFetching ? (
+                  <Form
+                    layout="vertical"
+                    onFinish={mutate}
+                    initialValues={{ propertyName: property?.propertyName }}
                   >
-                    <Input size="large" />
-                  </Form.Item>
-                  <CardBottom direction="horizontal">
-                    <Button
-                      size="large"
-                      type="primary"
-                      ghost
-                      icon={<ArrowLeftOutlined />}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center'
-                      }}
-                      onClick={() => {
-                        navigate(-1);
-                      }}
+                    <Form.Item
+                      label="Property Name"
+                      rules={[
+                        { required: true, message: 'Property name required' }
+                      ]}
+                      name="propertyName"
                     >
-                      Back
-                    </Button>
-                    <Button
-                      size="large"
-                      type="primary"
-                      block
-                      htmlType="submit"
-                      disabled={status === 'pending'}
-                      // onClick={() => {
-                      //   navigate('/apartment/property');
-                      // }}
-                    >
-                      Continue
-                    </Button>
-                  </CardBottom>
-                </Form>
+                      <Input size="large" />
+                    </Form.Item>
+                    <CardBottom direction="horizontal">
+                      <Button
+                        size="large"
+                        type="primary"
+                        ghost
+                        icon={<ArrowLeftOutlined />}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center'
+                        }}
+                        onClick={() => {
+                          navigate(-1);
+                        }}
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        size="large"
+                        type="primary"
+                        block
+                        htmlType="submit"
+                        disabled={status === 'pending'}
+                      >
+                        Continue
+                      </Button>
+                    </CardBottom>
+                  </Form>
+                ) : (
+                  <Spin />
+                )}
               </Card>
             </Col>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
