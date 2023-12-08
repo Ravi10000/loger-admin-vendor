@@ -7,11 +7,10 @@ import {
   Space,
   TimePicker,
   Typography,
-  Form,
-  Spin
+  Form
 } from 'antd';
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import {
   ArrowLeftOutlined,
@@ -20,62 +19,38 @@ import {
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { toast } from 'react-hot-toast';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import api from 'src/api';
+import { useMutation } from '@tanstack/react-query';
 import onError from 'src/utils/onError';
 import {
-  findApartment,
-  findProperty,
+  updateApartment,
+  updateHotel,
   updateProperty
 } from 'src/api/property.req';
 import dayjs from 'dayjs';
+import {
+  useIsHotel,
+  useProperty,
+  usePropertyContent,
+  usePropertyId
+} from 'src/hooks/property-info';
+import Spinner from 'src/components/spinner';
 
 const Rules = () => {
   const navigate = useNavigate();
-  const { propertyId } = useParams();
+  const propertyId = usePropertyId();
+  const isHotel = useIsHotel();
 
-  const { data: apartment, isFetching: isFetchingApartment } = useQuery({
-    queryKey: [
-      'apartment',
-      propertyId,
-      ['partiesEventsAllowed', 'petsAllowed', 'smokingAllowed']
-    ],
-    enabled: propertyId?.length === 24,
-    initialData: {},
-    queryFn: async ({ queryKey }) => {
-      const res = await findApartment(
-        propertyId,
-        queryKey?.[2]?.join?.(' ') ?? ''
-      );
-      const apartment = res?.data?.apartment;
-      return apartment;
-    }
-  });
-  const { data: property, isFetching: isFetchingProperty } = useQuery({
-    queryKey: [
-      'property',
-      propertyId,
-      [
-        'checkOutEndTime',
-        'checkOutStartTime',
-        'checkInEndTime',
-        'checkInStartTime'
-      ]
-    ],
-    enabled: propertyId?.length === 24,
-    initialData: {},
-    queryFn: async ({ queryKey }) => {
-      const res = await findProperty(
-        propertyId,
-        queryKey?.[2]?.join?.(' ') ?? ''
-      );
-      const property = res?.data?.property;
-
-      return property;
-    }
-  });
-
-  // console.log({ apartment });
+  const { content, isFetching: isFetchingContent } = usePropertyContent([
+    'partiesEventsAllowed',
+    'petsAllowed',
+    'smokingAllowed'
+  ]);
+  const { property, isFetching: isFetchingProperty } = useProperty([
+    'checkOutEndTime',
+    'checkOutStartTime',
+    'checkInEndTime',
+    'checkInStartTime'
+  ]);
 
   const { mutate, status } = useMutation({
     mutationFn: async data => {
@@ -98,15 +73,19 @@ const Rules = () => {
 
       // const res =
       await updateProperty(propertyData);
-      // const apartmentRes =
-      await api.put('/apartments', {
+      const contentData = {
         propertyId,
         petsAllowed: data.activities.includes('pets'),
         smokingAllowed: data.activities.includes('smoking'),
         partiesEventsAllowed: data.activities.includes('parties')
-      });
-      // console.log({ res, apartmentRes });
-      navigate(`/apartment/${propertyId}/host-profile`);
+      };
+      if (isHotel) {
+        await updateHotel(contentData);
+        navigate(`/hotel/${propertyId}/new/room-detail`);
+      } else {
+        await updateApartment(contentData);
+        navigate(`/apartment/${propertyId}/host-profile`);
+      }
     },
     onError: (...props) => onError(...props, 'Something Went Wrong')
   });
@@ -121,8 +100,8 @@ const Rules = () => {
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
-                {isFetchingApartment || isFetchingProperty ? (
-                  <Spin />
+                {isFetchingContent || isFetchingProperty ? (
+                  <Spinner />
                 ) : (
                   <Form
                     onFinish={mutate}
@@ -178,9 +157,9 @@ const Rules = () => {
                             ]
                           : [],
                       activities: [
-                        ...(apartment?.petsAllowed ? ['pets'] : []),
-                        ...(apartment?.smokingAllowed ? ['smoking'] : []),
-                        ...(apartment?.partiesEventsAllowed ? ['parties'] : [])
+                        ...(content?.petsAllowed ? ['pets'] : []),
+                        ...(content?.smokingAllowed ? ['smoking'] : []),
+                        ...(content?.partiesEventsAllowed ? ['parties'] : [])
                       ]
                     }}
                   >

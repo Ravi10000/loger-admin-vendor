@@ -7,10 +7,9 @@ import {
   Select,
   Space,
   Typography,
-  Form,
-  Spin
+  Form
 } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { ArrowLeftOutlined } from '@ant-design/icons';
@@ -19,10 +18,16 @@ import api from 'src/api';
 import { findProperty, updateProperty } from 'src/api/property.req';
 import onError from 'src/utils/onError';
 import { toast } from 'react-hot-toast';
+import Spinner from 'src/components/spinner';
+import {
+  useIsHotel,
+  useProperty,
+  usePropertyId
+} from 'src/hooks/property-info';
 
 const Language = () => {
   const navigate = useNavigate();
-  const { propertyId } = useParams();
+  const propertyId = usePropertyId();
   const {
     data: languages,
     isFetching: isFetchingLanguages,
@@ -45,16 +50,18 @@ const Language = () => {
     [languages]
   );
 
-  const { data: property, isFetching } = useQuery({
-    queryKey: ['property', propertyId, ['languagesSpoken']],
-    enabled: propertyId?.length === 24 && !!languages?.length,
-    initialData: {},
-    queryFn: async () => {
-      const res = await findProperty(propertyId, 'languagesSpoken');
-      const property = res?.data?.property;
-      return property;
-    }
-  });
+  const { property, isFetching } = useProperty(['languagesSpoken']);
+  const isHotel = useIsHotel();
+  // const { data: property, isFetching } = useQuery({
+  //   queryKey: ['property', propertyId, ['languagesSpoken']],
+  //   enabled: propertyId?.length === 24 && !!languages?.length,
+  //   initialData: {},
+  //   queryFn: async () => {
+  //     const res = await findProperty(propertyId, 'languagesSpoken');
+  //     const property = res?.data?.property;
+  //     return property;
+  //   }
+  // });
 
   const { mutate, status } = useMutation({
     mutationFn: async data => {
@@ -68,8 +75,9 @@ const Language = () => {
       }
       // const res =
       await updateProperty(data);
-      // console.log({ res });
-      navigate(`/apartment/${propertyId}/rules`);
+      isHotel
+        ? navigate(`/hotel/${propertyId}/rules`)
+        : navigate(`/apartment/${propertyId}/rules`);
     },
     onError: (...props) => onError(...props, 'Something Went Wrong')
   });
@@ -85,7 +93,7 @@ const Language = () => {
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
                 {isFetching ? (
-                  <Spin />
+                  <Spinner />
                 ) : (
                   <Form
                     onFinish={mutate}

@@ -28,6 +28,7 @@ import {
 } from 'src/api/property.req';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import onError from 'src/utils/onError';
+import { useApartment } from 'src/hooks/property-info';
 
 const ControlButton = styled(Button)`
   display: inline-flex;
@@ -44,34 +45,21 @@ const PropertyDetail = () => {
   const [bathroomsCount, setBathroomsCount] = useState(1);
 
   const isCribOptionRequired = childrenAllowed === true;
-
-  const { data: apartment, isFetching } = useQuery({
-    queryKey: [
-      'apartment',
-      propertyId,
-      [
-        'maxGuests',
-        'cribOffered',
-        'apartmentSize',
-        'bathroomsCount',
-        'childrenAllowed'
-      ]
+  const { apartment, isFetching } = useApartment(
+    [
+      'maxGuests',
+      'cribOffered',
+      'apartmentSize',
+      'bathroomsCount',
+      'childrenAllowed'
     ],
-    enabled: propertyId?.length === 24,
-    initialData: {},
-    queryFn: async () => {
-      const res = await findApartment(
-        propertyId,
-        'maxGuests cribOffered apartmentSize childrenAllowed bathroomsCount'
-      );
-      // console.log({ res });
-      const apartment = res?.data?.apartment;
-      setMaxGuests(apartment?.maxGuests ?? 1);
-      setBathroomsCount(apartment?.bathroomsCount ?? 1);
-      return apartment;
+    apartment => {
+      apartment?.maxGuests && setMaxGuests(apartment?.maxGuests);
+      apartment?.bathroomsCount && setBathroomsCount(apartment?.bathroomsCount);
+      setChildrenAllowed(apartment?.childrenAllowed ?? null);
+      setCribOffered(apartment?.cribOffered ?? null);
     }
-  });
-  // console.log({ apartment });
+  );
 
   const { status, mutate } = useMutation({
     mutationFn: async data => {
@@ -91,7 +79,6 @@ const PropertyDetail = () => {
         return;
       }
       await updateApartment(data);
-      // console.log({ res });
       navigate(`/apartment/${propertyId}/breakfast-detail`);
     },
     onError: (...props) => onError(...props, 'Something Went Wrong')
@@ -225,33 +212,35 @@ const PropertyDetail = () => {
                             </Radio.Group>
                           </Form.Item>
                         </Space>
-                        <Space direction="vertical" style={{ width: '100%' }}>
-                          <Typography.Title level={5}>
-                            Do you offer cribs?
-                          </Typography.Title>
-                          <Typography.Paragraph>
-                            Cribs sleep most infants 0-3 years old and are
-                            available to guests on request.
-                          </Typography.Paragraph>
-                          <Form.Item
-                            name="cribOffered"
-                            rules={[
-                              {
-                                required: isCribOptionRequired,
-                                message:
-                                  'Please select if crib is offered or not in this property'
-                              }
-                            ]}
-                          >
-                            <Radio.Group
-                              onChange={handleAllowCribs}
-                              value={cribOffered}
+                        {childrenAllowed && (
+                          <Space direction="vertical" style={{ width: '100%' }}>
+                            <Typography.Title level={5}>
+                              Do you offer cribs?
+                            </Typography.Title>
+                            <Typography.Paragraph>
+                              Cribs sleep most infants 0-3 years old and are
+                              available to guests on request.
+                            </Typography.Paragraph>
+                            <Form.Item
+                              name="cribOffered"
+                              rules={[
+                                {
+                                  required: isCribOptionRequired,
+                                  message:
+                                    'Please select if crib is offered or not in this property'
+                                }
+                              ]}
                             >
-                              <Radio value={true}>Yes</Radio>
-                              <Radio value={false}>No</Radio>
-                            </Radio.Group>
-                          </Form.Item>
-                        </Space>
+                              <Radio.Group
+                                onChange={handleAllowCribs}
+                                value={cribOffered}
+                              >
+                                <Radio value={true}>Yes</Radio>
+                                <Radio value={false}>No</Radio>
+                              </Radio.Group>
+                            </Form.Item>
+                          </Space>
+                        )}
                       </Space>
                     </Card>
                     <Card>

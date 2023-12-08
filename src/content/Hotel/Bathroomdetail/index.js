@@ -9,10 +9,17 @@ import {
   CloseOutlined
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
+import { usePropertyId } from 'src/hooks/property-info';
+import { useContentItems } from 'src/hooks/content-items';
+import Spinner from 'src/components/spinner';
 
 const Bathroomdetail = () => {
   const navigate = useNavigate();
-
+  const propertyId = usePropertyId();
+  const { contentItems: bathRoomItems, isFetching } = useContentItems({
+    type: 'bathroom-item'
+  });
+  console.log({ bathRoomItems });
   return (
     <>
       <MainWrapper>
@@ -23,69 +30,70 @@ const Bathroomdetail = () => {
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
-                <Space
-                  direction="vertical"
-                  size="large"
-                  style={{ width: '100%' }}
-                >
-                  <Space direction="vertical" style={{ width: '100%' }}>
-                    <Typography.Title level={5}>
-                      Is the Bathroom Private?
-                    </Typography.Title>
-                    <Radio.Group>
-                      <Space direction="vertical">
-                        <Radio value={1}>Yes</Radio>
-                        <Radio value={2}>No, it's shared</Radio>
-                      </Space>
-                    </Radio.Group>
+                {isFetching ? (
+                  <Spinner />
+                ) : (
+                  <Space
+                    direction="vertical"
+                    size="large"
+                    style={{ width: '100%' }}
+                  >
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Typography.Title level={5}>
+                        Is the Bathroom Private?
+                      </Typography.Title>
+                      <Radio.Group>
+                        <Space direction="vertical">
+                          <Radio value={1}>Yes</Radio>
+                          <Radio value={2}>No, it's shared</Radio>
+                        </Space>
+                      </Radio.Group>
+                    </Space>
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Typography.Title level={5}>
+                        What Bathroom Items are Available in This Room?
+                      </Typography.Title>
+                      <Checkbox.Group>
+                        <Checkbox.Group name="bathroomItems">
+                          <Space direction="vertical">
+                            {bathRoomItems?.map(item => (
+                              <Checkbox value={item?.text} key={item._id}>
+                                {item?.text}
+                              </Checkbox>
+                            ))}
+                          </Space>
+                        </Checkbox.Group>
+                      </Checkbox.Group>
+                    </Space>
+                    <CardBottom direction="horizontal">
+                      <Button
+                        size="large"
+                        type="primary"
+                        ghost
+                        icon={<ArrowLeftOutlined />}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center'
+                        }}
+                        onClick={() => {
+                          navigate(-1);
+                        }}
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        size="large"
+                        type="primary"
+                        block
+                        // onClick={() => {
+                        //   navigate('/hotel/room');
+                        // }}
+                      >
+                        Continue
+                      </Button>
+                    </CardBottom>
                   </Space>
-                  <Space direction="vertical" style={{ width: '100%' }}>
-                    <Typography.Title level={5}>
-                      What Bathroom Items are Available in This Room?
-                    </Typography.Title>
-                    <Checkbox.Group>
-                      <Space direction="vertical">
-                        <Checkbox>Toilet paper</Checkbox>
-                        <Checkbox>Shower</Checkbox>
-                        <Checkbox>Toilet</Checkbox>
-                        <Checkbox>Hairdryer</Checkbox>
-                        <Checkbox>Bathtub</Checkbox>
-                        <Checkbox>Free toiletries</Checkbox>
-                        <Checkbox>Bidget</Checkbox>
-                        <Checkbox>Slippers</Checkbox>
-                        <Checkbox>Bathrobe</Checkbox>
-                        <Checkbox>Spa tub</Checkbox>
-                      </Space>
-                    </Checkbox.Group>
-                  </Space>
-                  <CardBottom direction="horizontal">
-                    <Button
-                      size="large"
-                      type="primary"
-                      ghost
-                      icon={<ArrowLeftOutlined />}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center'
-                      }}
-                      onClick={() => {
-                        navigate('/hotel/room-detail');
-                      }}
-                    >
-                      Back
-                    </Button>
-                    <Button
-                      size="large"
-                      type="primary"
-                      block
-                      onClick={() => {
-                        navigate('/hotel/room');
-                      }}
-                    >
-                      Continue
-                    </Button>
-                  </CardBottom>
-                </Space>
+                )}
               </Card>
             </Col>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>

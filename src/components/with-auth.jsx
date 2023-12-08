@@ -10,7 +10,6 @@ function WithAuth({ children, redirectTo }) {
 
   useEffect(() => {
     if (!isFetching && !user) {
-      console.log('navigating...');
       navigate(redirectTo);
     }
   }, [isFetching, user, redirectTo, navigate]);

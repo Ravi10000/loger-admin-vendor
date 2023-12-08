@@ -14,17 +14,18 @@ import {
   Row,
   Select,
   Space,
-  Typography,
-  Spin
+  Typography
 } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { useTheme } from 'styled-components';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import api from 'src/api';
-import { findApartment, updateProperty } from 'src/api/property.req';
+import { findApartment } from 'src/api/property.req';
 import { toast } from 'react-hot-toast';
+import { useIsHotel, usePropertyId } from 'src/hooks/property-info';
+import Spinner from 'src/components/spinner';
 
 const options = [
   {
@@ -38,57 +39,76 @@ const options = [
 ];
 
 const Charge = () => {
-  const { propertyId } = useParams();
-
   const navigate = useNavigate();
+  const propertyId = usePropertyId();
+  const { roomName } = useParams();
+  const isHotel = useIsHotel();
+
   const theme = useTheme();
   const [price, setPrice] = useState('');
-  const {
-    data: apartment,
-    error: apartmentError,
-    isFetching
-  } = useQuery({
-    queryKey: ['apartment', propertyId, ['prices']],
+  const { data: content, isFetching } = useQuery({
+    queryKey: [
+      isHotel ? 'hotel' : 'apartment',
+      propertyId,
+      [isHotel ? 'price' : 'prices']
+    ],
     enabled: propertyId?.length === 24,
     initialData: {},
     queryFn: async () => {
-      const res = await findApartment(propertyId, 'prices');
-      const apartment = res?.data?.apartment;
-      if (apartment?.prices?.length) {
-        const occupancy1Price = apartment.prices.find(
+      const res = isHotel
+        ? await api.get(`/hotel-rooms/${propertyId}/${roomName}?select=price`)
+        : await findApartment(propertyId, 'prices');
+      console.log({ res });
+      const content = isHotel ? res?.data?.room : res?.data?.apartment;
+      if (content.price) setPrice(content.price);
+
+      if (content?.prices?.length) {
+        const occupancy1Price = content.prices.find(
           priceObj => priceObj.occupancy === 1
         )?.price;
         if (occupancy1Price) {
           setPrice(occupancy1Price);
         }
       }
-      return apartment;
+      return content;
     }
   });
 
   const { mutate, status } = useMutation({
     mutationFn: async () => {
       if (!price) {
-        toast.error('Please enter price for ocupancy 1');
+        toast.error(
+          isHotel
+            ? `Please provide price for ${roomName} Rooms`
+            : 'Please enter price for ocupancy 1'
+        );
         return;
       }
-      const apartmentPrices = apartment?.prices.filter(
-        priceObj => priceObj.occupancy !== 1
-      );
-      const data = {
-        propertyId,
-        prices: [
-          {
-            occupancy: 1,
-            price: parseFloat(price),
-            discountedPrice: parseFloat(price)
-          },
-          ...apartmentPrices
-        ]
-      };
-      const res = await api.put('/apartments', data);
-      console.log({ res });
-      navigate(`/apartment/${propertyId}/plans`);
+      if (isHotel) {
+        await api.put(`/hotel-rooms`, {
+          propertyId,
+          roomName,
+          price: parseFloat(price)
+        });
+        navigate(`/hotel/${propertyId}/${roomName}/plans`);
+      } else {
+        const apartmentPrices = content?.prices.filter(
+          priceObj => priceObj.occupancy !== 1
+        );
+        const data = {
+          propertyId,
+          prices: [
+            {
+              occupancy: 1,
+              price: parseFloat(price),
+              discountedPrice: parseFloat(price)
+            },
+            ...apartmentPrices
+          ]
+        };
+        await api.put('/apartments', data);
+        navigate(`/apartment/${propertyId}/plans`);
+      }
     },
     onError: console.error
   });
@@ -120,7 +140,7 @@ const Charge = () => {
               >
                 <Card>
                   {isFetching ? (
-                    <Spin />
+                    <Spinner />
                   ) : (
                     <Space
                       direction="vertical"

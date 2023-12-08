@@ -9,17 +9,19 @@ import {
   Typography,
   Spin
 } from 'antd';
-import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { COUNTRY_LIST as countryList } from 'src/constants/country';
 import { EnvironmentOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { Container, MainWrapper, CardBottom } from 'src/components/Global';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import onError from 'src/utils/onError';
 import { findProperty, updateProperty } from 'src/api/property.req';
+import api from 'src/api';
+import { usePropertyId, useIsHotel } from 'src/hooks/property-info';
 
 const Property = () => {
-  const { propertyId } = useParams();
+  const propertyId = usePropertyId();
+  const isHotel = useIsHotel();
   const navigate = useNavigate();
   const { data: property, isFetching } = useQuery({
     queryKey: [
@@ -28,7 +30,7 @@ const Property = () => {
       ['country', 'address', 'city', 'pincode']
     ],
     enabled: propertyId?.length === 24,
-    initialData: {},
+    initialData: null,
     queryFn: async () => {
       const res = await findProperty(
         propertyId,
@@ -41,8 +43,24 @@ const Property = () => {
   const { status, mutate } = useMutation({
     mutationFn: async data => {
       console.log({ data });
-      data.propertyId = propertyId;
-      await updateProperty(data);
+      let newPropertyId = null;
+      if (!property) {
+        data.propertyType = 'hotel';
+        const res = await api.post('/properties', data);
+        newPropertyId = res?.data?.property?._id;
+      } else {
+        data.propertyId = propertyId;
+        await updateProperty(data);
+      }
+      if (isHotel) {
+        const propertyExists = propertyId?.length === 24;
+        if (!propertyExists)
+          navigate(`/hotel/${newPropertyId ?? propertyId}/property`, {
+            replace: true
+          });
+        navigate(`/hotel/${newPropertyId ?? propertyId}/location`);
+        return;
+      }
       navigate(`/apartment/${propertyId}/location`);
     },
     onError: (...props) => onError(...props, 'Something Went Wrong')

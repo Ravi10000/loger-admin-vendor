@@ -40,9 +40,15 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { toast } from 'react-hot-toast';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { updateProperty } from 'src/api/property.req';
+import {
+  findHotelRoom,
+  findProperty,
+  updateHotelRooms,
+  updateProperty
+} from 'src/api/property.req';
 import onError from 'src/utils/onError';
 import api from 'src/api';
+import { useIsHotel, usePropertyId } from 'src/hooks/property-info';
 
 const UploadIconWrapper = styled(Typography.Paragraph)`
   color: ${props => props.theme.antd.colorPrimary};
@@ -117,7 +123,7 @@ export const SortablePhoto = ({
       <RemoveButton
         shape="circle"
         onClick={async () => {
-          removeFromFileList(id);
+          removeFromFileList(id, index);
           if (props?.photoUrl) await deletePhotoFromDB();
         }}
       >
@@ -169,80 +175,97 @@ export const Photo = forwardRef(
 
 const PreviewGallery = () => {
   const navigate = useNavigate();
-  const { propertyId } = useParams();
+  const propertyId = usePropertyId();
+  const isHotel = useIsHotel();
+  const { roomName } = useParams();
   const [fileList, setFileList] = useState([]);
-  console.log({ fileList });
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const [mainPhotoIdx, setMainPhotoIdx] = useState(0);
-  console.log({ mainPhotoIdx });
   const { message } = App.useApp();
-  const {
-    data: property,
-    error: propertyError,
-    isFetching
-  } = useQuery({
-    queryKey: ['property', propertyId],
+  const { isFetching } = useQuery({
+    queryKey: [roomName ? 'hotel-room' : 'property', propertyId],
     enabled: !!propertyId,
     refetchOnWindowFocus: false,
     initialData: {},
     queryFn: async () => {
-      const res = await api.get(`/properties/${propertyId}`);
-      setFileList(res?.data?.property?.photos || []);
-      const mainPhotoIdx = res?.data?.property?.photos?.findIndex(
-        photo => photo.isMain
-      );
+      const res = roomName
+        ? await findHotelRoom(propertyId, roomName, 'photos')
+        : await findProperty(propertyId, 'photos');
+      const content = roomName ? res?.data?.room : res?.data?.property;
+      setFileList(content?.photos || content?.photos || []);
+      const mainPhotoIdx = content?.photos?.findIndex(photo => photo.isMain);
       if (mainPhotoIdx !== -1) {
         setMainPhotoIdx(mainPhotoIdx);
       }
-      return res?.data?.property;
+      return content;
     }
   });
 
-  console.log({ property, propertyError });
-  console.log({ fileList });
-  console.log({ mainPhoto: fileList?.[mainPhotoIdx] });
-
-  const { status, mutate, data, error } = useMutation({
+  const { status, mutate } = useMutation({
     mutationFn: async () => {
-      // const data = { propertyId };
+      if (!fileList?.length) {
+        toast.error('Please upload photos of your property');
+        return;
+      }
       const formData = new FormData();
       formData.append('propertyId', propertyId);
       formData.append('mainPhotoIdx', mainPhotoIdx);
+      if (roomName) formData.append('roomName', roomName);
       fileList.forEach(file => {
         if (file.url) formData.append('photos', file);
       });
       if (formData.get('photos')) {
-        const res = await updateProperty(formData);
-        console.log({ res });
+        if (roomName) {
+          console.log({ fileList });
+          console.log({ mainPhoto: fileList[mainPhotoIdx] });
+          await updateHotelRooms(formData);
+        } else await updateProperty(formData);
+      } else {
+        let mainPhoto = fileList[mainPhotoIdx];
+        if (roomName) {
+          await api.put(`/hotel-rooms/photos`, {
+            propertyId,
+            roomName,
+            photoId: mainPhoto._id,
+            isMain: true
+          });
+        } else {
+          await api.put(`/properties/photos`, {
+            propertyId,
+            photoId: mainPhoto._id,
+            isMain: true
+          });
+        }
+      }
+
+      if (roomName) {
+        navigate(`/hotel/${propertyId}/view`);
+        return;
+      }
+      if (isHotel) {
+        navigate(`/hotel/${propertyId}/view`);
+        return;
       }
       navigate(`/apartment/${propertyId}/guest`);
     },
-    onError: err => {
-      console.log(err);
-      const formData = err.config.data;
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ', ' + pair[1]);
-      }
-    }
-    // onError: (...props) => onError(...props, 'Something Went Wrong')
+    onError: console.log
   });
 
-  const { mutateAsync: deletePhotoFromDB, error: deletePhotoError } =
-    useMutation({
-      mutationFn: async photoId => {
-        const res = await api.delete(
-          `/properties/photos/${propertyId}/${photoId}`
-        );
-        console.log({ res });
-      },
-      onError: err => {
-        console.log(err);
-      }
-    });
-
-  // console.log({ error, status, data });
+  const { mutateAsync: deletePhotoFromDB } = useMutation({
+    mutationFn: async (photoId, idx) => {
+      const res = roomName
+        ? await api.delete(
+            `/hotel-rooms/photos/${propertyId}/${roomName}/${photoId}`
+          )
+        : await api.delete(`/properties/photos/${propertyId}/${photoId}`);
+      console.log({ res });
+    },
+    onError: err => {
+      console.log(err);
+    }
+  });
 
   //   const [activeId, setActiveId] = useState(null);
   //   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
@@ -314,7 +337,8 @@ const PreviewGallery = () => {
   //     setActiveId(null);
   //   }
 
-  function handleDeletePhoto(id) {
+  function handleDeletePhoto(id, idx) {
+    if (idx === mainPhotoIdx) setMainPhotoIdx(0);
     setFileList([
       ...fileList.filter(item => {
         if (item.photoUrl) return item._id !== id;
@@ -329,7 +353,9 @@ const PreviewGallery = () => {
         <Container>
           <Space direction="vertical">
             <Typography.Title level={2}>
-              What Does Your Place Look Like ?
+              {roomName
+                ? 'What Does Your Room Look Like ?'
+                : 'What Does Your Place Look Like ?'}
             </Typography.Title>
             <Typography.Paragraph style={{ marginBottom: '1.5rem' }}>
               <b>Upload at Least 12 Photos of your Property.</b> The More Your
@@ -428,7 +454,6 @@ const PreviewGallery = () => {
                       ) : (
                         <>
                           <UploadIconWrapper>
-                            {/* <FileImageOutlined /> */}
                             <img
                               src="/assets/images/image-upload.png"
                               alt="upload"
@@ -627,12 +652,11 @@ const PreviewGallery = () => {
                 removeFromFileList={handleDeletePhoto}
                 setMainPhotoIdx={setMainPhotoIdx}
                 isMainPhoto={true}
-                deletePhotoFromDB={() =>
-                  deletePhotoFromDB(fileList?.[mainPhotoIdx]?._id)
-                }
+                deletePhotoFromDB={() => {
+                  deletePhotoFromDB(fileList?.[mainPhotoIdx]?._id);
+                }}
               />
               {fileList.map((item, index) => {
-                // console.log({ item, index, mainPhotoIdx });
                 if (index === mainPhotoIdx) return null;
                 return (
                   <SortablePhoto
@@ -668,7 +692,6 @@ const PreviewGallery = () => {
                 alignItems: 'center'
               }}
               onClick={() => {
-                // navigate('/apartment/host-profile');
                 navigate(-1);
               }}
             >

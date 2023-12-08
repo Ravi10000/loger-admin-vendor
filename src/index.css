@@ -41,3 +41,8 @@
 /* ._upload-input * {
   outline: auto;
 } */
+
+._delete:hover {
+  background-color: rgba(240, 128, 128, 0.168) !important;
+  color: rgb(238, 33, 33) !important;
+}

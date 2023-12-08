@@ -20,26 +20,38 @@ import {
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import api from 'src/api';
-import { findApartment } from 'src/api/property.req';
+import {
+  findApartment,
+  findHotel,
+  findHotelRoom,
+  updateApartment,
+  updateHotelRooms
+} from 'src/api/property.req';
+import { usePropertyId } from 'src/hooks/property-info';
+import Spinner from 'src/components/spinner';
 
 const Policy = () => {
   const navigate = useNavigate();
-  const { propertyId } = useParams();
+  const propertyId = usePropertyId();
+  const { roomName } = useParams();
   const [days, setDays] = useState('3 days');
 
-  const {
-    data: apartment,
-    error: apartmentError,
-    isFetching
-  } = useQuery({
-    queryKey: ['apartment', propertyId, ['freeCancellationBefore']],
-    enabled: !!propertyId,
+  const { data: content, isFetching } = useQuery({
+    queryKey: [
+      roomName ? 'hotel-rooms' : 'apartment',
+      propertyId,
+      ['freeCancellationBefore']
+    ],
+    enabled: propertyId?.length === 24,
     initialData: {},
     queryFn: async () => {
-      const res = await findApartment(propertyId, 'freeCancellationBefore');
-      if (res?.data?.apartment?.freeCancellationBefore)
-        setDays(res?.data?.apartment.freeCancellationBefore + ' days');
-      return res?.data?.apartment;
+      const res = roomName
+        ? await findHotelRoom(propertyId, roomName, 'freeCancellationBefore')
+        : await findApartment(propertyId, 'freeCancellationBefore');
+      const content = roomName ? res?.data?.room : res?.data?.apartment;
+      if (content?.freeCancellationBefore)
+        setDays(content.freeCancellationBefore + ' days');
+      return content;
     }
   });
 
@@ -47,8 +59,15 @@ const Policy = () => {
     mutationFn: async () => {
       const data = { propertyId };
       data.freeCancellationBefore = parseInt(days.split(' ')[0]);
-      const res = await api.put('/apartments', data);
+      if (roomName) data.roomName = roomName;
+      const res = roomName
+        ? await updateHotelRooms(data)
+        : await updateApartment(data);
       console.log({ res });
+      if (roomName) {
+        navigate(`/hotel/${propertyId}/${roomName}/preview-gallery`);
+        return;
+      }
       navigate(`/apartment/${propertyId}/availability`);
     },
     onError: console.error
@@ -65,7 +84,7 @@ const Policy = () => {
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
                 {isFetching ? (
-                  <Spin />
+                  <Spinner />
                 ) : (
                   <Space
                     direction="vertical"

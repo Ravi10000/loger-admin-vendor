@@ -13,6 +13,7 @@ import React from 'react';
 import { Container, MainWrapper } from 'src/components/Global';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import api from 'src/api';
+import onError from 'src/utils/onError';
 
 const Payment = () => {
   const { data: entity, isFetching } = useQuery({
@@ -27,10 +28,9 @@ const Payment = () => {
     mutationFn: async data => {
       console.log({ data });
       const res = await api.put('/legal-entity', data);
-      console.log({ res });
       return res;
     },
-    onError: console.log
+    onError
   });
 
   return (

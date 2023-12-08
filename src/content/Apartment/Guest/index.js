@@ -1,16 +1,6 @@
-import {
-  Button,
-  Card,
-  Checkbox,
-  Col,
-  Row,
-  Space,
-  Typography,
-  Form,
-  Spin
-} from 'antd';
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Button, Card, Checkbox, Col, Row, Space, Typography } from 'antd';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import {
   ArrowLeftOutlined,
@@ -20,36 +10,25 @@ import {
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import api from 'src/api';
-import { findProperty, updateProperty } from 'src/api/property.req';
+import { updateProperty } from 'src/api/property.req';
 import { toast } from 'react-hot-toast';
+import {
+  useIsHotel,
+  useProperty,
+  usePropertyId
+} from 'src/hooks/property-info';
+import Spinner from 'src/components/spinner';
 const Guest = () => {
   const navigate = useNavigate();
-  const { propertyId } = useParams();
+  const propertyId = usePropertyId();
+  const isHotel = useIsHotel();
   const [selectedFacilities, setSelectedFacilities] = useState([]);
-  console.log({ selectedFacilities });
-
-  const {
-    data: property,
-    error: propertyError,
-    isFetching
-  } = useQuery({
-    queryKey: ['property', propertyId, ['facilities']],
-    enabled: propertyId?.length === 24,
-    initialData: {},
-    queryFn: async () => {
-      const res = await findProperty(propertyId, 'facilities');
-      const property = res?.data?.property;
-      if (property?.facilities?.length)
-        setSelectedFacilities(property?.facilities);
-      return property;
-    }
+  const { isFetching } = useProperty(['facilities'], property => {
+    if (property?.facilities?.length)
+      setSelectedFacilities(property?.facilities);
   });
-  console.log({ property });
-  const {
-    data: facilityList,
-    isFetching: isFetchingFacility,
-    error: facilityError
-  } = useQuery({
+
+  const { data: facilityList, isFetching: isFetchingFacility } = useQuery({
     queryKey: ['facilities', { status: 'active' }],
     initialData: [],
     queryFn: async () => {
@@ -68,9 +47,10 @@ const Guest = () => {
         facilities: selectedFacilities,
         propertyId
       };
-      const res = await updateProperty(data);
-      console.log({ res });
-      navigate(`/apartment/${propertyId}/charge`);
+      await updateProperty(data);
+      isHotel
+        ? navigate(`/hotel/${propertyId}/breakfast-detail`)
+        : navigate(`/apartment/${propertyId}/charge`);
     },
     onError: err => {
       console.log({ err });
@@ -93,8 +73,8 @@ const Guest = () => {
           <Row gutter={[32, 32]}>
             <Col xs={24} md={20} lg={16} xl={12} xxl={8}>
               <Card>
-                {isFetching ? (
-                  <Spin />
+                {isFetching || isFetchingFacility ? (
+                  <Spinner />
                 ) : (
                   <Space
                     direction="vertical"

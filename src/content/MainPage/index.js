@@ -33,7 +33,8 @@ const properties = [
     title: 'Hotels',
     description:
       'Furnished and self-categing Accomadation, where guests rent the entire place',
-    navigateTo: '/hotel/boarding'
+    // navigateTo: '/hotel/new/boarding'
+    navigateTo: '/hotel/new/property'
   },
   {
     image: '/assets/images/villa-logo.png',

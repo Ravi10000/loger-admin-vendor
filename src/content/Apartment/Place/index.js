@@ -47,6 +47,10 @@ const Place = () => {
         data.propertyType = 'apartment';
         res = await api.post('/properties', data);
       }
+      if (!propertyExists)
+        navigate(`/apartment/${res?.data?.property?._id}/place`, {
+          replace: true
+        });
       navigate(
         `/apartment/${
           propertyExists ? propertyId : res?.data?.property?._id

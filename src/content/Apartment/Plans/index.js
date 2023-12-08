@@ -14,8 +14,7 @@ import {
   Space,
   Typography,
   Input,
-  Spin,
-  InputNumber
+  Spin
 } from 'antd';
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -24,78 +23,84 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import api from 'src/api';
 import { toast } from 'react-hot-toast';
 import { AiOutlinePercentage } from 'react-icons/ai';
-import { findApartment } from 'src/api/property.req';
+import { findApartment, findHotelRoom } from 'src/api/property.req';
+import { useIsHotel, usePropertyId } from 'src/hooks/property-info';
+import Spinner from 'src/components/spinner';
 
 const Charge = () => {
-  const { propertyId } = useParams();
+  const propertyId = usePropertyId();
+  const isHotel = useIsHotel();
+  const { roomName } = useParams();
   const navigate = useNavigate();
   const [prices, setPrices] = useState([]);
   const [nonRefundableDiscount, setNonRefundableDiscount] = useState('');
   const [weeklyPlanDiscount, setWeeklyPlanDiscount] = useState('');
 
   const {
-    data: apartment,
-    error: apartmentError,
+    // data: content,
+    // error: contentError,
     isFetching
   } = useQuery({
     queryKey: [
-      'apartment',
+      isHotel ? ['hotel-room', roomName] : ['apartment'],
       propertyId,
-      ['prices', 'nonRefundableDiscount', 'weeklyPlanDiscount']
+      [
+        isHotel ? 'price' : 'prices',
+        'nonRefundableDiscount',
+        'weeklyPlanDiscount'
+      ]
     ],
-    enabled: !!propertyId,
+    enabled: propertyId?.length === 24,
     initialData: {},
     queryFn: async ({ queryKey }) => {
-      const res = await findApartment(propertyId, queryKey[2].join(' '));
-      const apartment = res?.data?.apartment;
-      if (apartment?.prices?.length) setPrices(apartment.prices);
-      if (apartment?.nonRefundableDiscount)
-        setNonRefundableDiscount(apartment.nonRefundableDiscount);
-      if (apartment?.weeklyPlanDiscount)
-        setWeeklyPlanDiscount(apartment.weeklyPlanDiscount);
-      return apartment;
+      const res = isHotel
+        ? await findHotelRoom(propertyId, roomName, queryKey[2].join(' '))
+        : await findApartment(propertyId, queryKey[2].join(' '));
+      console.log({ res });
+      const content = isHotel ? res?.data?.room : res?.data?.apartment;
+      if (!isHotel) {
+        content?.prices?.length && setPrices(content.prices);
+        content?.nonRefundableDiscount ??
+          setNonRefundableDiscount(content.nonRefundableDiscount);
+        content?.weeklyPlanDiscount ??
+          setWeeklyPlanDiscount(content.weeklyPlanDiscount);
+      } else {
+        setNonRefundableDiscount(content.nonRefundableDiscount);
+        setWeeklyPlanDiscount(content.weeklyPlanDiscount);
+      }
+      return content;
     }
   });
 
   const { mutate, status } = useMutation({
     mutationFn: async () => {
-      if (!prices?.length) {
+      if (!prices?.length && !isHotel) {
         toast.error('Please provide pricing');
         return;
       }
-      console.log(typeof nonRefundableDiscount);
-      if (
-        nonRefundableDiscount &&
-        (typeof nonRefundableDiscount !== 'number' ||
-          nonRefundableDiscount > 100)
-      ) {
-        toast.error(
-          'Non-Refundable plan discount should be a discount less than 100'
-        );
-        return;
+      if (isHotel) {
+        const data = {
+          roomName,
+          propertyId,
+          weeklyPlanDiscount,
+          nonRefundableDiscount
+        };
+        await api.put(`/hotel-rooms`, data);
+        navigate(`/hotel/${propertyId}/${roomName}/cancellation-policy`);
+      } else {
+        const filteredPrices = prices?.filter(priceObj => priceObj?.price);
+        const data = {
+          propertyId,
+          prices: filteredPrices,
+          weeklyPlanDiscount: weeklyPlanDiscount || 0,
+          nonRefundableDiscount: nonRefundableDiscount || 0
+        };
+        await api.put('/apartments', data);
+        navigate(`/apartment/${propertyId}/cancellation-policy`);
       }
-      if (
-        weeklyPlanDiscount &&
-        (typeof weeklyPlanDiscount !== 'number' || weeklyPlanDiscount > 100)
-      ) {
-        toast.error('Weekly plan discount should be a discount less than 100');
-        return;
-      }
-      const filteredPrices = prices?.filter(priceObj => priceObj?.price);
-      const data = {
-        propertyId,
-        prices: filteredPrices,
-        weeklyPlanDiscount: weeklyPlanDiscount || 0,
-        nonRefundableDiscount: nonRefundableDiscount || 0
-      };
-      const res = await api.put('/apartments', data);
-      console.log({ res });
-      navigate(`/apartment/${propertyId}/cancellation-policy`);
     },
     onError: console.log
   });
-
-  // console.log({ apartment });
 
   return (
     <>
@@ -120,403 +125,420 @@ const Charge = () => {
                     Eu arcu ac integer d.
                   </Typography.Paragraph>
                 </Card>
-                <Space direction="vertical" style={{ width: '100%' }}>
-                  <Typography.Title level={4}>
-                    Standard Rate Plan
-                  </Typography.Title>
-                  <Card>
-                    {isFetching ? (
-                      <Spin />
-                    ) : (
-                      <Space
-                        direction="vertical"
-                        size="large"
-                        style={{ width: '100%' }}
-                      >
-                        <Space direction="vertical" style={{ width: '100%' }}>
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                              flexWrap: 'wrap',
-                              gap: '0.5rem'
-                            }}
-                          >
-                            <Typography.Title
-                              level={5}
-                              style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                marginBlock: 0
-                              }}
-                            >
-                              Cancellation Policy
-                              <InfoCircleOutlined
-                                style={{ marginLeft: '0.5rem' }}
-                              />
-                            </Typography.Title>
-                            <Button type="primary" ghost>
-                              Edit
-                            </Button>
-                          </div>
-                        </Space>
-                        <Typography.Paragraph type="success">
-                          Lorem ipsum dolor sit amet consectetur. Amet
-                          vestibulum enim id diam nunc arcu tellus ornare. Sed
-                          diam pellentesque sagittis nam. Tristique
-                        </Typography.Paragraph>
-                        <Checkbox.Group>
+                {!isHotel && (
+                  <Space direction="vertical" style={{ width: '100%' }}>
+                    <Typography.Title level={4}>
+                      Standard Rate Plan
+                    </Typography.Title>
+                    <Card>
+                      {isFetching ? (
+                        <Spin />
+                      ) : (
+                        <Space
+                          direction="vertical"
+                          size="large"
+                          style={{ width: '100%' }}
+                        >
                           <Space direction="vertical" style={{ width: '100%' }}>
-                            <Checkbox>
-                              Lorem ipsum dolor sit amet consectetur
-                            </Checkbox>
-                            <Checkbox>
-                              Lorem ipsum dolor sit amet consectetur
-                            </Checkbox>
-                          </Space>
-                        </Checkbox.Group>
-                        <Divider style={{ marginBlock: 0 }} />
-                        <Space direction="vertical" style={{ width: '100%' }}>
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                              flexWrap: 'wrap',
-                              gap: '0.5rem'
-                            }}
-                          >
-                            <Typography.Title
-                              level={5}
+                            <div
                               style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                marginBlock: 0
+                                justifyContent: 'space-between',
+                                flexWrap: 'wrap',
+                                gap: '0.5rem'
                               }}
                             >
-                              Price Per Group Size
-                              <InfoCircleOutlined
-                                style={{ marginLeft: '0.5rem' }}
-                              />
-                            </Typography.Title>
-                            <Button
-                              type="primary"
-                              ghost
-                              onClick={() =>
-                                setPrices(ps => [
-                                  ...ps,
-                                  {
-                                    occupancy: ps.length + 1,
-                                    price: '',
-                                    discountedPrice: ''
-                                  }
-                                ])
-                              }
+                              <Typography.Title
+                                level={5}
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  marginBlock: 0
+                                }}
+                              >
+                                Cancellation Policy
+                                <InfoCircleOutlined
+                                  style={{ marginLeft: '0.5rem' }}
+                                />
+                              </Typography.Title>
+                              <Button type="primary" ghost>
+                                Edit
+                              </Button>
+                            </div>
+                          </Space>
+                          <Typography.Paragraph type="success">
+                            Lorem ipsum dolor sit amet consectetur. Amet
+                            vestibulum enim id diam nunc arcu tellus ornare. Sed
+                            diam pellentesque sagittis nam. Tristique
+                          </Typography.Paragraph>
+                          <Checkbox.Group>
+                            <Space
+                              direction="vertical"
+                              style={{ width: '100%' }}
                             >
-                              Add
-                            </Button>
-                          </div>
-                          <div
-                            style={{
-                              display: 'grid',
-                              gridTemplateColumns: '1fr 1fr 1fr 25px'
-                            }}
-                          >
-                            <h3>Occupacy</h3>
-                            <h3>Guests Pay</h3>
-                            <h3>Discounted Price</h3>
-                          </div>
-                          {prices?.map((priceObj, idx) => (
+                              <Checkbox>
+                                Lorem ipsum dolor sit amet consectetur
+                              </Checkbox>
+                              <Checkbox>
+                                Lorem ipsum dolor sit amet consectetur
+                              </Checkbox>
+                            </Space>
+                          </Checkbox.Group>
+                          <Divider style={{ marginBlock: 0 }} />
+                          <Space direction="vertical" style={{ width: '100%' }}>
                             <div
-                              key={idx}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                flexWrap: 'wrap',
+                                gap: '0.5rem'
+                              }}
+                            >
+                              <Typography.Title
+                                level={5}
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  marginBlock: 0
+                                }}
+                              >
+                                Price Per Group Size
+                                <InfoCircleOutlined
+                                  style={{ marginLeft: '0.5rem' }}
+                                />
+                              </Typography.Title>
+                              <Button
+                                type="primary"
+                                ghost
+                                onClick={() =>
+                                  setPrices(ps => [
+                                    ...ps,
+                                    {
+                                      occupancy: ps.length + 1,
+                                      price: '',
+                                      discountedPrice: ''
+                                    }
+                                  ])
+                                }
+                              >
+                                Add
+                              </Button>
+                            </div>
+                            <div
                               style={{
                                 display: 'grid',
                                 gridTemplateColumns: '1fr 1fr 1fr 25px'
                               }}
                             >
+                              <h3>Occupacy</h3>
+                              <h3>Guests Pay</h3>
+                              <h3>Discounted Price</h3>
+                            </div>
+                            {prices?.map((priceObj, idx) => (
                               <div
+                                key={idx}
                                 style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '20px'
+                                  display: 'grid',
+                                  gridTemplateColumns: '1fr 1fr 1fr 25px'
                                 }}
                               >
-                                <img
-                                  src="/assets/images/user-icon.png"
-                                  alt="occupancy"
-                                  width={20}
-                                />
-                                <img
-                                  src="/assets/images/times.png"
-                                  alt="times"
-                                  width={15}
-                                />
-                                <h4>{priceObj.occupancy}</h4>
-                              </div>
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '20px'
+                                  }}
+                                >
+                                  <img
+                                    src="/assets/images/user-icon.png"
+                                    alt="occupancy"
+                                    width={20}
+                                  />
+                                  <img
+                                    src="/assets/images/times.png"
+                                    alt="times"
+                                    width={15}
+                                  />
+                                  <h4>{priceObj.occupancy}</h4>
+                                </div>
 
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '10px'
-                                }}
-                              >
-                                <p>INR</p>
-                                <Input
-                                  style={{ maxWidth: '100px' }}
-                                  value={priceObj.price}
-                                  onInput={e =>
-                                    (e.target.value = e.target.value.replace(
-                                      /[^0-9]/g,
-                                      ''
-                                    ))
-                                  }
-                                  onChange={e => {
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '10px'
+                                  }}
+                                >
+                                  <p>INR</p>
+                                  <Input
+                                    style={{ maxWidth: '100px' }}
+                                    value={priceObj.price}
+                                    onInput={e => {
+                                      e.target.value = e.target.value.replace(
+                                        /[^0-9]/g,
+                                        ''
+                                      );
+                                    }}
+                                    onChange={e => {
+                                      setPrices(ps =>
+                                        ps.map((priceObj, i) => {
+                                          if (idx === i) {
+                                            return {
+                                              ...priceObj,
+                                              price: e.target.value
+                                            };
+                                          }
+                                          return priceObj;
+                                        })
+                                      );
+                                    }}
+                                  />
+                                </div>
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '10px'
+                                  }}
+                                >
+                                  <Input
+                                    style={{ maxWidth: '100px' }}
+                                    value={priceObj.discountedPrice}
+                                    onInput={e =>
+                                      (e.target.value = e.target.value.replace(
+                                        /[^0-9]/g,
+                                        ''
+                                      ))
+                                    }
+                                    onChange={e => {
+                                      setPrices(ps =>
+                                        ps.map((priceObj, i) => {
+                                          if (idx === i) {
+                                            return {
+                                              ...priceObj,
+                                              discountedPrice: e.target.value
+                                            };
+                                          }
+                                          return priceObj;
+                                        })
+                                      );
+                                    }}
+                                  />
+                                </div>
+                                <CgRemove
+                                  onClick={() => {
                                     setPrices(ps =>
-                                      ps.map((priceObj, i) => {
-                                        if (idx === i) {
-                                          return {
-                                            ...priceObj,
-                                            price: parseFloat(
-                                              e?.target?.value?.length
-                                                ? e.target.value
-                                                : 0
-                                            )
-                                          };
-                                        }
-                                        return priceObj;
-                                      })
+                                      ps.filter((_, i) => i !== idx)
                                     );
+                                  }}
+                                  style={{
+                                    heigth: '30px',
+                                    width: 'fit-content',
+                                    cursor: 'pointer'
                                   }}
                                 />
                               </div>
-                              <div
+                            ))}
+                          </Space>
+                          <Typography.Paragraph type="success">
+                            Lorem ipsum dolor sit amet consectetur. Amet
+                            vestibulum enim id diam nunc arcu tellus ornare. Sed
+                            diam pellentesque sagittis nam. Tristique
+                          </Typography.Paragraph>
+                        </Space>
+                      )}
+                    </Card>
+                  </Space>
+                )}
+                {isFetching ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Typography.Title level={4}>
+                        Non-Refundable Rate Plan
+                      </Typography.Title>
+                      <Card>
+                        <Space
+                          direction="vertical"
+                          size="large"
+                          style={{ width: '100%' }}
+                        >
+                          <Space direction="vertical" style={{ width: '100%' }}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                flexWrap: 'wrap',
+                                gap: '0.5rem'
+                              }}
+                            >
+                              <Typography.Title
+                                level={5}
                                 style={{
                                   display: 'flex',
                                   alignItems: 'center',
-                                  gap: '10px'
+                                  marginBlock: 0
                                 }}
                               >
-                                <Input
-                                  style={{ maxWidth: '100px' }}
-                                  value={priceObj.discountedPrice}
-                                  onInput={e =>
-                                    (e.target.value = e.target.value.replace(
-                                      /[^0-9]/g,
-                                      ''
-                                    ))
-                                  }
-                                  onChange={e => {
-                                    setPrices(ps =>
-                                      ps.map((priceObj, i) => {
-                                        if (idx === i) {
-                                          return {
-                                            ...priceObj,
-                                            discountedPrice: parseFloat(
-                                              e.target.value
-                                            )
-                                          };
-                                        }
-                                        return priceObj;
-                                      })
-                                    );
-                                  }}
+                                Discount on Non-refundable Bookings
+                                <InfoCircleOutlined
+                                  style={{ marginLeft: '0.5rem' }}
                                 />
-                              </div>
-                              <CgRemove
-                                onClick={() => {
-                                  setPrices(ps =>
-                                    ps.filter((_, i) => i !== idx)
+                              </Typography.Title>
+
+                              {/* <Button type="primary" ghost>
+                            Edit
+                          </Button> */}
+                            </div>
+                            <div
+                              style={{
+                                width: 'fit-content',
+                                position: 'relative',
+                                marginTop: '10px'
+                              }}
+                            >
+                              <AiOutlinePercentage
+                                style={{
+                                  position: 'absolute',
+                                  top: '50%',
+                                  right: '10px',
+                                  transform: 'translateY(-50%)',
+                                  zIndex: '10',
+                                  background: '#fff'
+                                }}
+                              />
+                              <Input
+                                size="large"
+                                onInput={e => {
+                                  e.target.value = e.target.value.replace(
+                                    /[^0-9]/g,
+                                    ''
+                                  );
+                                }}
+                                value={nonRefundableDiscount}
+                                style={{
+                                  maxWidth: '75px'
+                                }}
+                                onChange={e => {
+                                  if (e.target.value > 100) {
+                                    toast.error(
+                                      "Non-refundable discount can't be more than 100%"
+                                    );
+                                    return;
+                                  }
+                                  setNonRefundableDiscount(e.target.value);
+                                }}
+                                controls={false}
+                              />
+                            </div>
+                          </Space>
+
+                          {/* <Checkbox.Group>
+                        <Space direction="vertical" style={{ width: '100%' }}>
+                          <Checkbox>
+                            Lorem ipsum dolor sit amet consectetur
+                          </Checkbox>
+                          <Checkbox>
+                            Lorem ipsum dolor sit amet consectetur
+                          </Checkbox>
+                        </Space>
+                      </Checkbox.Group> */}
+                        </Space>
+                      </Card>
+                    </Space>
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Typography.Title level={4}>
+                        Weekly Rate Plan
+                      </Typography.Title>
+                      <Card>
+                        <Space
+                          direction="vertical"
+                          size="large"
+                          style={{ width: '100%' }}
+                        >
+                          <Space direction="vertical" style={{ width: '100%' }}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                flexWrap: 'wrap',
+                                gap: '0.5rem'
+                              }}
+                            >
+                              <Typography.Title
+                                level={5}
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  marginBlock: 0
+                                }}
+                              >
+                                Discount on Weekly Bookings
+                                <InfoCircleOutlined
+                                  style={{ marginLeft: '0.5rem' }}
+                                />
+                              </Typography.Title>
+                              {/* <Button type="primary" ghost>
+                            Edit
+                          </Button> */}
+                            </div>
+                            <div
+                              style={{
+                                width: 'fit-content',
+                                position: 'relative',
+                                marginTop: '10px'
+                              }}
+                            >
+                              <AiOutlinePercentage
+                                style={{
+                                  position: 'absolute',
+                                  top: '50%',
+                                  right: '10px',
+                                  transform: 'translateY(-50%)',
+                                  zIndex: '10',
+                                  background: '#fff'
+                                }}
+                              />
+                              <Input
+                                size="large"
+                                onInput={e => {
+                                  e.target.value = e.target.value.replace(
+                                    /[^0-9]/g,
+                                    ''
                                   );
                                 }}
                                 style={{
-                                  heigth: '30px',
-                                  width: 'fit-content',
-                                  cursor: 'pointer'
+                                  maxWidth: '75px'
                                 }}
+                                value={weeklyPlanDiscount}
+                                onChange={e => {
+                                  if (e.target.value > 100) {
+                                    toast.error(
+                                      "Weekly discount can't be more than 100%"
+                                    );
+                                    return;
+                                  }
+                                  setWeeklyPlanDiscount(e.target.value);
+                                }}
+                                controls={false}
                               />
                             </div>
-                          ))}
+                          </Space>
+                          <Typography.Paragraph type="success">
+                            Lorem ipsum dolor sit amet consectetur. Amet
+                            vestibulum enim id diam nunc arcu tellus ornare. Sed
+                            diam pellentesque sagittis nam. Tristique
+                          </Typography.Paragraph>
                         </Space>
-                        <Typography.Paragraph type="success">
-                          Lorem ipsum dolor sit amet consectetur. Amet
-                          vestibulum enim id diam nunc arcu tellus ornare. Sed
-                          diam pellentesque sagittis nam. Tristique
-                        </Typography.Paragraph>
-                      </Space>
-                    )}
-                  </Card>
-                </Space>
-                <Space direction="vertical" style={{ width: '100%' }}>
-                  <Typography.Title level={4}>
-                    Non-Refundable Rate Plan
-                  </Typography.Title>
-                  <Card>
-                    <Space
-                      direction="vertical"
-                      size="large"
-                      style={{ width: '100%' }}
-                    >
-                      <Space direction="vertical" style={{ width: '100%' }}>
-                        <div
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            flexWrap: 'wrap',
-                            gap: '0.5rem'
-                          }}
-                        >
-                          <Typography.Title
-                            level={5}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              marginBlock: 0
-                            }}
-                          >
-                            Discount on Non-refundable Bookings
-                            <InfoCircleOutlined
-                              style={{ marginLeft: '0.5rem' }}
-                            />
-                          </Typography.Title>
-
-                          {/* <Button type="primary" ghost>
-                            Edit
-                          </Button> */}
-                        </div>
-                        <div
-                          style={{
-                            width: 'fit-content',
-                            position: 'relative',
-                            marginTop: '10px'
-                          }}
-                        >
-                          <AiOutlinePercentage
-                            style={{
-                              position: 'absolute',
-                              top: '50%',
-                              right: '10px',
-                              transform: 'translateY(-50%)',
-                              zIndex: '10',
-                              background: '#fff'
-                            }}
-                          />
-                          <InputNumber
-                            max={Infinity}
-                            value={nonRefundableDiscount}
-                            style={{ padding: '5px', fontSize: '20px' }}
-                            onChange={value => {
-                              console.log({ value });
-                              if (typeof value !== 'number')
-                                setNonRefundableDiscount(0);
-                              else setNonRefundableDiscount(parseFloat(value));
-                            }}
-                            controls={false}
-                          />
-                        </div>
-                      </Space>
-
-                      {/* <Checkbox.Group>
-                        <Space direction="vertical" style={{ width: '100%' }}>
-                          <Checkbox>
-                            Lorem ipsum dolor sit amet consectetur
-                          </Checkbox>
-                          <Checkbox>
-                            Lorem ipsum dolor sit amet consectetur
-                          </Checkbox>
-                        </Space>
-                      </Checkbox.Group> */}
+                      </Card>
                     </Space>
-                  </Card>
-                </Space>
-                <Space direction="vertical" style={{ width: '100%' }}>
-                  <Typography.Title level={4}>
-                    Weekly Rate Plan
-                  </Typography.Title>
-                  <Card>
-                    <Space
-                      direction="vertical"
-                      size="large"
-                      style={{ width: '100%' }}
-                    >
-                      <Space direction="vertical" style={{ width: '100%' }}>
-                        <div
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            flexWrap: 'wrap',
-                            gap: '0.5rem'
-                          }}
-                        >
-                          <Typography.Title
-                            level={5}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              marginBlock: 0
-                            }}
-                          >
-                            Discount on Weekly Bookings
-                            <InfoCircleOutlined
-                              style={{ marginLeft: '0.5rem' }}
-                            />
-                          </Typography.Title>
-                          {/* <Button type="primary" ghost>
-                            Edit
-                          </Button> */}
-                        </div>
-                        <div
-                          style={{
-                            width: 'fit-content',
-                            position: 'relative',
-                            marginTop: '10px'
-                          }}
-                        >
-                          <AiOutlinePercentage
-                            style={{
-                              position: 'absolute',
-                              top: '50%',
-                              right: '10px',
-                              transform: 'translateY(-50%)',
-                              zIndex: '10',
-                              background: '#fff'
-                            }}
-                          />
-                          <InputNumber
-                            max={Infinity}
-                            value={weeklyPlanDiscount}
-                            style={{ padding: '5px', fontSize: '20px' }}
-                            onChange={value => {
-                              console.log({ value });
-                              if (typeof value !== 'number')
-                                setWeeklyPlanDiscount(0);
-                              else setWeeklyPlanDiscount(parseFloat(value));
-                            }}
-                            controls={false}
-                          />
-                        </div>
-                      </Space>
-                      <Typography.Paragraph type="success">
-                        Lorem ipsum dolor sit amet consectetur. Amet vestibulum
-                        enim id diam nunc arcu tellus ornare. Sed diam
-                        pellentesque sagittis nam. Tristique
-                      </Typography.Paragraph>
-                      {/* <Checkbox.Group>
-                        <Space direction="vertical" style={{ width: '100%' }}>
-                          <Checkbox>
-                            Lorem ipsum dolor sit amet consectetur
-                          </Checkbox>
-                          <Checkbox>
-                            Lorem ipsum dolor sit amet consectetur
-                          </Checkbox>
-                        </Space>
-                      </Checkbox.Group> */}
-                    </Space>
-                  </Card>
-                </Space>
+                  </>
+                )}
                 <CardBottom direction="horizontal">
                   <Button
                     size="large"

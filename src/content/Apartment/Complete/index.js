@@ -128,7 +128,8 @@ const Complete = () => {
                     type="primary"
                     block
                     onClick={() => {
-                      navigate(`/apartment/${propertyId}/Payment`);
+                      // navigate(`/apartment/${propertyId}/Payment`);
+                      navigate(`/payment-details`);
                     }}
                   >
                     Open for bookings

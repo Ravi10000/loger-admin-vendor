@@ -7,18 +7,16 @@ import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { useMutation } from '@tanstack/react-query';
 import { updateProperty } from 'src/api/property.req';
 import onError from 'src/utils/onError';
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import { useIsHotel, usePropertyId } from 'src/hooks/property-info';
 const media = {
   mapImg: '/assets/images/map-img.png'
 };
 
 const Location = () => {
-  const { propertyId } = useParams();
+  const propertyId = usePropertyId();
   const navigate = useNavigate();
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: 'YOUR_API_KEY'
-  });
+  const isHotel = useIsHotel();
+
   const { status, mutate } = useMutation({
     mutationFn: async () => {
       const data = {
@@ -28,9 +26,12 @@ const Location = () => {
           lng: 123
         }
       };
-      console.log({ data });
-      const res = await updateProperty(data);
-      console.log({ res });
+      await updateProperty(data);
+      if (isHotel) {
+        console.log('navigating to : ', `/hotel/${propertyId}/rating`);
+        navigate(`/hotel/${propertyId}/rating`);
+        return;
+      }
       navigate(`/apartment/${propertyId}/property-detail`);
     },
     onError: (...props) => onError(...props, 'Something Went Wrong')

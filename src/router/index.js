@@ -10,6 +10,7 @@ import WithAuth from 'src/components/with-auth';
 import { Suspense, lazy } from 'react';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import WithNoAuth from 'src/components/with-no-auth';
+import Payment from 'src/content/Apartment/Payment';
 const Loader = Component => props =>
   (
     <Suspense fallback={<SuspenseLoader />}>
@@ -22,6 +23,10 @@ const router = [
   {
     path: '*',
     element: <Navigate to="auth" replace />
+  },
+  {
+    path: '/payment-details',
+    element: <Payment />
   },
   {
     path: 'auth',
@@ -41,12 +46,13 @@ const router = [
     )
   },
   {
+    // path: 'apartment/:propertyId',
     path: 'apartment/:propertyId',
     element: <BaseLayout />,
     children: apartmentRoutes
   },
   {
-    path: 'hotel',
+    path: 'hotel/:propertyId',
     element: <BaseLayout />,
     children: hotelRoutes
   },
