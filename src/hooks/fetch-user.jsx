@@ -28,6 +28,7 @@ function useFetchUser() {
     retry: 0,
     queryFn: async () => {
       const { data } = await fetchUserDetails();
+      console.log({ user: data?.user });
       setUser(data?.user);
       return data?.user;
     }

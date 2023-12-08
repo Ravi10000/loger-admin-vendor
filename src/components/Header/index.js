@@ -3,6 +3,7 @@ import { Avatar, Button, Dropdown, Layout, Space, Typography } from 'antd';
 import React from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useUserStore } from 'src/store/user';
 
 const flagIcon = {
   deFlag: 'http://purecatamphetamine.github.io/country-flag-icons/3x2/DE.svg',
@@ -45,6 +46,7 @@ const LangSwitcher = styled(Button)`
 
 const Header = () => {
   const navigate = useNavigate();
+  const user = useUserStore(state => state.user);
   return (
     <>
       <DefaultHeader
@@ -199,16 +201,23 @@ const Header = () => {
                   style={{ display: 'flex', alignItems: 'center' }}
                   type="primary"
                 >
-                  <Avatar
+                  <div
                     style={{
+                      height: '30px',
+                      width: '30px',
+                      borderRadius: '50%',
                       backgroundColor: '#8E03CF',
                       color: '#fff',
-                      marginRight: '0.4rem'
+                      marginRight: '0.4rem',
+                      textTransform: 'uppercase',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      fontWeight: '600'
                     }}
-                    size="small"
                   >
-                    A
-                  </Avatar>
+                    {user?.fName?.charAt(0)}
+                  </div>
                   <DownOutlined />
                 </Button>
               </Dropdown>
