@@ -7,7 +7,8 @@ import {
   Space,
   Typography,
   Input,
-  Progress
+  Progress,
+  Pagination
 } from 'antd';
 import { Container, MainWrapper } from 'src/components/Global';
 
@@ -21,6 +22,10 @@ import {
   SearchOutlined
 } from '@ant-design/icons';
 import { useTheme } from 'styled-components';
+import { useProperties } from 'src/hooks/properties-info';
+import { useQuery } from '@tanstack/react-query';
+import api from 'src/api';
+import Spinner from 'src/components/spinner';
 const onChange = key => {
   console.log(key);
 };
@@ -285,6 +290,99 @@ const data = [
 
 const GroupHome = () => {
   const theme = useTheme();
+  const [totalAddedPropertiesPages, setTotalAddedPropertiesPages] =
+    React.useState(0);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  console.log({ totalAddedPropertiesPages });
+  const {
+    data: properties,
+    isFetching,
+    error
+  } = useQuery({
+    queryKey: ['properties', 'added', ['propertyName', 'country'], currentPage],
+    keepPreviousData: true,
+    queryFn: async ({ queryKey }) => {
+      const res = await api.get(
+        `/properties/my-properties${
+          '?select=' + queryKey[2]?.join(' ')
+        }&status=added&page=${queryKey[3]}`
+      );
+      if (res?.data?.totalPages) {
+        setTotalAddedPropertiesPages(res.data.totalPages);
+      }
+      console.log({ res });
+
+      // {
+      //   key: '1',
+      //   name: 'Unnamed Property',
+      //   Location: 'India',
+      //   RegistrationProgress: (
+      //     <>
+      //       <Progress percent={30} status="exception" />
+      //     </>
+      //   ),
+      //   Action: <Typography.Link>Continue Registration</Typography.Link>
+      // },
+      const tableData = [];
+      res.data.properties.forEach(property => {
+        // console.log({ property });
+        tableData.push({
+          key: property._id,
+          name: property.propertyName,
+          Location: property.country,
+          RegistrationProgress: (
+            <>
+              <Progress percent={30} />
+            </>
+          ),
+          Action: <Typography.Link>Continue Registration</Typography.Link>
+        });
+      });
+      return tableData;
+    }
+  });
+
+  const {
+    data: progress,
+    isFetching: isProgressFetching,
+    error: isProgressError
+  } = useQuery({
+    queryKey: ['properties', 'progress', properties?.[36]?.key],
+    enabled: !!properties?.[36]?.key,
+    queryFn: async () => {
+      const res = await api.get(
+        `/properties/progress/${properties?.[36]?.key}`
+      );
+      console.log({ res });
+      return res.data?.progress;
+    }
+  });
+  console.log({ progress, isProgressFetching, isProgressError });
+  // const data = [
+  //   {
+  //     key: '1',
+  //     name: 'Unnamed Property',
+  //     Location: 'India',
+  //     RegistrationProgress: (
+  //       <>
+  //         <Progress percent={30} status="exception" />
+  //       </>
+  //     ),
+  //     Action: <Typography.Link>Continue Registration</Typography.Link>
+  //   },
+  //   {
+  //     key: '2',
+  //     name: 'Blueberry',
+  //     Location: 'India',
+  //     RegistrationProgress: (
+  //       <>
+  //         <Progress percent={90} />
+  //       </>
+  //     ),
+  //     Action: <Typography.Link>Continue Registration</Typography.Link>
+  //   }
+  // ];
+  // console.log(properties);
   return (
     <>
       <MainWrapper>
@@ -332,11 +430,29 @@ const GroupHome = () => {
                     Lorem ipsum dolor sit amet consectetur. Sit in donec ut
                     porta urna dolor quis faucibus.
                   </Typography.Text>
-                  <Table
-                    pagination={false}
-                    columns={columns}
-                    dataSource={data}
-                  />
+                  {isFetching ? (
+                    <Spinner />
+                  ) : (
+                    <>
+                      <Table
+                        pagination={false}
+                        columns={columns}
+                        // dataSource={data}
+                        dataSource={properties}
+                      />
+                      <Pagination
+                        // defaultCurrent={1}
+                        showLessItems
+                        // size='small'
+                        current={currentPage}
+                        total={totalAddedPropertiesPages * 6}
+                        defaultPageSize={6}
+                        onChange={value => {
+                          setCurrentPage(value);
+                        }}
+                      />
+                    </>
+                  )}
                 </Space>
                 <Space
                   direction="vertical"

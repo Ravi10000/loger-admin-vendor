@@ -23,3 +23,10 @@ export const findDistinctRooms = (propertyId, select, roomName) =>
   );
 export const deleteHotelRooms = (propertyId, roomName) =>
   api.delete(`/hotel-rooms/${propertyId}/${roomName}`);
+
+export const fetchMyProperties = ({ select, type, status }) =>
+  api.get(
+    `/properties/my-properties${'?select=' + select}${'&type=' + type}${
+      '&status=' + status
+    }`
+  );

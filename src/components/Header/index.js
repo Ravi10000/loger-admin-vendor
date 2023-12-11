@@ -2,8 +2,9 @@ import { QuestionCircleOutlined, DownOutlined } from '@ant-design/icons';
 import { Avatar, Button, Dropdown, Layout, Space, Typography } from 'antd';
 import React from 'react';
 import { styled } from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useUserStore } from 'src/store/user';
+import { toast } from 'react-hot-toast';
 
 const flagIcon = {
   deFlag: 'http://purecatamphetamine.github.io/country-flag-icons/3x2/DE.svg',
@@ -47,6 +48,7 @@ const LangSwitcher = styled(Button)`
 const Header = () => {
   const navigate = useNavigate();
   const user = useUserStore(state => state.user);
+  const logoutUser = useUserStore(state => state.logoutUser);
   return (
     <>
       <DefaultHeader
@@ -168,7 +170,7 @@ const Header = () => {
                     }
                   ]
                 }}
-                trigger={['click']}
+                // trigger={['click']}
               >
                 <LangSwitcher>
                   <img src={flagIcon.usFlag} alt="" />
@@ -186,19 +188,48 @@ const Header = () => {
                 <span style={{ marginLeft: '0.4rem' }}>Help</span>
               </Button>
               <Dropdown
+                overlayStyle={{
+                  width: 'fit-content',
+                  minWidth: '200px',
+                  padding: '10px'
+                }}
+                // trigger={['click']}
                 menu={{
                   items: [
                     {
-                      key: '1',
-                      label: <Typography.Text>1st item</Typography.Text>
+                      key: 'dashboard',
+                      label: (
+                        <Link to="/dashboard/groups/groups-home">
+                          Dashboard
+                        </Link>
+                      )
+                    },
+                    {
+                      key: 'logout',
+                      label: (
+                        <Button
+                          danger
+                          style={{ width: '100%' }}
+                          onClick={() => {
+                            localStorage.removeItem('AvJO)%zOxm}S/iy');
+                            logoutUser();
+                            toast.success('Logout Successful!');
+                          }}
+                        >
+                          Logout
+                        </Button>
+                      )
                     }
                   ]
                 }}
-                trigger={['click']}
               >
                 <Button
                   size="large"
-                  style={{ display: 'flex', alignItems: 'center' }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    borderRadius: '10px'
+                  }}
                   type="primary"
                 >
                   <div
@@ -218,7 +249,15 @@ const Header = () => {
                   >
                     {user?.fName?.charAt(0)}
                   </div>
-                  <DownOutlined />
+                  <img
+                    src="/arrow.png"
+                    alt="arrow"
+                    style={{
+                      marginLeft: '5px',
+                      height: '8px',
+                      width: 'fit-content'
+                    }}
+                  />
                 </Button>
               </Dropdown>
             </Space>

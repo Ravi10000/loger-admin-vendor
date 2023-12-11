@@ -1,10 +1,13 @@
 import { Layout, Menu, theme } from 'antd';
 import React, { memo } from 'react';
 import useMenuItems from './items';
+import { useLocation } from 'react-router-dom';
 
 const SideBar = ({ collapsed, handleCollapsed }) => {
   const { token } = theme.useToken();
   const [items] = useMenuItems();
+  const { pathname } = useLocation();
+  console.log({ pathname });
 
   return (
     <>
@@ -27,7 +30,12 @@ const SideBar = ({ collapsed, handleCollapsed }) => {
           }px)`
         }}
       >
-        <Menu theme="light" mode="inline" items={items} />
+        <Menu
+          selectedKeys={[pathname]}
+          theme="light"
+          mode="inline"
+          items={items}
+        />
       </Layout.Sider>
     </>
   );
