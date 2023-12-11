@@ -7,7 +7,7 @@ const SideBar = ({ collapsed, handleCollapsed }) => {
   const { token } = theme.useToken();
   const [items] = useMenuItems();
   const { pathname } = useLocation();
-  console.log({ pathname });
+  // console.log({ pathname });
 
   return (
     <>
@@ -31,7 +31,7 @@ const SideBar = ({ collapsed, handleCollapsed }) => {
         }}
       >
         <Menu
-          selectedKeys={[pathname]}
+Reservations          // selectedKeys={[pathname]}
           theme="light"
           mode="inline"
           items={items}

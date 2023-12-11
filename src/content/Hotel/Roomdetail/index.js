@@ -1,13 +1,13 @@
 import { Button, Card, Col, Input, Row, Space, Typography, Form } from 'antd';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import {
   ArrowLeftOutlined,
   MinusOutlined,
   PlusOutlined
 } from '@ant-design/icons';
-
+import { RiSkipRightLine } from 'react-icons/ri';
 import { styled } from 'styled-components';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import api from 'src/api';
@@ -101,9 +101,33 @@ const Roomdetail = () => {
     <>
       <MainWrapper>
         <Container>
-          <Typography.Title level={2} style={{ marginBottom: '2.5rem' }}>
-            {isRoom ? `Edit ${roomName} Room Details` : 'Add New Room Details'}
-          </Typography.Title>
+          <div
+            style={{
+              display: 'flex',
+              gap: '20px',
+              alignItems: 'center',
+              marginBottom: '20px'
+            }}
+          >
+            <Typography.Title level={2}>
+              {isRoom
+                ? `Edit ${roomName} Room Details`
+                : 'Add New Room Details'}
+            </Typography.Title>
+            <Button
+              onClick={() => navigate(`/hotel/${propertyId}/view`)}
+              style={{
+                fontSize: '1rem',
+                fontWeight: 'normal',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px'
+              }}
+            >
+              <span>Skip</span>
+              <RiSkipRightLine />
+            </Button>
+          </div>
           {isFetching ? (
             <Spinner />
           ) : (

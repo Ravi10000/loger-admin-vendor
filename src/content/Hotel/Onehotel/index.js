@@ -148,7 +148,9 @@ const HotelInfo = () => {
                       style={{ width: '100%', justifyContent: 'space-between' }}
                     >
                       <Space size="middle">
-                        <img src={media.checkIcon} alt="" />
+                        {!!rooms?.length && (
+                          <img src={media.checkIcon} alt="" />
+                        )}
                         <Space direction="vertical" style={{ width: '100%' }}>
                           <Typography.Text>Step 2</Typography.Text>
                           <Typography.Title
@@ -194,7 +196,9 @@ const HotelInfo = () => {
                     style={{ width: '100%', justifyContent: 'space-between' }}
                   >
                     <Space size="middle">
-                      <img src={media.checkIcon} alt="" />
+                      {!!property?.photos?.length && (
+                        <img src={media.checkIcon} alt="" />
+                      )}
                       <Space
                         direction="vertical"
                         style={{
