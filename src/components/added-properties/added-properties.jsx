@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { Button, Space, Pagination, Spin, Table } from 'antd';
-
+import { Button, Space, Pagination, Spin, Table, Modal } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from 'src/api';
 import Spinner from 'src/components/spinner';
 import PropertyProgress from 'src/components/property-progress/property-progress';
 import { Link } from 'react-router-dom';
-
+import { toast } from 'react-hot-toast';
 const columns = [
   {
     title: 'Name',
@@ -45,9 +45,14 @@ function AddedProperties() {
   const queryClient = useQueryClient();
 
   const { mutate: deleteProperty, status } = useMutation({
-    mutationFn: async propertyId => {
-      await api.delete(`/properties/${propertyId}`);
+    mutationFn: async () => {
+      if (propertyToDelete?.length !== 24) {
+        toast.error('Something went wrong!');
+        return;
+      }
+      await api.delete(`/properties/${propertyToDelete}`);
       setPropertyToDelete(null);
+      toast.success('Property deleted successfully!');
       queryClient.invalidateQueries(['properties', 'added']);
     }
   });
@@ -95,7 +100,7 @@ function AddedProperties() {
                   danger
                   onClick={() => {
                     setPropertyToDelete(property._id);
-                    deleteProperty(property._id);
+                    // deleteProperty(property._id);
                   }}
                 >
                   Delete
@@ -112,6 +117,76 @@ function AddedProperties() {
     <Spinner />
   ) : (
     <>
+      {/* <Button
+        type="primary"
+        onClick={() => {
+          Modal.confirm({
+            title: 'Confirm Delete',
+            content: 'Are you sure you want to delete this property?',
+            footer: (_, { OkBtn, CancelBtn }) => (
+              <>
+                <Button
+                  onClick={() => {
+                    setPropertyToDelete(null);
+                  }}
+                >
+                  No, Cancel
+                </Button>
+                <Button danger onClick={deleteProperty}>
+                  Yes, Delete
+                </Button>
+              </>
+            )
+          });
+        }}
+      >
+        Open Modal Confirm
+      </Button> */}
+      <Modal
+        open={!!propertyToDelete}
+        title="Delete Property"
+        onCancel={() => {
+          setPropertyToDelete(null);
+        }}
+        footer={
+          <>
+            <p style={{ width: '100%', textAlign: 'center', padding: '20px' }}>
+              Are you sure you want to delete this property?
+            </p>
+            <Button
+              onClick={() => {
+                setPropertyToDelete(null);
+              }}
+              disabled={status === 'pending'}
+            >
+              No, Cancel
+            </Button>
+            <Button
+              danger
+              onClick={deleteProperty}
+              disabled={status === 'pending'}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                width: 'fit-content'
+              }}
+            >
+              <span>Yes, Delete</span>
+              {status === 'pending' && (
+                <Spin
+                  size="small"
+                  indicator={
+                    <LoadingOutlined
+                      style={{ fontSize: '16px', color: '#ff4d4f' }}
+                    />
+                  }
+                />
+              )}
+            </Button>
+          </>
+        }
+      ></Modal>
       <Table pagination={false} columns={columns} dataSource={properties} />
       <Pagination
         showLessItems
