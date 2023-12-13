@@ -1,36 +1,23 @@
 import React, { useState } from 'react';
-import {
-  Card,
-  Col,
-  Row,
-  Space,
-  Typography,
-  Select,
-  Rate,
-  Divider,
-  Button,
-  Form
-} from 'antd';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Row, Space, Typography, Select, Button, Form, Skeleton } from 'antd';
 import { Container, MainWrapper } from 'src/components/Global';
 
 import { DatePicker } from 'antd';
+import { useQuery } from '@tanstack/react-query';
+import api from 'src/api';
+import ReviewCard from 'src/components/review-card';
+import { useDocumentTitle } from '@uidotdev/usehooks';
 const { RangePicker } = DatePicker;
 
-const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
-const onChange = value => {
-  console.log(`selected ${value}`);
-};
-const onSearch = value => {
-  console.log('search:', value);
-};
 const onChang = value => {
   console.log(`selected ${value}`);
 };
 const onSearc = value => {
   console.log('search:', value);
 };
-const Reviews = () => {
+function Reviews() {
+  useDocumentTitle('Loger | Reviews');
+  const [selectedProperty, setSelectedProperty] = useState(null);
   const [dates, setDates] = useState(null);
   const [value, setValue] = useState(null);
   const disabledDate = current => {
@@ -48,387 +35,148 @@ const Reviews = () => {
       setDates(null);
     }
   };
-  const [valu, setValu] = useState(3);
+  const { data: properties, isFetching: isFetchingProperties } = useQuery({
+    queryKey: ['my-properties', ['propertyName']],
+    queryFn: async ({ queryKey }) => {
+      const res = await api.get(
+        `/properties/my-properties?select=${queryKey[1].join(
+          ' '
+        )}&limit=${Infinity}`
+      );
+      console.log({ res });
+      // setSelectedProperty({
+      //   _id: '656f04c80368a49410d8f489',
+      //   propertyName: 'Apartment 12-05-2023'
+      // });
+      setSelectedProperty(res?.data?.properties[0]);
+      return res?.data?.properties;
+    }
+  });
+
+  const { data: reviews, isFetching: isFetchingReviews } = useQuery({
+    queryKey: ['reviews', selectedProperty?._id],
+    enabled: !!selectedProperty,
+    queryFn: async () => {
+      const reviewsRes = await api.get(`/review/${selectedProperty?._id}`);
+      return reviewsRes?.data?.reviews || [];
+    }
+  });
+
   return (
-    <>
-      <MainWrapper>
-        <Container>
-          <Typography.Title style={{ marginBottom: '2.5rem' }} level={2}>
-            Reviews
-          </Typography.Title>
-
-          <Space
-            direction="horizontal"
-            size="large"
-            style={{ width: '100%', alignItems: 'center' }}
-          >
-            <Form.Item
-              label={
-                <>
-                  {' '}
+    <MainWrapper>
+      <Container>
+        <Typography.Title style={{ marginBottom: '2.5rem' }} level={2}>
+          Reviews
+        </Typography.Title>
+        {isFetchingProperties ? (
+          <ReviewFormSkeleton />
+        ) : (
+          <Form>
+            <Space
+              // direction="horizontal"
+              size="large"
+              style={{ width: '100%', alignItems: 'center' }}
+            >
+              <Form.Item
+                label={
                   <Typography.Title level={5}>Filter by Dates</Typography.Title>
-                </>
-              }
-              labelCol={{ span: 24 }}
-            >
-              <RangePicker
-                size="large"
-                value={dates || value}
-                disabledDate={disabledDate}
-                onCalendarChange={val => {
-                  setDates(val);
-                }}
-                onChange={val => {
-                  setValue(val);
-                }}
-                onOpenChange={onOpenChange}
-                changeOnBlur
-              />
-            </Form.Item>
+                }
+                labelCol={{ span: 24 }}
+              >
+                <RangePicker
+                  size="large"
+                  value={dates || value}
+                  disabledDate={disabledDate}
+                  onCalendarChange={val => {
+                    setDates(val);
+                  }}
+                  onChange={val => {
+                    setValue(val);
+                  }}
+                  onOpenChange={onOpenChange}
+                  changeOnBlur
+                />
+              </Form.Item>
 
-            <Form.Item
-              label={
-                <>
+              <Form.Item
+                label={
                   <Typography.Title level={5}>Select Property</Typography.Title>
-                </>
-              }
-              labelCol={{ span: 24 }}
-            >
+                }
+                labelCol={{ span: 24 }}
+              >
+                <Select
+                  size="large"
+                  placeholder="Select Property"
+                  optionFilterProp="children"
+                  onChange={property => {
+                    setSelectedProperty(JSON.parse(property));
+                  }}
+                  value={JSON.stringify(selectedProperty)}
+                  options={properties?.map(property => ({
+                    label: property?.propertyName,
+                    value: JSON.stringify(property)
+                  }))}
+                />
+              </Form.Item>
+
+              <Button type="primary">Show Reviews</Button>
+
               <Select
-                size="large"
+                style={{ marginLeft: '20rem' }}
                 showSearch
-                placeholder="Select Property"
+                placeholder="Search by Score Date & Comment"
                 optionFilterProp="children"
-                onChange={onChange}
-                onSearch={onSearch}
+                onChange={onChang}
+                onSearch={onSearc}
               />
-            </Form.Item>
-
-            <Button type="primary">Show Reviews</Button>
-
-            <Select
-              style={{ marginLeft: '20rem' }}
-              showSearch
-              placeholder="Search by Score Date & Comment"
-              optionFilterProp="children"
-              onChange={onChang}
-              onSearch={onSearc}
-            />
-          </Space>
-          <Row gutter={[32, 32]}>
-            <Col xs={22}>
-              <Space
-                direction="horizontal"
-                size="large"
-                style={{ width: '100%', marginTop: '2.5rem' }}
-              >
-                <Card size="large">
-                  <Space
-                    direction="vertical"
-                    style={{ width: '100%' }}
-                    align="flex-start"
-                  >
-                    <Space
-                      direction="horizontal"
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between'
-                      }}
-                    >
-                      <Space direction="horizontal">
-                        <img src={'/assets/images/dashboard-1.png'} alt="" />
-
-                        <Space direction="vertical">
-                          <Typography.Title level={5}>
-                            Jane Cooper
-                          </Typography.Title>
-                          <Typography.Text>20 July 2023</Typography.Text>
-                        </Space>
-                      </Space>
-                      <Space direction="vertical" style={{ width: '100%' }}>
-                        <span>
-                          <Rate
-                            tooltips={desc}
-                            onChange={setValu}
-                            value={valu}
-                          />
-                          {value ? (
-                            <span className="ant-rate-text">
-                              {desc[value - 1]}
-                            </span>
-                          ) : (
-                            ''
-                          )}
-                        </span>
-
-                        <Space
-                          direction="horizontal"
-                          style={{ width: '100%', marginLeft: '' }}
-                        >
-                          <Typography.Text>3</Typography.Text>
-                          <Divider type="vertical" />
-
-                          <Typography.Title level={5}>5</Typography.Title>
-                        </Space>
-                      </Space>
-                    </Space>
-                    <Typography.Text>
-                      Lorem ipsum dolor sit amet consectetur. Quam eu tortor
-                      tellus blandit purus pellentesque. Non facilisis in lacus
-                      posuere sit in imperdiet euismod maecenas. At nibh velit
-                      suspendie pharetra aliquet risus duis congue. Vulputate
-                      vel lectus neque quam vel. Aliquam mauris in sem ac
-                      ornare. Urna consectetur massa ac est quam d
-                    </Typography.Text>
-                  </Space>
-                </Card>
-                <Space
-                  direction="vertical"
-                  style={{ width: '100%', marginLeft: '1.8rem' }}
-                >
-                  <Button icon={<EditOutlined />}>Edit</Button>
-                  <Button icon={<DeleteOutlined />} danger>
-                    Delete
-                  </Button>
-                </Space>
-              </Space>
-            </Col>
-            <Col xs={22}>
-              <Space
-                direction="horizontal"
-                size="large"
-                style={{ width: '100%', marginTop: '2.5rem' }}
-              >
-                <Card size="large">
-                  <Space
-                    direction="vertical"
-                    style={{ width: '100%' }}
-                    align="flex-start"
-                  >
-                    <Space
-                      direction="horizontal"
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between'
-                      }}
-                    >
-                      <Space direction="horizontal">
-                        <img src={'/assets/images/dashboard-2.png'} alt="" />
-
-                        <Space direction="vertical">
-                          <Typography.Title level={5}>
-                            Bessie Cooper
-                          </Typography.Title>
-                          <Typography.Text>30 July 2023</Typography.Text>
-                        </Space>
-                      </Space>
-                      <Space direction="vertical" style={{ width: '100%' }}>
-                        <span>
-                          <Rate
-                            tooltips={desc}
-                            onChange={setValu}
-                            value={valu}
-                          />
-                          {value ? (
-                            <span className="ant-rate-text">
-                              {desc[value - 1]}
-                            </span>
-                          ) : (
-                            ''
-                          )}
-                        </span>
-
-                        <Space
-                          direction="horizontal"
-                          style={{ width: '100%', marginLeft: '' }}
-                        >
-                          <Typography.Text>3</Typography.Text>
-                          <Divider type="vertical" />
-
-                          <Typography.Title level={5}>5</Typography.Title>
-                        </Space>
-                      </Space>
-                    </Space>
-                    <Typography.Text>
-                      Lorem ipsum dolor sit amet consectetur. Quam eu tortor
-                      tellus blandit purus pellentesque. Non facilisis in lacus
-                      posuere sit in imperdiet euismod maecenas. At nibh velit
-                      suspendie pharetra aliquet risus duis congue. Vulputate
-                      vel lectus neque quam vel. Aliquam mauris in sem ac
-                      ornare. Urna consectetur massa ac est quam d
-                    </Typography.Text>
-                  </Space>
-                </Card>
-                <Space
-                  direction="vertical"
-                  style={{ width: '100%', marginLeft: '1.8rem' }}
-                >
-                  <Button icon={<EditOutlined />}>Edit</Button>
-                  <Button icon={<DeleteOutlined />} danger>
-                    Delete
-                  </Button>
-                </Space>
-              </Space>
-            </Col>
-            <Col xs={22}>
-              <Space
-                direction="horizontal"
-                size="large"
-                style={{ width: '100%', marginTop: '2.5rem' }}
-              >
-                <Card size="large">
-                  <Space
-                    direction="vertical"
-                    style={{ width: '100%' }}
-                    align="flex-start"
-                  >
-                    <Space
-                      direction="horizontal"
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between'
-                      }}
-                    >
-                      <Space direction="horizontal">
-                        <img src={'/assets/images/dashboard-3.png'} alt="" />
-
-                        <Space direction="vertical">
-                          <Typography.Title level={5}>
-                            Ralph Edwards
-                          </Typography.Title>
-                          <Typography.Text>10 August 2023</Typography.Text>
-                        </Space>
-                      </Space>
-                      <Space direction="vertical" style={{ width: '100%' }}>
-                        <span>
-                          <Rate
-                            tooltips={desc}
-                            onChange={setValu}
-                            value={valu}
-                          />
-                          {value ? (
-                            <span className="ant-rate-text">
-                              {desc[value - 1]}
-                            </span>
-                          ) : (
-                            ''
-                          )}
-                        </span>
-
-                        <Space
-                          direction="horizontal"
-                          style={{ width: '100%', marginLeft: '' }}
-                        >
-                          <Typography.Text>3</Typography.Text>
-                          <Divider type="vertical" />
-
-                          <Typography.Title level={5}>5</Typography.Title>
-                        </Space>
-                      </Space>
-                    </Space>
-                    <Typography.Text>
-                      Lorem ipsum dolor sit amet consectetur. Quam eu tortor
-                      tellus blandit purus pellentesque. Non facilisis in lacus
-                      posuere sit in imperdiet euismod maecenas. At nibh velit
-                      suspendie pharetra aliquet risus duis congue. Vulputate
-                      vel lectus neque quam vel. Aliquam mauris in sem ac
-                      ornare. Urna consectetur massa ac est quam d
-                    </Typography.Text>
-                  </Space>
-                </Card>
-                <Space
-                  direction="vertical"
-                  style={{ width: '100%', marginLeft: '1.8rem' }}
-                >
-                  <Button icon={<EditOutlined />}>Edit</Button>
-                  <Button icon={<DeleteOutlined />} danger>
-                    Delete
-                  </Button>
-                </Space>
-              </Space>
-            </Col>
-            <Col xs={22}>
-              <Space
-                direction="horizontal"
-                size="large"
-                style={{ width: '100%', marginTop: '2.5rem' }}
-              >
-                <Card size="large">
-                  <Space
-                    direction="vertical"
-                    style={{ width: '100%' }}
-                    align="flex-start"
-                  >
-                    <Space
-                      direction="horizontal"
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between'
-                      }}
-                    >
-                      <Space direction="horizontal">
-                        <img src={'/assets/images/dashboard-4.png'} alt="" />
-
-                        <Space direction="vertical">
-                          <Typography.Title level={5}>
-                            Guy Hawkins
-                          </Typography.Title>
-                          <Typography.Text>2 September 2023</Typography.Text>
-                        </Space>
-                      </Space>
-                      <Space direction="vertical" style={{ width: '100%' }}>
-                        <span>
-                          <Rate
-                            tooltips={desc}
-                            onChange={setValu}
-                            value={valu}
-                          />
-                          {value ? (
-                            <span className="ant-rate-text">
-                              {desc[value - 1]}
-                            </span>
-                          ) : (
-                            ''
-                          )}
-                        </span>
-
-                        <Space
-                          direction="horizontal"
-                          style={{ width: '100%', marginLeft: '' }}
-                        >
-                          <Typography.Text>3</Typography.Text>
-                          <Divider type="vertical" />
-
-                          <Typography.Title level={5}>5</Typography.Title>
-                        </Space>
-                      </Space>
-                    </Space>
-                    <Typography.Text>
-                      Lorem ipsum dolor sit amet consectetur. Quam eu tortor
-                      tellus blandit purus pellentesque. Non facilisis in lacus
-                      posuere sit in imperdiet euismod maecenas. At nibh velit
-                      suspendie pharetra aliquet risus duis congue. Vulputate
-                      vel lectus neque quam vel. Aliquam mauris in sem ac
-                      ornare. Urna consectetur massa ac est quam d
-                    </Typography.Text>
-                  </Space>
-                </Card>
-                <Space
-                  direction="vertical"
-                  style={{ width: '100%', marginLeft: '1.8rem' }}
-                >
-                  <Button icon={<EditOutlined />}>Edit</Button>
-                  <Button icon={<DeleteOutlined />} danger>
-                    Delete
-                  </Button>
-                </Space>
-              </Space>
-            </Col>
-          </Row>
-        </Container>
-      </MainWrapper>
-    </>
+            </Space>
+          </Form>
+        )}
+        <Row gutter={[32, 32]}>
+          {isFetchingReviews ? (
+            <ReviewCardSkeleton />
+          ) : reviews?.length ? (
+            <div style={{ background: '#f3f4f4', height: '200px' }}></div>
+          ) : (
+            reviews?.map(review => (
+              <ReviewCard key={review._id} review={review} />
+            ))
+          )}
+        </Row>
+      </Container>
+    </MainWrapper>
   );
-};
+}
+
+function ReviewFormSkeleton() {
+  return (
+    <Space
+      style={{
+        width: '100%',
+        display: 'flex',
+        gap: '30px',
+        justifyContent: 'space-between'
+      }}
+    >
+      <div style={{ display: 'flex', gap: '30px' }}>
+        <Skeleton.Input active size="large" style={{ width: '250px' }} />
+        <Skeleton.Button active size="large" block style={{ width: '180px' }} />
+        <Skeleton.Button
+          active={true}
+          size="large"
+          block
+          style={{ width: '150px' }}
+        />
+      </div>
+      <Skeleton.Input active size="large" style={{ width: '300px' }} />
+    </Space>
+  );
+}
+
+function ReviewCardSkeleton() {
+  return (
+    <Skeleton loading active avatar style={{ maxWidth: '800px' }}></Skeleton>
+  );
+}
 
 export default Reviews;

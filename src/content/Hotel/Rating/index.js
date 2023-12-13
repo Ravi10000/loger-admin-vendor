@@ -17,7 +17,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Container, MainWrapper, CardBottom } from 'src/components/Global';
 import { useHotel, useProperty, usePropertyId } from 'src/hooks/property-info';
 import { useMutation } from '@tanstack/react-query';
-import { updateHotel, updateProperty } from 'src/api/property.req';
+import { updateHotel, updateProperty } from 'src/api/properties.req';
 import Spinner from 'src/components/spinner';
 const Rating = () => {
   const propertyId = usePropertyId();

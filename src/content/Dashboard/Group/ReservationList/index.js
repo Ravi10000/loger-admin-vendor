@@ -1,9 +1,13 @@
-import React from 'react';
-import { Space, Typography, Select, Button, Table, Form } from 'antd';
+import React, { useState } from 'react';
+import { Space, Typography, Select, Button, Table, Form, Skeleton } from 'antd';
 import { Container, MainWrapper } from 'src/components/Global';
 import { DownloadOutlined, PrinterOutlined } from '@ant-design/icons';
 
 import { DatePicker } from 'antd';
+import { useDocumentTitle } from '@uidotdev/usehooks';
+import { useQuery } from '@tanstack/react-query';
+import api from 'src/api';
+import dayjs from 'dayjs';
 const { RangePicker } = DatePicker;
 const onChange = (value, dateString) => {
   console.log('Selected Time: ', value);
@@ -22,22 +26,22 @@ const columns = [
     title: 'Property Name',
     dataIndex: 'PropertyName'
   },
-  {
-    title: 'Location',
-    dataIndex: 'Location'
-  },
+  // {
+  //   title: 'Location',
+  //   dataIndex: 'Location'
+  // },
   {
     title: 'Guest Name',
-    dataIndex: 'GuestName',
-    render: (_, record) => (
-      <Space direction="vertical" size="small">
-        <a>{record.GuestName}</a>
-        <Space direction="horizontal" size="small">
-          <Typography.Text>2 adults</Typography.Text>
-          <Typography.Text>1 child</Typography.Text>
-        </Space>
-      </Space>
-    )
+    dataIndex: 'GuestName'
+    // render: (_, record) => (
+    //   <Space direction="vertical" size="small">
+    //     <a>{record.GuestName}</a>
+    //     <Space direction="horizontal" size="small">
+    //       <Typography.Text>2 adults</Typography.Text>
+    //       <Typography.Text>1 child</Typography.Text>
+    //     </Space>
+    //   </Space>
+    // )
   },
   {
     title: 'Guest Phone No',
@@ -53,13 +57,13 @@ const columns = [
   },
   {
     title: 'Status',
-    dataIndex: 'Status',
-    render: (_, record) => (
-      <Space direction="vertical">
-        <Typography.Text>Paid</Typography.Text>
-        <Typography.Text>Online</Typography.Text>
-      </Space>
-    )
+    dataIndex: 'Status'
+    // render: (_, record) => (
+    //   <Space direction="vertical">
+    //     <Typography.Text>Paid</Typography.Text>
+    //     <Typography.Text>Online</Typography.Text>
+    //   </Space>
+    // )
   },
   {
     title: 'Total Payment',
@@ -202,54 +206,203 @@ const data = [
   }
 ];
 
-const ReservationList = () => {
+function ReservationList() {
+  useDocumentTitle('Loger | Reservations');
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const { data: properties, isFetching: isFetchingProperties } = useQuery({
+    queryKey: ['my-properties', ['propertyName']],
+    queryFn: async ({ queryKey }) => {
+      const res = await api.get(
+        `/properties/my-properties?select=${queryKey[1].join(
+          ' '
+        )}&limit=${Infinity}`
+      );
+      console.log({ res });
+      setSelectedProperty({
+        _id: '656f04c80368a49410d8f489',
+        propertyName: 'Apartment 12-05-2023'
+      });
+      // setSelectedProperty(res?.data?.properties[0]);
+      return res?.data?.properties;
+    }
+  });
+  const { data: bookings, isFetching: isFetchingBookings } = useQuery({
+    enabled: !!selectedProperty,
+    queryKey: ['bookings', selectedProperty?._id],
+    queryFn: async () => {
+      const bookingsRes = await api.get(`/booking/${selectedProperty?._id}`);
+      console.log({ bookingsRes });
+      // {
+      //   key: '1', _id
+      //   ReservationNo: '2564568732', Date
+      //   PropertyName: 'Westheimer Rd. Santa Ana, ', propertyname
+      //   Location: 'Mahipal Khandari, Haridwar, India', property location
+      //   GuestName: 'Richard Parker',
+      //   GuestPhoneNo: '+91 987 654 1230', phone
+      //   CheckIn: '13 july 2023', checkin
+      //   CheckOut: '17 july 2023', checkout
+      //   Status: 'Paid', status
+      //   TotalPayment: '₹ 900', price
+      //   TaxesCharges: '₹ 900',
+      //   BookedOn: '13 July 2023', created at
+      //   ArivalTime: '09:00 am'
+      // },
+      const data = bookingsRes?.data?.bookings?.map(booking => {
+        const { property, transaction } = booking;
+        const pkgDetails = JSON.parse(booking?.pkgDetails);
+
+        return {
+          key: booking?._id,
+          ReservationNo: new Date(booking?.createdAt).getTime(),
+          PropertyName: property?.propertyName,
+          GuestName: transaction?.firstName + ' ' + transaction?.firstName,
+          GuestPhoneNo: transaction?.phone,
+          CheckIn: dayjs(booking?.checkInDate).format('DD MMM YYYY'),
+          CheckOut: dayjs(booking?.checkOutDate).format('DD MMM YYYY'),
+          Status: booking?.status,
+          TotalPayment: transaction?.discountedAmount,
+          BookedOn: dayjs(transaction?.createdAt).format('DD MMM YYYY')
+        };
+      });
+      return data;
+    }
+  });
+  console.log({ bookings });
   return (
-    <>
-      <MainWrapper>
-        <Container>
-          <Space direction="vertical">
-            <Space
-              direction="horizontal"
-              style={{
-                width: '100%',
-                alignItem: 'center',
-                marginBottom: '2.5rem'
-              }}
-            >
-              <Typography.Title level={2}>Reservations</Typography.Title>
-              <PrinterOutlined style={{ marginLeft: '60rem' }} />
-              <Button type='text'>Print Reservation List</Button>
-              <DownloadOutlined style={{ marginLeft: '5rem' }} />
-              <Button type='text'>Downloaded</Button>
-            </Space>
-            <Space direction="horizontal" size={12}>
-              <Form.Item label="Date of" labelCol={{ span: 24 }}>
-                <DatePicker showTime onChange={onChange} onOk={onOk} />
-              </Form.Item>
-              <Form.Item label="Filter by Dates" labelCol={{ span: 24 }}>
-                <RangePicker
-                  showTime={{
-                    format: 'HH:mm'
-                  }}
-                  format="YYYY-MM-DD HH:mm"
-                  onChange={onChange}
-                  onOk={onOk}
-                />
-              </Form.Item>
-              <Select showSearch placeholder="filter" />
-              <Button type="primary">Show Results</Button>
-              <Select
-                showSearch
-                placeholder="filter"
-                style={{ marginLeft: '25rem', width: 300 }}
-              />
-            </Space>
-            <Table pagination={false}columns={columns} dataSource={data} size="middle" />
+    <MainWrapper>
+      <Container>
+        <Space direction="vertical">
+          <Space
+            direction="horizontal"
+            style={{
+              width: '100%',
+              alignItem: 'center',
+              marginBottom: '2.5rem'
+            }}
+          >
+            <Typography.Title style={{ width: 'max-content' }} level={2}>
+              Reservations
+            </Typography.Title>
+            <PrinterOutlined style={{ marginLeft: '60rem' }} />
+            <Button type="text">Print Reservation List</Button>
+            <DownloadOutlined style={{ marginLeft: '5rem' }} />
+            <Button type="text">Downloaded</Button>
           </Space>
-        </Container>
-      </MainWrapper>
-    </>
+          {/* <Space direction="horizontal" size={12}> */}
+          {isFetchingBookings ? (
+            <BookingFormSkeleton />
+          ) : (
+            <Form>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  margin: 0,
+                  height: 'fit-content',
+                  marginBlock: '20px'
+                }}
+              >
+                {/* <Form.Item label="Date of" labelCol={{ span: 24 }}>
+                <DatePicker showTime onChange={onChange} onOk={onOk} />
+              </Form.Item> */}
+                <Form.Item
+                  style={{
+                    margin: 0
+                  }}
+                  label={
+                    <Typography.Title level={5}>Select Date</Typography.Title>
+                  }
+                  labelCol={{ span: 24 }}
+                >
+                  <RangePicker
+                    size="large"
+                    // showTime={{
+                    //   format: 'HH:mm'
+                    // }}
+                    format="YYYY-MM-DD"
+                    onChange={onChange}
+                    onOk={onOk}
+                  />
+                </Form.Item>
+                <Form.Item
+                  style={{
+                    margin: 0
+                  }}
+                  label={
+                    <Typography.Title level={5}>
+                      Select Property
+                    </Typography.Title>
+                  }
+                  labelCol={{ span: 24 }}
+                >
+                  <Select
+                    size="large"
+                    placeholder="Select Property"
+                    optionFilterProp="children"
+                    onChange={property => {
+                      setSelectedProperty(JSON.parse(property));
+                    }}
+                    value={JSON.stringify(selectedProperty)}
+                    options={properties?.map(property => ({
+                      label: property?.propertyName,
+                      value: JSON.stringify(property)
+                    }))}
+                  />
+                </Form.Item>
+                <Button
+                  size="large"
+                  type="primary"
+                  style={{ marginLeft: '30px' }}
+                >
+                  Show Results
+                </Button>
+                {/* <Select
+              showSearch
+              placeholder="filter"
+              style={{ marginLeft: '25rem', width: 300 }}
+            /> */}
+              </div>
+            </Form>
+          )}
+          {isFetchingBookings ? (
+            <></>
+          ) : (
+            <Table
+              pagination={false}
+              columns={columns}
+              dataSource={bookings}
+              size="middle"
+            />
+          )}
+        </Space>
+      </Container>
+    </MainWrapper>
   );
-};
+}
+
+function BookingFormSkeleton() {
+  return (
+    <Space
+      style={{
+        width: '100%',
+        display: 'flex',
+        gap: '30px',
+        justifyContent: 'space-between',
+        marginBlock: '20px'
+      }}
+    >
+      <div style={{ display: 'flex', gap: '30px' }}>
+        <Skeleton.Input active size="large" style={{ width: '250px' }} />
+        <Skeleton.Button active size="large" block style={{ width: '180px' }} />
+        <Skeleton.Button
+          active={true}
+          size="large"
+          block
+          style={{ width: '150px' }}
+        />
+      </div>
+    </Space>
+  );
+}
 
 export default ReservationList;

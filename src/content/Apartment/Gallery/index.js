@@ -39,7 +39,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { toast } from 'react-hot-toast';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { updateProperty } from 'src/api/property.req';
+import { updateProperty } from 'src/api/properties.req';
 import onError from 'src/utils/onError';
 import api from 'src/api';
 import LoadingPage from 'src/pages/loading.page';

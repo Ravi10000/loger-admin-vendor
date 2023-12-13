@@ -45,7 +45,7 @@ import {
   findProperty,
   updateHotelRooms,
   updateProperty
-} from 'src/api/property.req';
+} from 'src/api/properties.req';
 import onError from 'src/utils/onError';
 import api from 'src/api';
 import { useIsHotel, usePropertyId } from 'src/hooks/property-info';

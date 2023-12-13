@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchMyProperties } from 'src/api/property.req';
+import { fetchMyProperties } from 'src/api/properties.req';
 
 export function useProperties({ select = [], type, onSuccess, status }) {
   const {

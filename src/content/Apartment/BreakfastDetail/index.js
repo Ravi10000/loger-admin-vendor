@@ -17,7 +17,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Container, MainWrapper, CardBottom } from 'src/components/Global';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import onError from 'src/utils/onError';
-import { updateProperty } from 'src/api/property.req';
+import { updateProperty } from 'src/api/properties.req';
 import { toast } from 'react-hot-toast';
 import api from 'src/api';
 import {

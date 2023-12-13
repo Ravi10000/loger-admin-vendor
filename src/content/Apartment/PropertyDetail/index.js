@@ -25,7 +25,7 @@ import {
   findApartment,
   findProperty,
   updateApartment
-} from 'src/api/property.req';
+} from 'src/api/properties.req';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import onError from 'src/utils/onError';
 import { useApartment } from 'src/hooks/property-info';

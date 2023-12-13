@@ -7,7 +7,7 @@ import {
   findHotel,
   findHotelRoom,
   findProperty
-} from 'src/api/property.req';
+} from 'src/api/properties.req';
 
 export function usePropertyId() {
   const { propertyId } = useParams();

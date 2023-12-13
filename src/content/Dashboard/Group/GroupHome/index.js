@@ -20,6 +20,7 @@ import {
 } from '@ant-design/icons';
 import { useTheme } from 'styled-components';
 import AddedProperties from 'src/components/added-properties/added-properties';
+import { useDocumentTitle } from '@uidotdev/usehooks';
 const onChange = key => {
   console.log(key);
 };
@@ -205,7 +206,6 @@ const items = [
     label: 'Performance',
     children: (
       <>
-        {' '}
         <Table pagination={false} dataSource={data2} columns={column2} />
       </>
     )
@@ -223,6 +223,7 @@ const items = [
 ];
 
 const GroupHome = () => {
+  useDocumentTitle('Loger | Home');
   const theme = useTheme();
   return (
     <>

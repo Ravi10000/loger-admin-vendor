@@ -117,31 +117,6 @@ function AddedProperties() {
     <Spinner />
   ) : (
     <>
-      {/* <Button
-        type="primary"
-        onClick={() => {
-          Modal.confirm({
-            title: 'Confirm Delete',
-            content: 'Are you sure you want to delete this property?',
-            footer: (_, { OkBtn, CancelBtn }) => (
-              <>
-                <Button
-                  onClick={() => {
-                    setPropertyToDelete(null);
-                  }}
-                >
-                  No, Cancel
-                </Button>
-                <Button danger onClick={deleteProperty}>
-                  Yes, Delete
-                </Button>
-              </>
-            )
-          });
-        }}
-      >
-        Open Modal Confirm
-      </Button> */}
       <Modal
         open={!!propertyToDelete}
         title="Delete Property"
@@ -153,16 +128,10 @@ function AddedProperties() {
             <p style={{ width: '100%', textAlign: 'center', padding: '20px' }}>
               Are you sure you want to delete this property?
             </p>
-            <Button
-              onClick={() => {
-                setPropertyToDelete(null);
-              }}
-              disabled={status === 'pending'}
-            >
-              No, Cancel
-            </Button>
+
             <Button
               danger
+              type="primary"
               onClick={deleteProperty}
               disabled={status === 'pending'}
               style={{
@@ -183,6 +152,14 @@ function AddedProperties() {
                   }
                 />
               )}
+            </Button>
+            <Button
+              onClick={() => {
+                setPropertyToDelete(null);
+              }}
+              disabled={status === 'pending'}
+            >
+              No, Cancel
             </Button>
           </>
         }

@@ -14,7 +14,7 @@ import api from 'src/api';
 import { useHotelRoom, usePropertyId } from 'src/hooks/property-info';
 import { toast } from 'react-hot-toast';
 import Spinner from 'src/components/spinner';
-import { updateHotelRooms } from 'src/api/property.req';
+import { updateHotelRooms } from 'src/api/properties.req';
 const media = {
   checkIcon: '/assets/images/hotel-bed.png'
 };

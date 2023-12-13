@@ -24,7 +24,7 @@ import {
   findProperty,
   updateApartment,
   updateProperty
-} from 'src/api/property.req';
+} from 'src/api/properties.req';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { AiOutlinePercentage } from 'react-icons/ai';
 import { toast } from 'react-hot-toast';

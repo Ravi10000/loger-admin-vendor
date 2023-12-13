@@ -21,7 +21,7 @@ import {
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import api from 'src/api';
 import onError from 'src/utils/onError';
-import { findProperty, updateProperty } from 'src/api/property.req';
+import { findProperty, updateProperty } from 'src/api/properties.req';
 
 const Place = () => {
   const navigate = useNavigate();

@@ -26,7 +26,7 @@ import {
   findHotelRoom,
   updateApartment,
   updateHotelRooms
-} from 'src/api/property.req';
+} from 'src/api/properties.req';
 import { usePropertyId } from 'src/hooks/property-info';
 import Spinner from 'src/components/spinner';
 

@@ -23,7 +23,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import api from 'src/api';
 import { toast } from 'react-hot-toast';
 import { AiOutlinePercentage } from 'react-icons/ai';
-import { findApartment, findHotelRoom } from 'src/api/property.req';
+import { findApartment, findHotelRoom } from 'src/api/properties.req';
 import { useIsHotel, usePropertyId } from 'src/hooks/property-info';
 import Spinner from 'src/components/spinner';
 

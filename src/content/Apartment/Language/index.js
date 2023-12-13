@@ -15,7 +15,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import api from 'src/api';
-import { findProperty, updateProperty } from 'src/api/property.req';
+import { findProperty, updateProperty } from 'src/api/properties.req';
 import onError from 'src/utils/onError';
 import { toast } from 'react-hot-toast';
 import Spinner from 'src/components/spinner';

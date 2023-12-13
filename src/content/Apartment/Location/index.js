@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeftOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { useMutation } from '@tanstack/react-query';
-import { updateProperty } from 'src/api/property.req';
+import { updateProperty } from 'src/api/properties.req';
 import onError from 'src/utils/onError';
 import { useIsHotel, usePropertyId } from 'src/hooks/property-info';
 const media = {

@@ -25,7 +25,7 @@ import {
   updateApartment,
   updateHotel,
   updateProperty
-} from 'src/api/property.req';
+} from 'src/api/properties.req';
 import dayjs from 'dayjs';
 import {
   useIsHotel,

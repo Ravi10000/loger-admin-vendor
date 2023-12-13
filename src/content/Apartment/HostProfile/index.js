@@ -22,7 +22,7 @@ import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import api from 'src/api';
 import onError from 'src/utils/onError';
-import { findApartment, updateProperty } from 'src/api/property.req';
+import { findApartment, updateProperty } from 'src/api/properties.req';
 import { toast } from 'react-hot-toast';
 
 const HostProfile = () => {

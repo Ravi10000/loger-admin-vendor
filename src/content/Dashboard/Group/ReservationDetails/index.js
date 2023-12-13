@@ -10,7 +10,6 @@ const ReservationDetails = () => {
     <>
       <MainWrapper>
         <Container>
-          
           <Row>
             <Col xs={24} xl={20} xxl={16}>
               <Space size={48} direction="vertical" style={{ width: '100%' }}>

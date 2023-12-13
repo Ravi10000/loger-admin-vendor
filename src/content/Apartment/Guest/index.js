@@ -10,7 +10,7 @@ import {
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import api from 'src/api';
-import { updateProperty } from 'src/api/property.req';
+import { updateProperty } from 'src/api/properties.req';
 import { toast } from 'react-hot-toast';
 import {
   useIsHotel,

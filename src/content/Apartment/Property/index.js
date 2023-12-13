@@ -15,7 +15,7 @@ import { EnvironmentOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { Container, MainWrapper, CardBottom } from 'src/components/Global';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import onError from 'src/utils/onError';
-import { findProperty, updateProperty } from 'src/api/property.req';
+import { findProperty, updateProperty } from 'src/api/properties.req';
 import api from 'src/api';
 import { usePropertyId, useIsHotel } from 'src/hooks/property-info';
 
