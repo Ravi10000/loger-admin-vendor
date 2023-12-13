@@ -209,6 +209,7 @@ const columns = [
 function ReservationList() {
   useDocumentTitle('Loger | Reservations');
   const [selectedProperty, setSelectedProperty] = useState(null);
+  const [dates, setDates] = useState(null);
   const { data: properties } = useQuery({
     queryKey: ['my-properties', ['propertyName']],
     queryFn: async ({ queryKey }) => {
@@ -228,9 +229,15 @@ function ReservationList() {
   });
   const { data: bookings, isFetching: isFetchingBookings } = useQuery({
     enabled: !!selectedProperty,
-    queryKey: ['bookings', selectedProperty?._id],
+    queryKey: ['bookings', selectedProperty?._id, dates],
     queryFn: async () => {
-      const bookingsRes = await api.get(`/booking/${selectedProperty?._id}`);
+      let query = '';
+      if (dates?.from && dates?.to) {
+        query = `?from=${dates?.from}&to=${dates?.to}`;
+      }
+      const bookingsRes = await api.get(
+        `/booking/${selectedProperty?._id}${query}`
+      );
       console.log({ bookingsRes });
       // {
       //   key: '1', _id
@@ -292,7 +299,14 @@ function ReservationList() {
           {isFetchingBookings ? (
             <BookingFormSkeleton />
           ) : (
-            <Form>
+            <Form
+              onFinish={values => {
+                const { dates } = values;
+                const from = dayjs(dates[0]).format('YYYY-MM-DD');
+                const to = dayjs(dates[1]).format('YYYY-MM-DD');
+                setDates({ from, to });
+              }}
+            >
               <div
                 style={{
                   display: 'flex',
@@ -302,9 +316,6 @@ function ReservationList() {
                   marginBlock: '20px'
                 }}
               >
-                {/* <Form.Item label="Date of" labelCol={{ span: 24 }}>
-                <DatePicker showTime onChange={onChange} onOk={onOk} />
-              </Form.Item> */}
                 <Form.Item
                   style={{
                     margin: 0
@@ -313,15 +324,13 @@ function ReservationList() {
                     <Typography.Title level={5}>Select Date</Typography.Title>
                   }
                   labelCol={{ span: 24 }}
+                  name={'dates'}
                 >
                   <RangePicker
                     size="large"
-                    // showTime={{
-                    //   format: 'HH:mm'
-                    // }}
                     format="YYYY-MM-DD"
-                    onChange={onChange}
-                    onOk={onOk}
+                    // onChange={onChange}
+                    // onOk={onOk}
                   />
                 </Form.Item>
                 <Form.Item
@@ -352,6 +361,7 @@ function ReservationList() {
                 <Button
                   size="large"
                   type="primary"
+                  htmlType="submit"
                   style={{ marginLeft: '30px' }}
                 >
                   Show Results
