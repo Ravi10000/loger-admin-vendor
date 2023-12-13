@@ -1,5 +1,5 @@
-import { QuestionCircleOutlined, DownOutlined } from '@ant-design/icons';
-import { Avatar, Button, Dropdown, Layout, Space, Typography } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Layout, Space, Typography } from 'antd';
 import React from 'react';
 import { styled } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';

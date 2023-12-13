@@ -10,33 +10,18 @@ import {
   App,
   Spin
 } from 'antd';
-import React, { forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   ArrowLeftOutlined,
   CloseOutlined,
   DeleteOutlined,
-  FileImageOutlined,
   LikeOutlined
 } from '@ant-design/icons';
-import { CardBottom, Container, MainWrapper } from 'src/components/Global';
+import { Container, MainWrapper } from 'src/components/Global';
 import styled from 'styled-components';
-import {
-  DndContext,
-  closestCenter,
-  MouseSensor,
-  TouchSensor,
-  DragOverlay,
-  useSensor,
-  useSensors
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  rectSortingStrategy,
-  useSortable
-} from '@dnd-kit/sortable';
+import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { toast } from 'react-hot-toast';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -250,7 +235,7 @@ const PreviewGallery = () => {
       }
       navigate(`/apartment/${propertyId}/guest`);
     },
-    onError: console.log
+    onError
   });
 
   const { mutateAsync: deletePhotoFromDB } = useMutation({

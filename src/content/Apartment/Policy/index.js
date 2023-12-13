@@ -6,8 +6,7 @@ import {
   Segmented,
   Space,
   Switch,
-  Typography,
-  Spin
+  Typography
 } from 'antd';
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -19,10 +18,8 @@ import {
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import api from 'src/api';
 import {
   findApartment,
-  findHotel,
   findHotelRoom,
   updateApartment,
   updateHotelRooms
@@ -36,7 +33,7 @@ const Policy = () => {
   const { roomName } = useParams();
   const [days, setDays] = useState('3 days');
 
-  const { data: content, isFetching } = useQuery({
+  const { isFetching } = useQuery({
     queryKey: [
       roomName ? 'hotel-rooms' : 'apartment',
       propertyId,
@@ -55,7 +52,7 @@ const Policy = () => {
     }
   });
 
-  const { mutate, status } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: async () => {
       const data = { propertyId };
       data.freeCancellationBefore = parseInt(days.split(' ')[0]);

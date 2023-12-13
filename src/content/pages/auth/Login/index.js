@@ -54,10 +54,10 @@ const Container = styled.div`
   }
 `;
 
-const FormWrapper = styled.div`
-  width: 100%;
-  margin-top: 1.5rem;
-`;
+// const FormWrapper = styled.div`
+//   width: 100%;
+//   margin-top: 1.5rem;
+// `;
 
 const Login = () => {
   const setUser = useUserStore(state => state.setUser);
@@ -66,7 +66,7 @@ const Login = () => {
     mutationFn: async data => {
       const response = await api.post('/vendor/auth/login', data);
       console.log({ response });
-      if (response?.data?.message == 'verification link sent to email') {
+      if (response?.data?.message === 'verification link sent to email') {
         // toast.success(response?.data?.message || 'Something went wrong');
         return navigate('/auth/verify');
       }

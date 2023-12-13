@@ -22,20 +22,15 @@ import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import api from 'src/api';
 import onError from 'src/utils/onError';
-import { findApartment, updateProperty } from 'src/api/properties.req';
+import { findApartment } from 'src/api/properties.req';
 import { toast } from 'react-hot-toast';
 
 const HostProfile = () => {
   const navigate = useNavigate();
   const { propertyId } = useParams();
   const [checkList, setCheckList] = useState([]);
-  console.log({ checkList });
 
-  const {
-    data: apartment,
-    error: apartmentError,
-    isFetching
-  } = useQuery({
+  const { data: apartment, isFetching } = useQuery({
     queryKey: [
       'apartment',
       propertyId,
@@ -54,7 +49,6 @@ const HostProfile = () => {
       return apartment;
     }
   });
-  console.log({ apartment });
 
   const { mutate, status } = useMutation({
     mutationFn: async data => {
@@ -63,10 +57,8 @@ const HostProfile = () => {
         return;
       }
       if (!checkList.includes('none')) {
-        console.log({ data });
         data.propertyId = propertyId;
-        const res = await api.put('/apartments', data);
-        console.log({ res });
+        await api.put('/apartments', data);
       }
       navigate(`/apartment/${propertyId}/preview-gallery`);
     },

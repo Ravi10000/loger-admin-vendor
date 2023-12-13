@@ -1,12 +1,12 @@
 import { Layout, Menu, theme } from 'antd';
 import React, { memo } from 'react';
 import useMenuItems from './items';
-import { useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 
 const SideBar = ({ collapsed, handleCollapsed }) => {
   const { token } = theme.useToken();
   const [items] = useMenuItems();
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
   // console.log({ pathname });
 
   return (

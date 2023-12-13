@@ -1,10 +1,9 @@
-import { Space, Card, Typography, Rate, Divider, Col, Button } from 'antd';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Space, Card, Typography, Rate, Col, Button } from 'antd';
 import dayjs from 'dayjs';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import api from 'src/api';
 import { toast } from 'react-hot-toast';
 import onError from 'src/utils/onError';
+import api from 'src/api';
 
 function ReviewCard({ review }) {
   console.log({ review });
@@ -48,8 +47,6 @@ function ReviewCard({ review }) {
               }}
             >
               <Space direction="horizontal">
-                {/* <img src={'/assets/images/dashboard-2.png'} alt="" /> */}
-                {/* <img src={'/assets/images/dashboard-2.png'} alt="" /> */}
                 <div
                   style={{
                     height: '60px',
@@ -81,33 +78,15 @@ function ReviewCard({ review }) {
               </Space>
               <Space direction="vertical" style={{ width: '100%' }}>
                 <Rate value={parseInt(rating)} disabled />
-                {/* <Space
-                  direction="horizontal"
-                  style={{ width: '100%', marginLeft: '' }}
-                >
-                  <Typography.Text>3</Typography.Text>
-                  <Divider type="vertical" />
-
-                  <Typography.Title level={5}>5</Typography.Title>
-                </Space> */}
               </Space>
             </Space>
-            <Typography.Text>
-              Lorem ipsum dolor sit amet consectetur. Quam eu tortor tellus
-              blandit purus pellentesque. Non facilisis in lacus posuere sit in
-              imperdiet euismod maecenas. At nibh velit suspendie pharetra
-              aliquet risus duis congue. Vulputate vel lectus neque quam vel.
-              Aliquam mauris in sem ac ornare. Urna consectetur massa ac est
-              quam d
-            </Typography.Text>
+            <Typography.Text>{comment}</Typography.Text>
           </Space>
         </Card>
         <Space
           direction="vertical"
           style={{ width: '100%', marginLeft: '1.8rem' }}
         >
-          {/* <Button icon={<EditOutlined />}>Edit</Button> */}
-          {/* <Button icon={<DeleteOutlined />} danger> */}
           <Button
             danger={isActive}
             type="primary"

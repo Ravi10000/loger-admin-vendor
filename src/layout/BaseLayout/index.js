@@ -1,5 +1,4 @@
 import { Layout } from 'antd';
-import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from 'src/components/Header';
 import WithAuth from 'src/components/with-auth';

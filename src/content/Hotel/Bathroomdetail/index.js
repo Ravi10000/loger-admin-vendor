@@ -9,13 +9,13 @@ import {
   CloseOutlined
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
-import { usePropertyId } from 'src/hooks/property-info';
+// import { usePropertyId } from 'src/hooks/property-info';
 import { useContentItems } from 'src/hooks/content-items';
 import Spinner from 'src/components/spinner';
 
 const Bathroomdetail = () => {
   const navigate = useNavigate();
-  const propertyId = usePropertyId();
+  // const propertyId = usePropertyId();
   const { contentItems: bathRoomItems, isFetching } = useContentItems({
     type: 'bathroom-item'
   });

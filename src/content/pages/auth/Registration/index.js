@@ -54,10 +54,10 @@ const Container = styled.div`
   }
 `;
 
-const FormWrapper = styled.div`
-  width: 100%;
-  margin-top: 1.5rem;
-`;
+// const FormWrapper = styled.div`
+//   width: 100%;
+//   margin-top: 1.5rem;
+// `;
 
 const Registration = () => {
   const navigate = useNavigate();

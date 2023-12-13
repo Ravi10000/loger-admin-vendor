@@ -15,7 +15,6 @@ import { Container, MainWrapper } from 'src/components/Global';
 import Spinner from 'src/components/spinner';
 import { useProperty, usePropertyId } from 'src/hooks/property-info';
 import { deleteHotelRooms, findDistinctRooms } from 'src/api/properties.req';
-import { useState } from 'react';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import styled from 'styled-components';
 import api from 'src/api';

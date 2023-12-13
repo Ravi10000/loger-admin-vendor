@@ -1,23 +1,12 @@
-import {
-  Button,
-  Card,
-  Col,
-  Radio,
-  Row,
-  Space,
-  Typography,
-  Form,
-  Spin
-} from 'antd';
-import React, { useState } from 'react';
+import { Button, Card, Col, Radio, Row, Space, Typography, Form } from 'antd';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import onError from 'src/utils/onError';
-import { findProperty, updateProperty } from 'src/api/properties.req';
-import { toast } from 'react-hot-toast';
+import { updateProperty } from 'src/api/properties.req';
 import {
   useIsHotel,
   useProperty,

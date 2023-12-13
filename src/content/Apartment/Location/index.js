@@ -1,6 +1,6 @@
 import { Button, Card, Col, Row, Space, Typography } from 'antd';
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { ArrowLeftOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';

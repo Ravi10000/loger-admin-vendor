@@ -5,12 +5,12 @@ import {
 } from '@ant-design/icons';
 import { Button, Card, Checkbox, Col, Row, Space, Typography } from 'antd';
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Container, MainWrapper } from 'src/components/Global';
 
 const Complete = () => {
   const navigate = useNavigate();
-  const { propertyId } = useParams();
+  // const { propertyId } = useParams();
 
   return (
     <>

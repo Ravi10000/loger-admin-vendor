@@ -1,5 +1,4 @@
-import { Button, Space, Typography } from 'antd';
-import React from 'react';
+import { Space, Typography } from 'antd';
 import { styled } from 'styled-components';
 
 const media = {
@@ -52,8 +51,9 @@ const Verify = () => {
             Verify Your Email Address
           </Typography.Title>
           <Typography.Paragraph style={{ marginBottom: '2rem' }}>
-            Thanks for signing up with us.<br/> An Email with verification link is sent
-            to your provided email address.
+            Thanks for signing up with us.
+            <br /> An Email with verification link is sent to your provided
+            email address.
             {/* Click on the button below to verify your
             email address. */}
           </Typography.Paragraph>

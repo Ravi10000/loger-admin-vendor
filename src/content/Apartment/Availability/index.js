@@ -28,7 +28,6 @@ import {
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { AiOutlinePercentage } from 'react-icons/ai';
 import { toast } from 'react-hot-toast';
-import api from 'src/api';
 const Availability = () => {
   const navigate = useNavigate();
   const [checkInStartDate, setCheckInStartDate] = useState(dayjs());
@@ -37,7 +36,7 @@ const Availability = () => {
   const [monthlyPlanDiscount, setMonthlyPlanDiscount] = useState(0);
   const { propertyId } = useParams();
 
-  const { data: apartment, isFetching: isFetchingApartment } = useQuery({
+  const { isFetching: isFetchingApartment } = useQuery({
     queryKey: ['apartment', propertyId, ['monthlyPlanDiscount']],
     enabled: propertyId?.length === 24,
     initialData: {},
@@ -54,7 +53,7 @@ const Availability = () => {
       return apartment;
     }
   });
-  const { data: property, isFetching: isFetchingProperty } = useQuery({
+  const { isFetching: isFetchingProperty } = useQuery({
     queryKey: ['property', propertyId, ['checkInStartDate']],
     enabled: propertyId?.length === 24,
     initialData: {},

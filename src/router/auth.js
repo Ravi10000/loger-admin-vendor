@@ -1,7 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import WithNoAuth from 'src/components/with-no-auth';
+// import WithNoAuth from 'src/components/with-no-auth';
 
 const Loader = Component => props =>
   (

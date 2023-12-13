@@ -10,12 +10,12 @@ import {
   Form
 } from 'antd';
 import { useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import api from 'src/api';
-import { findProperty, updateProperty } from 'src/api/properties.req';
+import { updateProperty } from 'src/api/properties.req';
 import onError from 'src/utils/onError';
 import { toast } from 'react-hot-toast';
 import Spinner from 'src/components/spinner';
@@ -28,11 +28,7 @@ import {
 const Language = () => {
   const navigate = useNavigate();
   const propertyId = usePropertyId();
-  const {
-    data: languages,
-    isFetching: isFetchingLanguages,
-    error: languagesError
-  } = useQuery({
+  const { data: languages } = useQuery({
     queryKey: ['contentItems', { type: 'language' }],
     initialData: [],
     queryFn: async () => {

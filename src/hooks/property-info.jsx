@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import api from 'src/api';
+// import api from 'src/api';
 import {
   findApartment,
   findHotel,

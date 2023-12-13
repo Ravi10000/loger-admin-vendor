@@ -1,6 +1,6 @@
 import { Suspense, lazy } from 'react';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import { Navigate } from 'react-router-dom';
+// import { Navigate } from 'react-router-dom';
 import PreviewGallery from 'src/content/Apartment/preview-gallery';
 const Loader = Component => props =>
   (
@@ -32,7 +32,7 @@ const Room = Loader(lazy(() => import('src/content/Hotel/Room')));
 const Charge = Loader(lazy(() => import('src/content/Apartment/Charge')));
 const Plans = Loader(lazy(() => import('src/content/Apartment/Plans')));
 const Policy = Loader(lazy(() => import('src/content/Apartment/Policy')));
-const Gallery = Loader(lazy(() => import('src/content/Hotel/Gallery')));
+// const Gallery = Loader(lazy(() => import('src/content/Hotel/Gallery')));
 const Availability = Loader(
   lazy(() => import('src/content/Hotel/Availability'))
 );

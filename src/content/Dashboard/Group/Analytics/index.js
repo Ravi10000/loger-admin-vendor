@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Col, Row, Space, Typography } from 'antd';
+import { Card, Col, Row, Typography } from 'antd';
 import { Container, MainWrapper } from 'src/components/Global';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 const Analytics = () => {

@@ -19,28 +19,28 @@ import {
   FileImageOutlined,
   LikeOutlined
 } from '@ant-design/icons';
-import { CardBottom, Container, MainWrapper } from 'src/components/Global';
+import { Container, MainWrapper } from 'src/components/Global';
 import styled from 'styled-components';
 import {
-  DndContext,
-  closestCenter,
-  MouseSensor,
-  TouchSensor,
-  DragOverlay,
-  useSensor,
-  useSensors
+  // DndContext,
+  // closestCenter,
+  // MouseSensor,
+  // TouchSensor,
+  // DragOverlay,
+  // useSensor,
+  // useSensors
 } from '@dnd-kit/core';
 import {
-  arrayMove,
-  SortableContext,
-  rectSortingStrategy,
+  // arrayMove,
+  // SortableContext,
+  // rectSortingStrategy,
   useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { toast } from 'react-hot-toast';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { updateProperty } from 'src/api/properties.req';
-import onError from 'src/utils/onError';
+// import onError from 'src/utils/onError';
 import api from 'src/api';
 import LoadingPage from 'src/pages/loading.page';
 
@@ -159,7 +159,7 @@ const Gallery = () => {
   const { message } = App.useApp();
   console.log({ fileList });
 
-  const { status, mutate, data, error } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: async () => {
       // const data = { propertyId };
       const formData = new FormData();
@@ -201,8 +201,8 @@ const Gallery = () => {
 
   // console.log({ error, status, data });
 
-  const [activeId, setActiveId] = useState(null);
-  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+  // const [activeId, setActiveId] = useState(null);
+  // const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
   const uploadProps = {
     onRemove: file => {
@@ -248,28 +248,28 @@ const Gallery = () => {
     return () => fileList.forEach(file => URL.revokeObjectURL(file.url));
   }, [fileList]);
 
-  function handleDragStart(event) {
-    setActiveId(event.active.id);
-  }
+  // function handleDragStart(event) {
+  //   setActiveId(event.active.id);
+  // }
 
-  function handleDragEnd(event) {
-    const { active, over } = event;
+  // function handleDragEnd(event) {
+  //   const { active, over } = event;
 
-    if (active.id !== over.id) {
-      setFileList(items => {
-        const oldIndex = items.findIndex(item => item.uid === active.id);
-        const newIndex = items.findIndex(item => item.uid === over.id);
+  //   if (active.id !== over.id) {
+  //     setFileList(items => {
+  //       const oldIndex = items.findIndex(item => item.uid === active.id);
+  //       const newIndex = items.findIndex(item => item.uid === over.id);
 
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
+  //       return arrayMove(items, oldIndex, newIndex);
+  //     });
+  //   }
 
-    setActiveId(null);
-  }
+  //   setActiveId(null);
+  // }
 
-  function handleDragCancel() {
-    setActiveId(null);
-  }
+  // function handleDragCancel() {
+  //   setActiveId(null);
+  // }
 
   function handleDeletePhoto(id) {
     setFileList([...fileList.filter(item => item.uid !== id)]);

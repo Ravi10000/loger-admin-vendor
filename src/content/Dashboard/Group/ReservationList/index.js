@@ -83,133 +83,133 @@ const columns = [
   }
 ];
 
-const data = [
-  {
-    key: '1',
-    ReservationNo: '2564568732',
-    PropertyName: 'Westheimer Rd. Santa Ana, ',
-    Location: 'Mahipal Khandari, Haridwar, India',
-    GuestName: 'Richard Parker',
-    GuestPhoneNo: '+91 987 654 1230',
-    CheckIn: '13 july 2023',
-    CheckOut: '17 july 2023',
-    Status: 'Paid',
-    TotalPayment: '₹ 900',
-    TaxesCharges: '₹ 900',
-    BookedOn: '13 July 2023',
-    ArivalTime: '09:00 am'
-  },
-  {
-    key: '2',
-    ReservationNo: '2564568732',
-    PropertyName: 'Westheimer Rd. Santa Ana, ',
-    Location: 'Mahipal Khandari, Haridwar, India',
-    GuestName: 'Richard Parker',
-    GuestPhoneNo: '+91 987 654 1230',
-    CheckIn: '13 july 2023',
-    CheckOut: '17 july 2023',
-    Status: 'Paid',
-    TotalPayment: '₹ 900',
-    TaxesCharges: '₹ 900',
-    BookedOn: '13 July 2023',
-    ArivalTime: '09:00 am'
-  },
-  {
-    key: '3',
-    ReservationNo: '2564568732',
-    PropertyName: 'Westheimer Rd. Santa Ana, ',
-    Location: 'Mahipal Khandari, Haridwar, India',
-    GuestName: 'Richard Parker',
-    GuestPhoneNo: '+91 987 654 1230',
-    CheckIn: '13 july 2023',
-    CheckOut: '17 july 2023',
-    Status: 'Paid',
-    TotalPayment: '₹ 900',
-    TaxesCharges: '₹ 900',
-    BookedOn: '13 July 2023',
-    ArivalTime: '09:00 am'
-  },
-  {
-    key: '4',
-    ReservationNo: '2564568732',
-    PropertyName: 'Westheimer Rd. Santa Ana, ',
-    Location: 'Mahipal Khandari, Haridwar, India',
-    GuestName: 'Richard Parker',
-    GuestPhoneNo: '+91 987 654 1230',
-    CheckIn: '13 july 2023',
-    CheckOut: '17 july 2023',
-    Status: 'Paid',
-    TotalPayment: '₹ 900',
-    TaxesCharges: '₹ 900',
-    BookedOn: '13 July 2023',
-    ArivalTime: '09:00 am'
-  },
-  {
-    key: '5',
-    ReservationNo: '2564568732',
-    PropertyName: 'Westheimer Rd. Santa Ana, ',
-    Location: 'Mahipal Khandari, Haridwar, India',
-    GuestName: 'Richard Parker',
-    GuestPhoneNo: '+91 987 654 1230',
-    CheckIn: '13 july 2023',
-    CheckOut: '17 july 2023',
-    Status: 'Paid',
-    TotalPayment: '₹ 900',
-    TaxesCharges: '₹ 900',
-    BookedOn: '13 July 2023',
-    ArivalTime: '09:00 am'
-  },
-  {
-    key: '6',
-    ReservationNo: '2564568732',
-    PropertyName: 'Westheimer Rd. Santa Ana, ',
-    Location: 'Mahipal Khandari, Haridwar, India',
-    GuestName: 'Richard Parker',
-    GuestPhoneNo: '+91 987 654 1230',
-    CheckIn: '13 july 2023',
-    CheckOut: '17 july 2023',
-    Status: 'Paid',
-    TotalPayment: '₹ 900',
-    TaxesCharges: '₹ 900',
-    BookedOn: '13 July 2023',
-    ArivalTime: '09:00 am'
-  },
-  {
-    key: '7',
-    ReservationNo: '2564568732',
-    PropertyName: 'Westheimer Rd. Santa Ana, ',
-    Location: 'Mahipal Khandari, Haridwar, India',
-    GuestName: 'Richard Parker',
-    GuestPhoneNo: '+91 987 654 1230',
-    CheckIn: '13 july 2023',
-    CheckOut: '17 july 2023',
-    Status: 'Paid',
-    TotalPayment: '₹ 900',
-    TaxesCharges: '₹ 900',
-    BookedOn: '13 July 2023',
-    ArivalTime: '09:00 am'
-  },
-  {
-    key: '8',
-    ReservationNo: '2564568732',
-    PropertyName: 'Westheimer Rd. Santa Ana, ',
-    Location: 'Mahipal Khandari, Haridwar, India',
-    GuestName: 'Richard Parker',
-    GuestPhoneNo: '+91 987 654 1230',
-    CheckIn: '13 july 2023',
-    CheckOut: '17 july 2023',
-    Status: 'Paid',
-    TotalPayment: '₹ 900',
-    TaxesCharges: '₹ 900',
-    BookedOn: '13 July 2023',
-    ArivalTime: '09:00 am'
-  }
-];
+// const data = [
+//   {
+//     key: '1',
+//     ReservationNo: '2564568732',
+//     PropertyName: 'Westheimer Rd. Santa Ana, ',
+//     Location: 'Mahipal Khandari, Haridwar, India',
+//     GuestName: 'Richard Parker',
+//     GuestPhoneNo: '+91 987 654 1230',
+//     CheckIn: '13 july 2023',
+//     CheckOut: '17 july 2023',
+//     Status: 'Paid',
+//     TotalPayment: '₹ 900',
+//     TaxesCharges: '₹ 900',
+//     BookedOn: '13 July 2023',
+//     ArivalTime: '09:00 am'
+//   },
+//   {
+//     key: '2',
+//     ReservationNo: '2564568732',
+//     PropertyName: 'Westheimer Rd. Santa Ana, ',
+//     Location: 'Mahipal Khandari, Haridwar, India',
+//     GuestName: 'Richard Parker',
+//     GuestPhoneNo: '+91 987 654 1230',
+//     CheckIn: '13 july 2023',
+//     CheckOut: '17 july 2023',
+//     Status: 'Paid',
+//     TotalPayment: '₹ 900',
+//     TaxesCharges: '₹ 900',
+//     BookedOn: '13 July 2023',
+//     ArivalTime: '09:00 am'
+//   },
+//   {
+//     key: '3',
+//     ReservationNo: '2564568732',
+//     PropertyName: 'Westheimer Rd. Santa Ana, ',
+//     Location: 'Mahipal Khandari, Haridwar, India',
+//     GuestName: 'Richard Parker',
+//     GuestPhoneNo: '+91 987 654 1230',
+//     CheckIn: '13 july 2023',
+//     CheckOut: '17 july 2023',
+//     Status: 'Paid',
+//     TotalPayment: '₹ 900',
+//     TaxesCharges: '₹ 900',
+//     BookedOn: '13 July 2023',
+//     ArivalTime: '09:00 am'
+//   },
+//   {
+//     key: '4',
+//     ReservationNo: '2564568732',
+//     PropertyName: 'Westheimer Rd. Santa Ana, ',
+//     Location: 'Mahipal Khandari, Haridwar, India',
+//     GuestName: 'Richard Parker',
+//     GuestPhoneNo: '+91 987 654 1230',
+//     CheckIn: '13 july 2023',
+//     CheckOut: '17 july 2023',
+//     Status: 'Paid',
+//     TotalPayment: '₹ 900',
+//     TaxesCharges: '₹ 900',
+//     BookedOn: '13 July 2023',
+//     ArivalTime: '09:00 am'
+//   },
+//   {
+//     key: '5',
+//     ReservationNo: '2564568732',
+//     PropertyName: 'Westheimer Rd. Santa Ana, ',
+//     Location: 'Mahipal Khandari, Haridwar, India',
+//     GuestName: 'Richard Parker',
+//     GuestPhoneNo: '+91 987 654 1230',
+//     CheckIn: '13 july 2023',
+//     CheckOut: '17 july 2023',
+//     Status: 'Paid',
+//     TotalPayment: '₹ 900',
+//     TaxesCharges: '₹ 900',
+//     BookedOn: '13 July 2023',
+//     ArivalTime: '09:00 am'
+//   },
+//   {
+//     key: '6',
+//     ReservationNo: '2564568732',
+//     PropertyName: 'Westheimer Rd. Santa Ana, ',
+//     Location: 'Mahipal Khandari, Haridwar, India',
+//     GuestName: 'Richard Parker',
+//     GuestPhoneNo: '+91 987 654 1230',
+//     CheckIn: '13 july 2023',
+//     CheckOut: '17 july 2023',
+//     Status: 'Paid',
+//     TotalPayment: '₹ 900',
+//     TaxesCharges: '₹ 900',
+//     BookedOn: '13 July 2023',
+//     ArivalTime: '09:00 am'
+//   },
+//   {
+//     key: '7',
+//     ReservationNo: '2564568732',
+//     PropertyName: 'Westheimer Rd. Santa Ana, ',
+//     Location: 'Mahipal Khandari, Haridwar, India',
+//     GuestName: 'Richard Parker',
+//     GuestPhoneNo: '+91 987 654 1230',
+//     CheckIn: '13 july 2023',
+//     CheckOut: '17 july 2023',
+//     Status: 'Paid',
+//     TotalPayment: '₹ 900',
+//     TaxesCharges: '₹ 900',
+//     BookedOn: '13 July 2023',
+//     ArivalTime: '09:00 am'
+//   },
+//   {
+//     key: '8',
+//     ReservationNo: '2564568732',
+//     PropertyName: 'Westheimer Rd. Santa Ana, ',
+//     Location: 'Mahipal Khandari, Haridwar, India',
+//     GuestName: 'Richard Parker',
+//     GuestPhoneNo: '+91 987 654 1230',
+//     CheckIn: '13 july 2023',
+//     CheckOut: '17 july 2023',
+//     Status: 'Paid',
+//     TotalPayment: '₹ 900',
+//     TaxesCharges: '₹ 900',
+//     BookedOn: '13 July 2023',
+//     ArivalTime: '09:00 am'
+//   }
+// ];
 
 function ReservationList() {
   useDocumentTitle('Loger | Reservations');
   const [selectedProperty, setSelectedProperty] = useState(null);
-  const { data: properties, isFetching: isFetchingProperties } = useQuery({
+  const { data: properties } = useQuery({
     queryKey: ['my-properties', ['propertyName']],
     queryFn: async ({ queryKey }) => {
       const res = await api.get(
@@ -249,7 +249,7 @@ function ReservationList() {
       // },
       const data = bookingsRes?.data?.bookings?.map(booking => {
         const { property, transaction } = booking;
-        const pkgDetails = JSON.parse(booking?.pkgDetails);
+        // const pkgDetails = JSON.parse(booking?.pkgDetails);
 
         return {
           key: booking?._id,
