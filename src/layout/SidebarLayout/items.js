@@ -168,20 +168,21 @@ const items = [
   }
 ];
 
-const useMenuItems = () => {
+const urlMatch = match('/dashboard/:tab(groups|manage)', {
+  decode: decodeURIComponent,
+  end: false
+});
+
+function useMenuItems() {
   const [menuItems, setMenuItems] = useState([]);
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const urlMatch = match('/dashboard/:tab(groups|manage)', {
-      decode: decodeURIComponent,
-      end: false
-    });
     const list = items
       .filter(({ path }) => {
         const isPathMatch = urlMatch(path);
         const pathNameMatch = urlMatch(pathname);
-
+        console.log({ isPathMatch, pathNameMatch });
         return isPathMatch && pathNameMatch
           ? isPathMatch.params.tab === pathNameMatch.params.tab
           : false;
@@ -208,6 +209,6 @@ const useMenuItems = () => {
   }, [pathname]);
 
   return [menuItems];
-};
+}
 
 export default useMenuItems;

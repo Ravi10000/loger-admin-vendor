@@ -136,11 +136,24 @@ function Reviews() {
           {isFetchingReviews ? (
             <ReviewCardSkeleton />
           ) : reviews?.length ? (
-            <div style={{ background: '#f3f4f4', height: '200px' }}></div>
-          ) : (
             reviews?.map(review => (
               <ReviewCard key={review._id} review={review} />
             ))
+          ) : (
+            <div
+              style={{
+                background: '#fff',
+                height: '200px',
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: '10px',
+                color: 'lightgray'
+              }}
+            >
+              <h3>No Reviews Found</h3>
+            </div>
           )}
         </Row>
       </Container>

@@ -1,13 +1,34 @@
 import { Layout, Menu, theme } from 'antd';
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import useMenuItems from './items';
-// import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const SideBar = ({ collapsed, handleCollapsed }) => {
   const { token } = theme.useToken();
   const [items] = useMenuItems();
-  // const { pathname } = useLocation();
-  // console.log({ pathname });
+  const [selectedKeys, setSelectedKeys] = useState([]);
+  const [openKeys, setOpenKeys] = useState([]);
+  const { pathname } = useLocation();
+  console.log({ selectedKeys, openKeys });
+
+  useEffect(() => {
+    let selectedChild = null;
+    const selectedItem = items.find(item => {
+      if (item?.children) {
+        selectedChild = item.children?.find(
+          child => child?.label?.props?.to === pathname
+        );
+        if (selectedChild) return true;
+      }
+      return item?.label?.props?.to === pathname;
+    });
+    const selectedKeys = [selectedItem?.key];
+    if (selectedChild) {
+      selectedKeys.push(selectedChild.key);
+      setOpenKeys([selectedItem?.key]);
+    }
+    setSelectedKeys(selectedKeys);
+  }, [pathname, items]);
 
   return (
     <>
@@ -25,16 +46,25 @@ const SideBar = ({ collapsed, handleCollapsed }) => {
           left: 0,
           bottom: 0,
           overflow: 'auto',
+          gap: '50px',
           height: `calc(100vh - ${
             token.Layout.headerHeight + token.Layout.triggerHeight
           }px)`
         }}
       >
         <Menu
-Reservations          // selectedKeys={[pathname]}
           theme="light"
           mode="inline"
           items={items}
+          selectedKeys={selectedKeys}
+          openKeys={openKeys}
+          // onSelect={(...props) => {
+          //   console.log({ props });
+          // }}
+          onOpenChange={keyOpened => {
+            console.log({ keyOpened });
+            setOpenKeys(keyOpened);
+          }}
         />
       </Layout.Sider>
     </>

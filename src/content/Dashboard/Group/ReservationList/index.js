@@ -9,13 +9,6 @@ import { useQuery } from '@tanstack/react-query';
 import api from 'src/api';
 import dayjs from 'dayjs';
 const { RangePicker } = DatePicker;
-const onChange = (value, dateString) => {
-  console.log('Selected Time: ', value);
-  console.log('Formatted Selected Time: ', dateString);
-};
-const onOk = value => {
-  console.log('onOk: ', value);
-};
 
 const columns = [
   {
@@ -271,7 +264,7 @@ function ReservationList() {
           BookedOn: dayjs(transaction?.createdAt).format('DD MMM YYYY')
         };
       });
-      return data;
+      return data || [];
     }
   });
   console.log({ bookings });
@@ -296,7 +289,7 @@ function ReservationList() {
             <Button type="text">Downloaded</Button>
           </Space>
           {/* <Space direction="horizontal" size={12}> */}
-          {isFetchingBookings ? (
+          {isFetchingBookings || !bookings ? (
             <BookingFormSkeleton />
           ) : (
             <Form
@@ -374,8 +367,8 @@ function ReservationList() {
               </div>
             </Form>
           )}
-          {isFetchingBookings ? (
-            <></>
+          {isFetchingBookings || !bookings ? (
+            <TableSkeleton />
           ) : (
             <Table
               pagination={false}
@@ -412,6 +405,31 @@ function BookingFormSkeleton() {
         />
       </div>
     </Space>
+  );
+}
+
+function TableSkeleton() {
+  return (
+    <>
+      <Skeleton.Button
+        block
+        size="large"
+        style={{ borderRadius: 0 }}
+        active
+      ></Skeleton.Button>
+      <Skeleton.Button
+        size="large"
+        style={{ borderRadius: 0 }}
+        block
+        active
+      ></Skeleton.Button>
+      <Skeleton.Button
+        size="large"
+        style={{ borderRadius: 0 }}
+        block
+        active
+      ></Skeleton.Button>
+    </>
   );
 }
 
