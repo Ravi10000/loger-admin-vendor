@@ -186,6 +186,7 @@ const Rules = () => {
                         <Typography.Title level={5}>Check in</Typography.Title>
                         <Form.Item name="checkIn">
                           <TimePicker.RangePicker
+                            format="HH:mm"
                             size="large"
                             style={{ width: '100%' }}
                             placeholder={['From', 'Until']}
@@ -196,6 +197,7 @@ const Rules = () => {
                         <Typography.Title level={5}>Check Out</Typography.Title>
                         <Form.Item name="checkOut">
                           <TimePicker.RangePicker
+                            format="HH:mm"
                             size="large"
                             style={{ width: '100%' }}
                             placeholder={['From', 'Until']}

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Space, Pagination, Spin, Table, Modal } from 'antd';
+import { Button, Space, Pagination, Spin, Table, Modal, Skeleton } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -39,11 +39,10 @@ const columns = [
 
 const limit = 6;
 function AddedProperties() {
-  const [totalAddedPropertiesPages, setTotalAddedPropertiesPages] = useState(0);
   const [propertyToDelete, setPropertyToDelete] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [page, setPage] = useState(1);
   const queryClient = useQueryClient();
-
   const { mutate: deleteProperty, status } = useMutation({
     mutationFn: async () => {
       if (propertyToDelete?.length !== 24) {
@@ -62,7 +61,7 @@ function AddedProperties() {
       'properties',
       'added',
       ['propertyName', 'country', 'propertyType'],
-      currentPage
+      page
     ],
     queryFn: async ({ queryKey }) => {
       const res = await api.get(
@@ -70,8 +69,7 @@ function AddedProperties() {
           queryKey[1]
         }&select=${queryKey[2]?.join(' ')}&page=${queryKey[3]}`
       );
-      if (res?.data?.totalPages)
-        setTotalAddedPropertiesPages(res.data.totalPages);
+      if (res?.data?.totalPages) setTotalPages(res.data.totalPages);
 
       const tableData = [];
       res.data.properties.forEach(property => {
@@ -114,7 +112,7 @@ function AddedProperties() {
     }
   });
   return isFetching ? (
-    <Spinner />
+    <TableSkeleton />
   ) : (
     <>
       <Modal
@@ -166,16 +164,23 @@ function AddedProperties() {
       ></Modal>
       <Table pagination={false} columns={columns} dataSource={properties} />
       <Pagination
-        showLessItems
-        current={currentPage}
-        total={totalAddedPropertiesPages * limit}
-        defaultPageSize={limit}
-        onChange={value => {
-          setCurrentPage(value);
+        style={{
+          marginTop: '20px',
+          marginLeft: 'auto',
+          width: 'fit-content'
         }}
+        showLessItems
+        current={page}
+        total={totalPages * limit}
+        defaultPageSize={limit}
+        onChange={setPage}
       />
     </>
   );
+}
+
+function TableSkeleton() {
+  return <Skeleton loading active style={{ maxWidth: '800px' }}></Skeleton>;
 }
 
 export default AddedProperties;
