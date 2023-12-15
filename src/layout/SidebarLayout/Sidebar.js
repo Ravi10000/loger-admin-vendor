@@ -9,7 +9,6 @@ const SideBar = ({ collapsed, handleCollapsed }) => {
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [openKeys, setOpenKeys] = useState([]);
   const { pathname } = useLocation();
-  console.log({ selectedKeys, openKeys });
 
   useEffect(() => {
     let selectedChild = null;
@@ -20,7 +19,7 @@ const SideBar = ({ collapsed, handleCollapsed }) => {
         );
         if (selectedChild) return true;
       }
-      return item?.label?.props?.to === pathname;
+      return pathname?.includes?.(item?.label?.props?.to);
     });
     const selectedKeys = [selectedItem?.key];
     if (selectedChild) {

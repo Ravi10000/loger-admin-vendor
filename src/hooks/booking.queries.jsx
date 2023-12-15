@@ -8,7 +8,6 @@ export function useBooking({ bookingId, select, onSuccess }) {
     error
   } = useQuery({
     queryKey: ['booking', select],
-    initialData: [],
     queryFn: async () => {
       const res = await api.get(
         `/booking/one/${bookingId}?select=${select ? select?.join(' ') : ''}`

@@ -1,15 +1,31 @@
 import { ClockCircleOutlined, DownOutlined } from '@ant-design/icons';
-import { Card, Col, Collapse, Divider, Row, Space, Typography } from 'antd';
+import {
+  Card,
+  Col,
+  Collapse,
+  Divider,
+  Row,
+  Space,
+  Typography,
+  Skeleton
+} from 'antd';
 import React from 'react';
 import { Container, MainWrapper } from 'src/components/Global';
 import { useBooking } from 'src/hooks/booking.queries';
 import { useTheme } from 'styled-components';
 import { useParams } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const ReservationDetails = () => {
   const { bookingId } = useParams();
-  const { booking } = useBooking({ bookingId, select: ['propertyId'] });
+  const { booking, isFetching } = useBooking({
+    bookingId,
+    select: ['propertyId transactionId userId pkgDetails']
+  });
   console.log({ booking });
+  if (booking?.pkgDetails) booking.pkgDetails = JSON.parse(booking?.pkgDetails);
+  const { user, transaction, property } = booking || {};
+
   const theme = useTheme();
   return (
     <>
@@ -43,193 +59,220 @@ const ReservationDetails = () => {
                   <Typography.Title level={4} style={{ marginBlock: 0 }}>
                     Reservation Details
                   </Typography.Title>
-                  <Card>
-                    <Row gutter={[0, 32]}>
-                      <Col xs={24}>
-                        <Row gutter={32}>
-                          <Col xs={4}>
-                            <Space direction="vertical">
-                              <Typography.Text strong>Check-In</Typography.Text>
-                              <Typography.Text>
-                                Fri 14, Jun, 2023
-                              </Typography.Text>
-                            </Space>
-                          </Col>
-                          <Col xs={20}>
-                            <Space direction="vertical">
-                              <Typography.Text italic>
-                                Guest Name
-                              </Typography.Text>
-                              <Typography.Text
-                                style={{ color: theme.antd.colorPrimary }}
+                  {isFetching ? (
+                    <Skeleton active/>
+                  ) : (
+                    <Card>
+                      <Row gutter={[0, 32]}>
+                        <Col xs={24}>
+                          <Row gutter={32}>
+                            <Col xs={4}>
+                              <Space direction="vertical">
+                                <Typography.Text strong>
+                                  Check-In
+                                </Typography.Text>
+                                <Typography.Text>
+                                  {dayjs(booking?.checkInDate)?.format(
+                                    'ddd DD, MMM, YYYY'
+                                  )}
+                                </Typography.Text>
+                              </Space>
+                            </Col>
+                            <Col xs={20}>
+                              <Space direction="vertical">
+                                <Typography.Text italic>
+                                  Guest Name
+                                </Typography.Text>
+                                <Typography.Text
+                                  style={{ color: theme.antd.colorPrimary }}
+                                >
+                                  {transaction?.firstName + ' '}
+                                  {transaction?.lastName}
+                                </Typography.Text>
+                              </Space>
+                            </Col>
+                          </Row>
+                        </Col>
+                        <Col xs={24}>
+                          <Row gutter={32}>
+                            <Col xs={4}>
+                              <Space direction="vertical">
+                                <Typography.Text strong>
+                                  Check-Out
+                                </Typography.Text>
+                                <Typography.Text>
+                                  {dayjs(booking?.checkOutDate)?.format(
+                                    'ddd DD, MMM, YYYY'
+                                  )}
+                                </Typography.Text>
+                              </Space>
+                            </Col>
+                            <Col xs={20}>
+                              <Space direction="vertical">
+                                <Typography.Text
+                                  style={{ color: theme.antd.colorPrimary }}
+                                >
+                                  {transaction?.email}
+                                </Typography.Text>
+                                <Typography.Paragraph
+                                  style={{ marginBottom: 0 }}
+                                >
+                                  Lorem ipsum dolor sit amet consectetur. Amet
+                                  vestibulum enim id diam nunc arcu tellus
+                                  ornare. Sed diam pellentesque sagittis nam.
+                                </Typography.Paragraph>
+                              </Space>
+                            </Col>
+                          </Row>
+                        </Col>
+                        <Col xs={24}>
+                          <Row gutter={[32, 32]} style={{ flexWrap: 'wrap' }}>
+                            <Col xs={6}>
+                              <Space
+                                direction="vertical"
+                                style={{ width: '100%' }}
                               >
-                                Richard Parker
-                              </Typography.Text>
-                            </Space>
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col xs={24}>
-                        <Row gutter={32}>
-                          <Col xs={4}>
-                            <Space direction="vertical">
-                              <Typography.Text strong>
-                                Check-Out
-                              </Typography.Text>
-                              <Typography.Text>
-                                Tue 18, Jun, 2023
-                              </Typography.Text>
-                            </Space>
-                          </Col>
-                          <Col xs={20}>
-                            <Space direction="vertical">
-                              <Typography.Text
-                                style={{ color: theme.antd.colorPrimary }}
+                                <Typography.Text type="secondary">
+                                  Length of Stay:
+                                </Typography.Text>
+                                <Typography.Text strong>
+                                  {dayjs(booking?.checkOutDate).diff(
+                                    booking?.checkInDate,
+                                    'day'
+                                  ) + 1}{' '}
+                                  Nights
+                                </Typography.Text>
+                              </Space>
+                            </Col>
+                            <Col xs={6}>
+                              <Space
+                                direction="vertical"
+                                style={{ width: '100%' }}
                               >
-                                richard@loger.ma
-                              </Typography.Text>
-                              <Typography.Paragraph style={{ marginBottom: 0 }}>
-                                Lorem ipsum dolor sit amet consectetur. Amet
-                                vestibulum enim id diam nunc arcu tellus ornare.
-                                Sed diam pellentesque sagittis nam.
-                              </Typography.Paragraph>
-                            </Space>
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col xs={24}>
-                        <Row gutter={[32, 32]} style={{ flexWrap: 'wrap' }}>
-                          <Col xs={6}>
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Text type="secondary">
-                                Length of Stay:
-                              </Typography.Text>
-                              <Typography.Text strong>1 Night</Typography.Text>
-                            </Space>
-                          </Col>
-                          <Col xs={6}>
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Text type="secondary">
-                                Preferred Language
-                              </Typography.Text>
-                              <Typography.Text strong>Arabic</Typography.Text>
-                            </Space>
-                          </Col>
-                          <Col xs={6}>
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Text type="secondary">
-                                Reservation No.
-                              </Typography.Text>
-                              <Typography.Text strong>
-                                2564568732
-                              </Typography.Text>
-                            </Space>
-                          </Col>
-                          <Col xs={6}>
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Text type="secondary">
-                                Total Guests:
-                              </Typography.Text>
-                              <Typography.Text strong>
-                                2 Guest 1 Child
-                              </Typography.Text>
-                            </Space>
-                          </Col>
-                          <Col xs={6}>
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Text type="secondary">
-                                Channel:
-                              </Typography.Text>
-                              <Typography.Text strong>Loger.ma</Typography.Text>
-                            </Space>
-                          </Col>
-                          <Col xs={6}>
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Text type="secondary">
-                                Code
-                              </Typography.Text>
-                              <Typography.Text strong>PC029090</Typography.Text>
-                            </Space>
-                          </Col>
-                          <Col xs={6}>
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Text type="secondary">
-                                Total Room
-                              </Typography.Text>
-                              <Typography.Text strong>1</Typography.Text>
-                            </Space>
-                          </Col>
-                          <Col xs={6}>
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Text type="secondary">
-                                Taxes and Charges
-                              </Typography.Text>
-                              <Typography.Text strong>900</Typography.Text>
-                            </Space>
-                          </Col>
-                          <Col xs={6}>
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Text type="secondary">
-                                Total Price
-                              </Typography.Text>
-                              <Typography.Text strong>181</Typography.Text>
-                            </Space>
-                          </Col>
-                          <Col xs={6}>
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Text type="secondary">
-                                Commission and Charge
-                              </Typography.Text>
-                              <Typography.Text strong>200</Typography.Text>
-                            </Space>
-                          </Col>
-                          <Col xs={6}>
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Text type="secondary">
-                                Payment Status
-                              </Typography.Text>
-                              <Typography.Text strong>
-                                Loger.ma Payments
-                              </Typography.Text>
-                            </Space>
-                          </Col>
-                        </Row>
-                      </Col>
-                    </Row>
-                  </Card>
+                                <Typography.Text type="secondary">
+                                  Preferred Language
+                                </Typography.Text>
+                                <Typography.Text strong>Arabic</Typography.Text>
+                              </Space>
+                            </Col>
+                            <Col xs={6}>
+                              <Space
+                                direction="vertical"
+                                style={{ width: '100%' }}
+                              >
+                                <Typography.Text type="secondary">
+                                  Reservation No.
+                                </Typography.Text>
+                                <Typography.Text strong>
+                                  2564568732
+                                </Typography.Text>
+                              </Space>
+                            </Col>
+                            <Col xs={6}>
+                              <Space
+                                direction="vertical"
+                                style={{ width: '100%' }}
+                              >
+                                <Typography.Text type="secondary">
+                                  Total Guests:
+                                </Typography.Text>
+                                <Typography.Text strong>
+                                  {booking?.pkgDetails?.noOfAdults} Adults,{' '}
+                                </Typography.Text>
+                              </Space>
+                            </Col>
+                            <Col xs={6}>
+                              <Space
+                                direction="vertical"
+                                style={{ width: '100%' }}
+                              >
+                                <Typography.Text type="secondary">
+                                  Channel:
+                                </Typography.Text>
+                                <Typography.Text strong>
+                                  Loger.ma
+                                </Typography.Text>
+                              </Space>
+                            </Col>
+                            <Col xs={6}>
+                              <Space
+                                direction="vertical"
+                                style={{ width: '100%' }}
+                              >
+                                <Typography.Text type="secondary">
+                                  Code
+                                </Typography.Text>
+                                <Typography.Text strong>
+                                  PC029090
+                                </Typography.Text>
+                              </Space>
+                            </Col>
+                            <Col xs={6}>
+                              <Space
+                                direction="vertical"
+                                style={{ width: '100%' }}
+                              >
+                                <Typography.Text type="secondary">
+                                  Total Room
+                                </Typography.Text>
+                                <Typography.Text strong>
+                                  {booking?.pkgDetails?.noOfRooms}
+                                </Typography.Text>
+                              </Space>
+                            </Col>
+                            <Col xs={6}>
+                              <Space
+                                direction="vertical"
+                                style={{ width: '100%' }}
+                              >
+                                <Typography.Text type="secondary">
+                                  Taxes and Charges
+                                </Typography.Text>
+                                <Typography.Text strong>900</Typography.Text>
+                              </Space>
+                            </Col>
+                            <Col xs={6}>
+                              <Space
+                                direction="vertical"
+                                style={{ width: '100%' }}
+                              >
+                                <Typography.Text type="secondary">
+                                  Total Price
+                                </Typography.Text>
+                                <Typography.Text strong>
+                                  {booking?.transaction?.discountedAmount}
+                                </Typography.Text>
+                              </Space>
+                            </Col>
+                            <Col xs={6}>
+                              <Space
+                                direction="vertical"
+                                style={{ width: '100%' }}
+                              >
+                                <Typography.Text type="secondary">
+                                  Commission and Charge
+                                </Typography.Text>
+                                <Typography.Text strong>200</Typography.Text>
+                              </Space>
+                            </Col>
+                            <Col xs={6}>
+                              <Space
+                                direction="vertical"
+                                style={{ width: '100%' }}
+                              >
+                                <Typography.Text type="secondary">
+                                  Payment Status
+                                </Typography.Text>
+                                <Typography.Text strong>
+                                  {booking?.transaction?.status}
+                                </Typography.Text>
+                              </Space>
+                            </Col>
+                          </Row>
+                        </Col>
+                      </Row>
+                    </Card>
+                  )}
                 </Space>
                 <Space direction="vertical" style={{ width: '100%' }}>
                   <Typography.Title level={4} style={{ marginBottom: 0 }}>
@@ -324,8 +367,7 @@ const ReservationDetails = () => {
                 </Space>
                 <Space direction="vertical" style={{ width: '100%' }}>
                   <Typography.Title level={4} style={{ marginBottom: 0 }}>
-                    Apartment with Sea View ( Tirath View, Haridwar - A Four
-                    Star Luxury )
+                    {property?.propertyName}
                   </Typography.Title>
                   <Collapse
                     expandIconPosition="end"

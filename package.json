@@ -28,12 +28,13 @@
     "zustand": "^4.4.7"
   },
   "scripts": {
-    "start": "react-scripts start -p 4000",
-    "dev": "npm start",
-    "dev:production": "sh -ac '. $(pwd)/.env.production; npm start'",
+    "start": "sh -ac '. $(pwd)/.env.development; react-scripts start -p 4000'",
+    "dev:production": "sh -ac '. $(pwd)/.env.production; react-scripts start -p 4000'",
+    "build": "sh -ac '. $(pwd)/.env.production; react-scripts build'",
+    "preview": "npm run build && serve -s build",
     "push": "git push origin master",
     "pull": "git pull origin master",
-    "build": "sh -ac '. $(pwd)/.env.production; react-scripts build'",
+    "dev": "npm start",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -54,5 +55,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "babel-plugin-transform-remove-console": "^6.9.4"
   }
 }
