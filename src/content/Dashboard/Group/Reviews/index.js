@@ -18,6 +18,7 @@ const onSearc = value => {
 function Reviews() {
   useDocumentTitle('Loger | Reviews');
   const [selectedProperty, setSelectedProperty] = useState(null);
+  console.log({ selectedProperty });
   const [dates, setDates] = useState(null);
   const [value, setValue] = useState(null);
   const disabledDate = current => {

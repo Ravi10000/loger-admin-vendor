@@ -19,8 +19,9 @@ import {
   SearchOutlined
 } from '@ant-design/icons';
 import { useTheme } from 'styled-components';
-import AddedProperties from 'src/components/added-properties/added-properties';
+import AddedProperties from 'src/components/added-properties';
 import { useDocumentTitle } from '@uidotdev/usehooks';
+import ActiveProperties from 'src/components/active-properties';
 const onChange = key => {
   console.log(key);
 };
@@ -194,7 +195,6 @@ const items = [
       <>
         <Row gutter={[32, 32]}>
           <Col xs={24}>
-            {' '}
             <Table pagination={false} dataSource={data1} columns={column1} />
           </Col>
         </Row>
@@ -291,7 +291,7 @@ const GroupHome = () => {
                     }
                     style={{ width: 300 }}
                   />
-                  <Space
+                  {/* <Space
                     direction="vertical"
                     style={{
                       width: '100%'
@@ -320,7 +320,13 @@ const GroupHome = () => {
                         )
                       }}
                     />
-                  </Space>
+                  </Space> */}
+                  <ActiveProperties />
+                  {/* <Table
+                    pagination={false}
+                    dataSource={data1}
+                    columns={column1}
+                  /> */}
                 </Space>
               </Space>
             </Col>
