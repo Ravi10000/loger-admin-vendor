@@ -24,7 +24,7 @@ import { Container, MainWrapper, CardBottom } from 'src/components/Global';
 import { updateApartment } from 'src/api/properties.req';
 import { useMutation } from '@tanstack/react-query';
 import onError from 'src/utils/onError';
-import { useApartment } from 'src/hooks/property-info';
+import { useApartment } from 'src/hooks/property-info.queries';
 
 const ControlButton = styled(Button)`
   display: inline-flex;

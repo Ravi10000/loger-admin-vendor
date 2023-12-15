@@ -1,13 +1,21 @@
 import axios from 'axios';
 
-// console.log(process.env.REACT_APP_API_URL);
+console.log(
+  `%cAPI URL : ${process.env.REACT_APP_API_URL}`,
+  'color: orange;font-weight: bold;background-color: #00ff0023;padding:10px 20px;border-radius: 20px;'
+);
+
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL
 });
 
-export const getAuthToken = () => localStorage.getItem('AvJO)%zOxm}S/iy');
+const accessTokenKey = process.env.REACT_APP_ACCESS_TOKEN_KEY;
+
+export const getAuthToken = () => localStorage.getItem(accessTokenKey);
+
 export const setAuthToken = token =>
-  localStorage.setItem('AvJO)%zOxm}S/iy', token);
-export const removeAuthToken = () => localStorage.removeItem('AvJO)%zOxm}S/iy');
+  localStorage.setItem(accessTokenKey, token);
+
+export const removeAuthToken = () => localStorage.removeItem(accessTokenKey);
 
 export default api;

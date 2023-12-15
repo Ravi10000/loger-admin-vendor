@@ -16,7 +16,7 @@ import {
   useIsHotel,
   useProperty,
   usePropertyId
-} from 'src/hooks/property-info';
+} from 'src/hooks/property-info.queries';
 import Spinner from 'src/components/spinner';
 const Guest = () => {
   const navigate = useNavigate();

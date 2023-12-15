@@ -15,7 +15,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Container, MainWrapper, CardBottom } from 'src/components/Global';
-import { useHotel, useProperty, usePropertyId } from 'src/hooks/property-info';
+import { useHotel, useProperty, usePropertyId } from 'src/hooks/property-info.queries';
 import { useMutation } from '@tanstack/react-query';
 import { updateHotel, updateProperty } from 'src/api/properties.req';
 import Spinner from 'src/components/spinner';

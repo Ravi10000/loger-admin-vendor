@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import { Container, MainWrapper } from 'src/components/Global';
 import Spinner from 'src/components/spinner';
-import { useProperty, usePropertyId } from 'src/hooks/property-info';
+import { useProperty, usePropertyId } from 'src/hooks/property-info.queries';
 import { deleteHotelRooms, findDistinctRooms } from 'src/api/properties.req';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import styled from 'styled-components';

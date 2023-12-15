@@ -32,7 +32,7 @@ import {
   useProperty,
   usePropertyContent,
   usePropertyId
-} from 'src/hooks/property-info';
+} from 'src/hooks/property-info.queries';
 import Spinner from 'src/components/spinner';
 
 const Rules = () => {

@@ -24,7 +24,7 @@ import {
   updateApartment,
   updateHotelRooms
 } from 'src/api/properties.req';
-import { usePropertyId } from 'src/hooks/property-info';
+import { usePropertyId } from 'src/hooks/property-info.queries';
 import Spinner from 'src/components/spinner';
 
 const Policy = () => {

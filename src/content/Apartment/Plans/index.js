@@ -24,7 +24,7 @@ import api from 'src/api';
 import { toast } from 'react-hot-toast';
 import { AiOutlinePercentage } from 'react-icons/ai';
 import { findApartment, findHotelRoom } from 'src/api/properties.req';
-import { useIsHotel, usePropertyId } from 'src/hooks/property-info';
+import { useIsHotel, usePropertyId } from 'src/hooks/property-info.queries';
 import Spinner from 'src/components/spinner';
 
 const Charge = () => {

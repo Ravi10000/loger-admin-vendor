@@ -24,7 +24,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import api from 'src/api';
 import { findApartment } from 'src/api/properties.req';
 import { toast } from 'react-hot-toast';
-import { useIsHotel, usePropertyId } from 'src/hooks/property-info';
+import { useIsHotel, usePropertyId } from 'src/hooks/property-info.queries';
 import Spinner from 'src/components/spinner';
 
 const options = [

@@ -2,9 +2,14 @@ import { ClockCircleOutlined, DownOutlined } from '@ant-design/icons';
 import { Card, Col, Collapse, Divider, Row, Space, Typography } from 'antd';
 import React from 'react';
 import { Container, MainWrapper } from 'src/components/Global';
+import { useBooking } from 'src/hooks/booking.queries';
 import { useTheme } from 'styled-components';
+import { useParams } from 'react-router-dom';
 
 const ReservationDetails = () => {
+  const { bookingId } = useParams();
+  const { booking } = useBooking({ bookingId, select: ['propertyId'] });
+  console.log({ booking });
   const theme = useTheme();
   return (
     <>

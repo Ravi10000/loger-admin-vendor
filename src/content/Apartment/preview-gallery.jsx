@@ -33,7 +33,7 @@ import {
 } from 'src/api/properties.req';
 import onError from 'src/utils/onError';
 import api from 'src/api';
-import { useIsHotel, usePropertyId } from 'src/hooks/property-info';
+import { useIsHotel, usePropertyId } from 'src/hooks/property-info.queries';
 
 const UploadIconWrapper = styled(Typography.Paragraph)`
   color: ${props => props.theme.antd.colorPrimary};

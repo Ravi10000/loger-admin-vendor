@@ -23,7 +23,7 @@ import {
   useIsHotel,
   useProperty,
   usePropertyId
-} from 'src/hooks/property-info';
+} from 'src/hooks/property-info.queries';
 
 const Language = () => {
   const navigate = useNavigate();

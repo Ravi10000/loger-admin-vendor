@@ -7,7 +7,7 @@ import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { useMutation } from '@tanstack/react-query';
 import { updateProperty } from 'src/api/properties.req';
 import onError from 'src/utils/onError';
-import { useIsHotel, usePropertyId } from 'src/hooks/property-info';
+import { useIsHotel, usePropertyId } from 'src/hooks/property-info.queries';
 const media = {
   mapImg: '/assets/images/map-img.png'
 };

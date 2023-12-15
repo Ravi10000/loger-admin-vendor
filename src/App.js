@@ -4,7 +4,7 @@ import { useRoutes } from 'react-router-dom';
 import router from './router';
 import theme from './theme';
 import { Toaster } from 'react-hot-toast';
-import useFetchUser from 'src/hooks/fetch-user';
+import useFetchUser from 'src/hooks/user.queries';
 // import { useUserStore } from './store/user';
 
 const App = () => {

@@ -10,7 +10,7 @@ import {
 } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 // import { usePropertyId } from 'src/hooks/property-info';
-import { useContentItems } from 'src/hooks/content-items';
+import { useContentItems } from 'src/hooks/content-items.queries';
 import Spinner from 'src/components/spinner';
 
 const Bathroomdetail = () => {

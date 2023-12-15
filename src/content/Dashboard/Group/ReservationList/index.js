@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Space, Typography, Select, Button, Table, Form, Skeleton } from 'antd';
 import { Container, MainWrapper } from 'src/components/Global';
 import { DownloadOutlined, PrinterOutlined } from '@ant-design/icons';
@@ -6,6 +6,7 @@ import { DownloadOutlined, PrinterOutlined } from '@ant-design/icons';
 import { DatePicker } from 'antd';
 import { useDocumentTitle } from '@uidotdev/usehooks';
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import api from 'src/api';
 import dayjs from 'dayjs';
 const { RangePicker } = DatePicker;
@@ -200,6 +201,7 @@ const columns = [
 // ];
 
 function ReservationList() {
+  const navigate = useNavigate();
   useDocumentTitle('Loger | Reservations');
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [dates, setDates] = useState(null);
@@ -375,6 +377,11 @@ function ReservationList() {
               columns={columns}
               dataSource={bookings}
               size="middle"
+              onRow={record => ({
+                onClick() {
+                  navigate(`/dashboard/groups/reservations/${record.key}`);
+                }
+              })}
             />
           )}
         </Space>

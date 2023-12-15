@@ -11,7 +11,7 @@ import { RiSkipRightLine } from 'react-icons/ri';
 import { styled } from 'styled-components';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import api from 'src/api';
-import { useHotelRoom, usePropertyId } from 'src/hooks/property-info';
+import { useHotelRoom, usePropertyId } from 'src/hooks/property-info.queries';
 import { toast } from 'react-hot-toast';
 import Spinner from 'src/components/spinner';
 import { updateHotelRooms } from 'src/api/properties.req';

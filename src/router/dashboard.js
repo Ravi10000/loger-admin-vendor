@@ -132,7 +132,7 @@ const dashboardRoutes = [
             element: <GroupsReservation />
           },
           {
-            path: ':reservationNo',
+            path: ':bookingId',
             element: <GroupReservationDetails />
           }
         ]
