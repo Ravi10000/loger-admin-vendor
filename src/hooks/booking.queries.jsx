@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import api from 'src/api';
 
-export function useBooking({ bookingId, select, onSuccess }) {
+export function useBooking({ bookingId, select, onSuccess, transform }) {
   const {
     data: booking,
     isFetching,
@@ -13,6 +13,7 @@ export function useBooking({ bookingId, select, onSuccess }) {
         `/booking/one/${bookingId}?select=${select ? select?.join(' ') : ''}`
       );
       onSuccess?.(res?.data?.booking);
+      if (transform) return transform(res?.data?.booking);
       return res?.data?.booking || {};
     }
   });

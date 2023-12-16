@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 ._main-photo-text {
   position: absolute;
   top: 0;

@@ -182,7 +182,6 @@ function useMenuItems() {
       .filter(({ path }) => {
         const isPathMatch = urlMatch(path);
         const pathNameMatch = urlMatch(pathname);
-        console.log({ isPathMatch, pathNameMatch });
         return isPathMatch && pathNameMatch
           ? isPathMatch.params.tab === pathNameMatch.params.tab
           : false;

@@ -9,21 +9,36 @@ import {
   Typography,
   Skeleton
 } from 'antd';
-import React from 'react';
 import { Container, MainWrapper } from 'src/components/Global';
 import { useBooking } from 'src/hooks/booking.queries';
 import { useTheme } from 'styled-components';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
+import ChatBox from 'src/components/chat-box/chat-box';
+import { useQuery } from '@tanstack/react-query';
+import api from 'src/api';
+import Spinner from 'src/components/spinner';
 
 const ReservationDetails = () => {
   const { bookingId } = useParams();
+
+  const { data: messages, isLoading } = useQuery({
+    queryKey: ['messages', { bookingId }],
+    queryFn: async () => {
+      const res = await api.get(`/messages/${bookingId}`);
+      return res.data.messages;
+    }
+  });
+
   const { booking, isFetching } = useBooking({
     bookingId,
-    select: ['propertyId transactionId userId pkgDetails']
+    select: ['propertyId transactionId userId pkgDetails'],
+    transform: booking => {
+      if (booking?.pkgDetails)
+        booking.pkgDetails = JSON.parse(booking?.pkgDetails);
+      return booking;
+    }
   });
-  console.log({ booking });
-  if (booking?.pkgDetails) booking.pkgDetails = JSON.parse(booking?.pkgDetails);
   const { user, transaction, property } = booking || {};
 
   const theme = useTheme();
@@ -60,7 +75,7 @@ const ReservationDetails = () => {
                     Reservation Details
                   </Typography.Title>
                   {isFetching ? (
-                    <Skeleton active/>
+                    <Skeleton active />
                   ) : (
                     <Card>
                       <Row gutter={[0, 32]}>
@@ -365,6 +380,19 @@ const ReservationDetails = () => {
                     </Space>
                   </Card>
                 </Space>
+                {isLoading || isFetching ? (
+                  <Spinner />
+                ) : (
+                  <ChatBox
+                    title={'Requests From Guests'}
+                    messages={messages}
+                    user={{
+                      profilePic: user?.profilePic,
+                      initials:
+                        user?.fName?.charAt?.(0) + user?.lName?.charAt?.(0)
+                    }}
+                  />
+                )}
                 <Space direction="vertical" style={{ width: '100%' }}>
                   <Typography.Title level={4} style={{ marginBottom: 0 }}>
                     {property?.propertyName}
