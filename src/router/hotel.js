@@ -41,6 +41,9 @@ const Complete = Loader(lazy(() => import('src/content/Hotel/Complete')));
 const Hotelinfo = Loader(lazy(() => import('src/content/Hotel/Hotelinfo')));
 const Payment = Loader(lazy(() => import('src/content/Apartment/Payment')));
 const Onehotel = Loader(lazy(() => import('src/content/Hotel/Onehotel')));
+const HostProfile = Loader(
+  lazy(() => import('src/content/Apartment/HostProfile'))
+);
 
 const hotelRoutes = [
   {
@@ -90,6 +93,10 @@ const hotelRoutes = [
   {
     path: 'rules',
     element: <Rules />
+  },
+  {
+    path: 'host-profile',
+    element: <HostProfile />
   },
   {
     path: ':roomName/room-detail',

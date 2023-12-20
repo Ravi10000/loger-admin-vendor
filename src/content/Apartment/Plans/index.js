@@ -139,7 +139,7 @@ const Charge = () => {
                           size="large"
                           style={{ width: '100%' }}
                         >
-                          <Space direction="vertical" style={{ width: '100%' }}>
+                          {/* <Space direction="vertical" style={{ width: '100%' }}>
                             <div
                               style={{
                                 display: 'flex',
@@ -166,13 +166,13 @@ const Charge = () => {
                                 Edit
                               </Button>
                             </div>
-                          </Space>
-                          <Typography.Paragraph type="success">
+                          </Space> */}
+                          {/* <Typography.Paragraph type="success">
                             Lorem ipsum dolor sit amet consectetur. Amet
                             vestibulum enim id diam nunc arcu tellus ornare. Sed
                             diam pellentesque sagittis nam. Tristique
-                          </Typography.Paragraph>
-                          <Checkbox.Group>
+                          </Typography.Paragraph> */}
+                          {/* <Checkbox.Group>
                             <Space
                               direction="vertical"
                               style={{ width: '100%' }}
@@ -185,7 +185,7 @@ const Charge = () => {
                               </Checkbox>
                             </Space>
                           </Checkbox.Group>
-                          <Divider style={{ marginBlock: 0 }} />
+                          <Divider style={{ marginBlock: 0 }} /> */}
                           <Space direction="vertical" style={{ width: '100%' }}>
                             <div
                               style={{

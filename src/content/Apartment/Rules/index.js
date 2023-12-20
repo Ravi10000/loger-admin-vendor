@@ -81,7 +81,7 @@ const Rules = () => {
       };
       if (isHotel) {
         await updateHotel(contentData);
-        navigate(`/hotel/${propertyId}/new/room-detail`);
+        navigate(`/hotel/${propertyId}/host-profile`);
       } else {
         await updateApartment(contentData);
         navigate(`/apartment/${propertyId}/host-profile`);
