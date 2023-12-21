@@ -7,7 +7,9 @@ import {
   Space,
   Typography,
   Tag,
-  Form
+  Form,
+  Select,
+  Input
 } from 'antd';
 import { useState } from 'react';
 import { styled } from 'styled-components';
@@ -40,6 +42,18 @@ const CheckableTag = styled(Tag.CheckableTag)`
     border-color: ${props => props.theme.antd.colorInfoTextHover};
   }
 `;
+
+const options = [
+  {
+    value: 'INR',
+    label: 'INR'
+  },
+  {
+    value: 'USD',
+    label: 'USD'
+  }
+];
+
 const BreakfastDetail = () => {
   const navigate = useNavigate();
   const propertyId = usePropertyId();
@@ -47,8 +61,10 @@ const BreakfastDetail = () => {
   const [typesOfBreakfast, setTypesOfBreakfast] = useState([]);
   const [breakfastServed, setBreakfastServed] = useState(null);
   const [breakfastIncluded, setBreakfastIncluded] = useState(null);
+  const [breakfastPrice, setBreakfastPrice] = useState('');
 
   const isBreakfastIncludedOptionRequired = breakfastServed === true;
+  const isBreakfastPriceValueRequired = breakfastIncluded === false;
 
   const handleTagChange = (tag, checked) => {
     const nextSelectedTags = checked
@@ -68,6 +84,7 @@ const BreakfastDetail = () => {
       setBreakfastIncluded(property?.breakfastServed);
       setBreakfastServed(property?.breakfastIncluded);
       setTypesOfBreakfast(property?.typesOfBreakfast);
+      setBreakfastPrice(property?.breakfastPrice.toString());
     }
   );
 
@@ -102,7 +119,8 @@ const BreakfastDetail = () => {
         propertyId,
         ...(typeof breakfastIncluded === 'boolean' && { breakfastIncluded }),
         ...(typeof breakfastServed === 'boolean' && { breakfastServed }),
-        ...(typesOfBreakfast?.length && { typesOfBreakfast })
+        ...(typesOfBreakfast?.length && { typesOfBreakfast }),
+        ...(breakfastPrice && { breakfastPrice: +breakfastPrice })
       };
       if (breakfastServed === null) {
         toast.error('please select if breakfast is served or not');
@@ -110,6 +128,10 @@ const BreakfastDetail = () => {
       }
       if (breakfastServed && breakfastIncluded === null) {
         toast.error('please select if breakfast is included or not');
+        return;
+      }
+      if (isBreakfastPriceValueRequired && breakfastPrice === '') {
+        toast.error('please fill price if breakfast is not included');
         return;
       }
       if (breakfastServed && !typesOfBreakfast?.length) {
@@ -218,6 +240,33 @@ const BreakfastDetail = () => {
                               </Radio.Group>
                             </Form.Item>
                           </Space>
+                          {isBreakfastPriceValueRequired && (
+                            <Space
+                              direction="vertical"
+                              style={{ width: '100%' }}
+                            >
+                              <Typography.Title level={5}>
+                                Price guests pay
+                              </Typography.Title>
+                              <Space.Compact style={{ width: '100%' }}>
+                                <Select
+                                  style={{ width: 'auto' }}
+                                  size="large"
+                                  defaultValue="INR"
+                                  options={options}
+                                />
+                                <Input
+                                  size="large"
+                                  value={breakfastPrice}
+                                  onChange={e => {
+                                    console.log(!isNaN(e.target.value));
+                                    if (!isNaN(e.target.value))
+                                      setBreakfastPrice(e.target.value);
+                                  }}
+                                />
+                              </Space.Compact>
+                            </Space>
+                          )}
                           <Space direction="vertical" style={{ width: '100%' }}>
                             <Space
                               direction="vertical"

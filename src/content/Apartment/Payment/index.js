@@ -14,8 +14,10 @@ import { Container, MainWrapper } from 'src/components/Global';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import api from 'src/api';
 import onError from 'src/utils/onError';
+import { useNavigate } from 'react-router-dom';
 
 const Payment = () => {
+  const navigate = useNavigate();
   const { data: entity, isFetching } = useQuery({
     queryKey: ['entity'],
     queryFn: async () => {
@@ -27,8 +29,8 @@ const Payment = () => {
   const { mutate, status } = useMutation({
     mutationFn: async data => {
       console.log({ data });
-      const res = await api.put('/legal-entity', data);
-      return res;
+      await api.put('/legal-entity', data);
+      navigate('/dashboard/groups/groups-home');
     },
     onError
   });

@@ -4,18 +4,7 @@ import {
   InfoCircleOutlined
 } from '@ant-design/icons';
 import { CgRemove } from 'react-icons/cg';
-import {
-  Button,
-  Card,
-  Checkbox,
-  Col,
-  Divider,
-  Row,
-  Space,
-  Typography,
-  Input,
-  Spin
-} from 'antd';
+import { Button, Card, Col, Row, Space, Typography, Input, Spin } from 'antd';
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
