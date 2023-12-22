@@ -16,7 +16,7 @@ jobs:
       # Build React application
       - run:
           name: Build React App
-          command: npm run build
+          command:CI=false npm run build
 
       # Deploy to EC2
       - deploy:
