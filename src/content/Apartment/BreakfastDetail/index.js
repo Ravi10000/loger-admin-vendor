@@ -7,7 +7,6 @@ import {
   Space,
   Typography,
   Tag,
-  Form,
   Select,
   Input
 } from 'antd';
@@ -19,14 +18,10 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Container, MainWrapper, CardBottom } from 'src/components/Global';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import onError from 'src/utils/onError';
-import { updateProperty } from 'src/api/properties.req';
+import { findProperty, updateProperty } from 'src/api/properties.req';
 import { toast } from 'react-hot-toast';
 import api from 'src/api';
-import {
-  useIsHotel,
-  useProperty,
-  usePropertyId
-} from 'src/hooks/property-info.queries';
+import { useIsHotel, usePropertyId } from 'src/hooks/property-info.queries';
 import Spinner from 'src/components/spinner';
 
 const CheckableTag = styled(Tag.CheckableTag)`
@@ -63,7 +58,6 @@ const BreakfastDetail = () => {
   const [breakfastIncluded, setBreakfastIncluded] = useState(null);
   const [breakfastPrice, setBreakfastPrice] = useState('');
 
-  const isBreakfastIncludedOptionRequired = breakfastServed === true;
   const isBreakfastPriceValueRequired = breakfastIncluded === false;
 
   const handleTagChange = (tag, checked) => {
@@ -73,46 +67,50 @@ const BreakfastDetail = () => {
     setTypesOfBreakfast(nextSelectedTags);
   };
 
-  const { property, isFetching } = useProperty(
-    [
-      'typesOfBreakfast',
-      'breakfastPrice',
-      'breakfastIncluded',
-      'breakfastServed'
-    ],
-    property => {
-      setBreakfastIncluded(property?.breakfastServed);
-      setBreakfastServed(property?.breakfastIncluded);
-      setTypesOfBreakfast(property?.typesOfBreakfast);
-      setBreakfastPrice(property?.breakfastPrice.toString());
-    }
-  );
-
-  // const { data: property, isFetching } = useQuery({
-  //   queryKey: [
-  //     'property',
-  //     propertyId,
-  //     [
-  //       'typesOfBreakfast',
-  //       'breakfastPrice',
-  //       'breakfastIncluded',
-  //       'breakfastServed'
-  //     ]
+  // const { property, isFetching } = useProperty(
+  //   [
+  //     'typesOfBreakfast',
+  //     'breakfastPrice',
+  //     'breakfastIncluded',
+  //     'breakfastServed',
+  //     'propertyType'
   //   ],
-  //   enabled: propertyId?.length === 24,
-  //   initialData: {},
-  //   queryFn: async () => {
-  //     const res = await findProperty(
-  //       propertyId,
-  //       'typesOfBreakfast breakfastPrice breakfastIncluded breakfastServed'
-  //     );
-  //     const property = res?.data?.property;
+  //   property => {
   //     setBreakfastIncluded(property?.breakfastServed);
   //     setBreakfastServed(property?.breakfastIncluded);
   //     setTypesOfBreakfast(property?.typesOfBreakfast);
-  //     return property;
+  //     setBreakfastPrice(property?.breakfastPrice.toString());
   //   }
-  // });
+  // );
+
+  const { data: property, isFetching } = useQuery({
+    queryKey: [
+      'property',
+      propertyId,
+      [
+        'typesOfBreakfast',
+        'breakfastPrice',
+        'breakfastIncluded',
+        'breakfastServed',
+        'propertyType'
+      ]
+    ],
+    enabled: propertyId?.length === 24,
+    initialData: {},
+    queryFn: async () => {
+      const res = await findProperty(
+        propertyId,
+        'typesOfBreakfast breakfastPrice breakfastIncluded breakfastServed propertyType'
+      );
+      const property = res?.data?.property;
+      setBreakfastServed(property?.breakfastServed);
+      setBreakfastIncluded(property?.breakfastIncluded);
+      setTypesOfBreakfast(property?.typesOfBreakfast);
+      setBreakfastPrice(property?.breakfastPrice.toString());
+      return property;
+    }
+  });
+
   const { status, mutate } = useMutation({
     mutationFn: async () => {
       const data = {
@@ -120,7 +118,8 @@ const BreakfastDetail = () => {
         ...(typeof breakfastIncluded === 'boolean' && { breakfastIncluded }),
         ...(typeof breakfastServed === 'boolean' && { breakfastServed }),
         ...(typesOfBreakfast?.length && { typesOfBreakfast }),
-        ...(breakfastPrice && { breakfastPrice: +breakfastPrice })
+        ...(breakfastPrice && { breakfastPrice: +breakfastPrice }),
+        route: `/${property.propertyType}/${propertyId}/breakfast-detail`
       };
       if (breakfastServed === null) {
         toast.error('please select if breakfast is served or not');
@@ -138,8 +137,7 @@ const BreakfastDetail = () => {
         toast.error('Please select types of breakfast provided');
         return;
       }
-      const res = await updateProperty(data);
-      console.log({ res });
+      await updateProperty(data);
       isHotel
         ? navigate(`/hotel/${propertyId}/parking`)
         : navigate(`/apartment/${propertyId}/parking`);
@@ -147,11 +145,7 @@ const BreakfastDetail = () => {
     onError: (...props) => onError(...props, 'Something Went Wrong')
   });
 
-  const {
-    data: cuisineList,
-    isFetching: isFetchingCuisine,
-    error: cuisineError
-  } = useQuery({
+  const { data: cuisineList } = useQuery({
     queryKey: ['contentItems', { type: 'cuisine' }],
     initialData: [],
     queryFn: async () => {
@@ -159,8 +153,6 @@ const BreakfastDetail = () => {
       return res?.data?.contentItems;
     }
   });
-
-  console.log({ cuisineList, isFetchingCuisine, cuisineError });
 
   return (
     <>
@@ -175,157 +167,115 @@ const BreakfastDetail = () => {
                 {isFetching ? (
                   <Spinner />
                 ) : (
-                  <Form
-                    onFinish={mutate}
-                    initialValues={
-                      typeof property?.breakfastServed !== 'undefined'
-                        ? property
-                        : {}
-                    }
+                  <Space
+                    direction="vertical"
+                    size="large"
+                    style={{ width: '100%' }}
                   >
-                    <Space
-                      direction="vertical"
-                      size="large"
-                      style={{ width: '100%' }}
-                    >
-                      <Space direction="vertical" style={{ width: '100%' }}>
-                        <Typography.Title level={5}>
-                          Do You Serve Guests Breakfast?
-                        </Typography.Title>
-                        <Form.Item
-                          name="breakfastServed"
-                          rules={[
-                            {
-                              required: true,
-                              message:
-                                'Please select if breakfast is provided or not'
-                            }
-                          ]}
-                        >
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Typography.Title level={5}>
+                        Do You Serve Guests Breakfast?
+                      </Typography.Title>
+                      <Radio.Group
+                        onChange={e => {
+                          setBreakfastServed(e.target.value);
+                        }}
+                        value={breakfastServed}
+                      >
+                        <Radio value={true}>Yes</Radio>
+                        <Radio value={false}>No</Radio>
+                      </Radio.Group>
+                    </Space>
+                    {breakfastServed && (
+                      <>
+                        <Space direction="vertical" style={{ width: '100%' }}>
+                          <Typography.Title level={5}>
+                            Is Breakfast Included in the Price Guests Pay?
+                          </Typography.Title>
                           <Radio.Group
-                            onChange={e => {
-                              setBreakfastServed(e.target.value);
-                            }}
-                            value={breakfastServed}
+                            onChange={e => setBreakfastIncluded(e.target.value)}
+                            value={breakfastIncluded}
                           >
                             <Radio value={true}>Yes</Radio>
                             <Radio value={false}>No</Radio>
                           </Radio.Group>
-                        </Form.Item>
-                      </Space>
-                      {breakfastServed && (
-                        <>
+                        </Space>
+                        {isBreakfastPriceValueRequired && (
                           <Space direction="vertical" style={{ width: '100%' }}>
                             <Typography.Title level={5}>
-                              Is Breakfast Included in the Price Guests Pay?
+                              Price guests pay
                             </Typography.Title>
-                            <Form.Item
-                              name="breakfastIncluded"
-                              rules={[
-                                {
-                                  required: isBreakfastIncludedOptionRequired,
-                                  message:
-                                    'Please select if breakfast is included or not'
-                                }
-                              ]}
-                            >
-                              <Radio.Group
-                                onChange={e =>
-                                  setBreakfastIncluded(e.target.value)
-                                }
-                                value={breakfastIncluded}
-                              >
-                                <Radio value={true}>Yes</Radio>
-                                <Radio value={false}>No</Radio>
-                              </Radio.Group>
-                            </Form.Item>
+                            <Space.Compact style={{ width: '100%' }}>
+                              <Select
+                                style={{ width: 'auto' }}
+                                size="large"
+                                defaultValue="INR"
+                                options={options}
+                              />
+                              <Input
+                                size="large"
+                                value={breakfastPrice}
+                                onChange={e => {
+                                  console.log(!isNaN(e.target.value));
+                                  if (!isNaN(e.target.value))
+                                    setBreakfastPrice(e.target.value);
+                                }}
+                              />
+                            </Space.Compact>
                           </Space>
-                          {isBreakfastPriceValueRequired && (
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Title level={5}>
-                                Price guests pay
-                              </Typography.Title>
-                              <Space.Compact style={{ width: '100%' }}>
-                                <Select
-                                  style={{ width: 'auto' }}
-                                  size="large"
-                                  defaultValue="INR"
-                                  options={options}
-                                />
-                                <Input
-                                  size="large"
-                                  value={breakfastPrice}
-                                  onChange={e => {
-                                    console.log(!isNaN(e.target.value));
-                                    if (!isNaN(e.target.value))
-                                      setBreakfastPrice(e.target.value);
-                                  }}
-                                />
-                              </Space.Compact>
-                            </Space>
-                          )}
+                        )}
+                        <Space direction="vertical" style={{ width: '100%' }}>
                           <Space direction="vertical" style={{ width: '100%' }}>
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Title level={5}>
-                                What type of breakfast do you offer?
-                              </Typography.Title>
-                              <Space size={[0, 8]} wrap>
-                                {cuisineList.map(cuisine => (
-                                  <CheckableTag
-                                    key={cuisine._id}
-                                    checked={typesOfBreakfast.includes(
-                                      cuisine.text
-                                    )}
-                                    onChange={checked =>
-                                      handleTagChange(cuisine.text, checked)
-                                    }
-                                  >
-                                    {cuisine.text}
-                                  </CheckableTag>
-                                ))}
-                              </Space>
+                            <Typography.Title level={5}>
+                              What type of breakfast do you offer?
+                            </Typography.Title>
+                            <Space size={[0, 8]} wrap>
+                              {cuisineList.map(cuisine => (
+                                <CheckableTag
+                                  key={cuisine._id}
+                                  checked={typesOfBreakfast.includes(
+                                    cuisine.text
+                                  )}
+                                  onChange={checked =>
+                                    handleTagChange(cuisine.text, checked)
+                                  }
+                                >
+                                  {cuisine.text}
+                                </CheckableTag>
+                              ))}
                             </Space>
                           </Space>
-                        </>
-                      )}
-                      <CardBottom direction="horizontal">
-                        <Button
-                          size="large"
-                          type="primary"
-                          ghost
-                          icon={<ArrowLeftOutlined />}
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center'
-                          }}
-                          onClick={() => {
-                            navigate(-1);
-                          }}
-                        >
-                          Back
-                        </Button>
-                        <Button
-                          size="large"
-                          type="primary"
-                          block
-                          htmlType="submit"
-                          disabled={status === 'pending'}
-                          // onClick={mutate}
-                          // onClick={() => {
-                          //   navigate('/apartment/parking');
-                          // }}
-                        >
-                          Continue
-                        </Button>
-                      </CardBottom>
-                    </Space>
-                  </Form>
+                        </Space>
+                      </>
+                    )}
+                    <CardBottom direction="horizontal">
+                      <Button
+                        size="large"
+                        type="primary"
+                        ghost
+                        icon={<ArrowLeftOutlined />}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center'
+                        }}
+                        onClick={() => {
+                          navigate(-1);
+                        }}
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        size="large"
+                        type="primary"
+                        block
+                        htmlType="submit"
+                        disabled={status === 'pending'}
+                        onClick={mutate}
+                      >
+                        Continue
+                      </Button>
+                    </CardBottom>
+                  </Space>
                 )}
               </Card>
             </Col>

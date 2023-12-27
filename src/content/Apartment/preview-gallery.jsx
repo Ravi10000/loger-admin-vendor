@@ -169,15 +169,19 @@ const PreviewGallery = () => {
   const [previewTitle, setPreviewTitle] = useState('');
   const [mainPhotoIdx, setMainPhotoIdx] = useState(0);
   const { message } = App.useApp();
-  const { isFetching } = useQuery({
-    queryKey: [roomName ? 'hotel-room' : 'property', propertyId],
+  const { data: result, isFetching } = useQuery({
+    queryKey: [
+      roomName ? 'hotel-room' : 'property',
+      propertyId,
+      'propertyType'
+    ],
     enabled: !!propertyId,
     refetchOnWindowFocus: false,
     initialData: {},
     queryFn: async () => {
       const res = roomName
         ? await findHotelRoom(propertyId, roomName, 'photos')
-        : await findProperty(propertyId, 'photos');
+        : await findProperty(propertyId, 'photos propertyType');
       const content = roomName ? res?.data?.room : res?.data?.property;
       setFileList(content?.photos || content?.photos || []);
       const mainPhotoIdx = content?.photos?.findIndex(photo => photo.isMain);
@@ -197,6 +201,10 @@ const PreviewGallery = () => {
       const formData = new FormData();
       formData.append('propertyId', propertyId);
       formData.append('mainPhotoIdx', mainPhotoIdx);
+      formData.append(
+        'route',
+        `/${result.propertyType}/${propertyId}/preview-gallery`
+      );
       if (roomName) formData.append('roomName', roomName);
       fileList.forEach(file => {
         if (file.url) formData.append('photos', file);

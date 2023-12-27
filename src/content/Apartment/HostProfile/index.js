@@ -39,6 +39,7 @@ const HostProfile = () => {
       [
         'aboutNeighborhood',
         'aboutProperty',
+        'propertyType',
         ...(isHotel ? [] : ['hostName', 'aboutHost'])
       ]
     ],
@@ -70,6 +71,9 @@ const HostProfile = () => {
       }
       if (!checkList.includes('none')) {
         data.propertyId = propertyId;
+        data.route = `/${
+          isHotel ? 'hotel' : 'apartment'
+        }/${propertyId}/host-profile`;
         await api.put(`/${isHotel ? 'hotels' : 'apartments'}`, data);
       }
       navigate(

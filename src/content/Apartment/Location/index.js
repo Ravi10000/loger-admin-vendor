@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { ArrowLeftOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
-import { useMutation } from '@tanstack/react-query';
-import { updateProperty } from 'src/api/properties.req';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { findProperty, updateProperty } from 'src/api/properties.req';
 import onError from 'src/utils/onError';
 import { useIsHotel, usePropertyId } from 'src/hooks/property-info.queries';
 const media = {
@@ -16,6 +16,15 @@ const Location = () => {
   const propertyId = usePropertyId();
   const navigate = useNavigate();
   const isHotel = useIsHotel();
+  const { data: property } = useQuery({
+    queryKey: ['property'],
+    enabled: propertyId?.length === 24,
+    initialData: null,
+    queryFn: async () => {
+      const res = await findProperty(propertyId, 'propertyType');
+      return res?.data?.property;
+    }
+  });
 
   const { status, mutate } = useMutation({
     mutationFn: async () => {
@@ -24,7 +33,8 @@ const Location = () => {
         geoLocation: {
           lat: 1232,
           lng: 123
-        }
+        },
+        route: `/${property.propertyType}/${propertyId}/location`
       };
       await updateProperty(data);
       if (isHotel) {

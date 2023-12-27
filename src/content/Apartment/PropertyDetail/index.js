@@ -64,7 +64,8 @@ const PropertyDetail = () => {
         ...data,
         maxGuests,
         bathroomsCount,
-        propertyId
+        propertyId,
+        route: `/apartment/${propertyId}/breakfast-detail`
       };
       if (typeof maxGuests !== 'number') {
         toast.error('invalid max guests value');

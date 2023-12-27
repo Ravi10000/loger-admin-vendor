@@ -25,7 +25,8 @@ const Parking = () => {
       'parkingAvailable',
       'parkingReservation',
       'parkingType',
-      'parkingLocation'
+      'parkingLocation',
+      'propertyType'
     ],
     property => {
       if (property.parkingAvailable) {
@@ -34,9 +35,12 @@ const Parking = () => {
     }
   );
 
+  console.log(property);
+
   const { status, mutate } = useMutation({
     mutationFn: async data => {
       data.propertyId = propertyId;
+      data.route = `/${property.propertyType}/${propertyId}/parking`;
       await updateProperty(data);
       isHotel
         ? navigate(`/hotel/${propertyId}/language`)
