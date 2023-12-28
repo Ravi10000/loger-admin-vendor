@@ -106,7 +106,7 @@ const BreakfastDetail = () => {
       setBreakfastServed(property?.breakfastServed);
       setBreakfastIncluded(property?.breakfastIncluded);
       setTypesOfBreakfast(property?.typesOfBreakfast);
-      setBreakfastPrice(property?.breakfastPrice.toString());
+      setBreakfastPrice(property?.breakfastPrice?.toString());
       return property;
     }
   });

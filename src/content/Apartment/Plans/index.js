@@ -72,7 +72,8 @@ const Charge = () => {
           roomName,
           propertyId,
           weeklyPlanDiscount,
-          nonRefundableDiscount
+          nonRefundableDiscount,
+          route: `/hotel/${propertyId}/${roomName}/plans`
         };
         await api.put(`/hotel-rooms`, data);
         navigate(`/hotel/${propertyId}/${roomName}/cancellation-policy`);
@@ -82,7 +83,8 @@ const Charge = () => {
           propertyId,
           prices: filteredPrices,
           weeklyPlanDiscount: weeklyPlanDiscount || 0,
-          nonRefundableDiscount: nonRefundableDiscount || 0
+          nonRefundableDiscount: nonRefundableDiscount || 0,
+          route: `/apartment/${propertyId}/plans`
         };
         await api.put('/apartments', data);
         navigate(`/apartment/${propertyId}/cancellation-policy`);

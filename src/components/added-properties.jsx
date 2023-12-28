@@ -4,9 +4,8 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from 'src/api';
-import Spinner from 'src/components/spinner';
 import PropertyProgress from 'src/components/property-progress/property-progress';
-import { Link } from 'react-router-dom';
+import ActionProperty from 'src/components/action-property.jsx';
 import { toast } from 'react-hot-toast';
 const columns = [
   {
@@ -78,15 +77,7 @@ function AddedProperties() {
           name: property?.propertyName,
           Location: property?.country,
           RegistrationProgress: <PropertyProgress propertyId={property?._id} />,
-          Action: (
-            <Link
-              to={`/${property?.propertyType}/${property?._id}/${
-                property?.propertyType === 'apartment' ? 'place' : 'property'
-              }`}
-            >
-              Continue Registration
-            </Link>
-          ),
+          Action: <ActionProperty propertyId={property?._id} />,
           Delete: (
             <Space size="middle">
               {status === 'pending' && propertyToDelete === property?._id ? (

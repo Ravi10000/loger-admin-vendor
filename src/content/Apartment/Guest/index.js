@@ -23,10 +23,13 @@ const Guest = () => {
   const propertyId = usePropertyId();
   const isHotel = useIsHotel();
   const [selectedFacilities, setSelectedFacilities] = useState([]);
-  const { isFetching } = useProperty(['facilities'], property => {
-    if (property?.facilities?.length)
-      setSelectedFacilities(property?.facilities);
-  });
+  const { property, isFetching } = useProperty(
+    ['facilities', 'propertyType'],
+    property => {
+      if (property?.facilities?.length)
+        setSelectedFacilities(property?.facilities);
+    }
+  );
 
   const { data: facilityList, isFetching: isFetchingFacility } = useQuery({
     queryKey: ['facilities', { status: 'active' }],
@@ -45,7 +48,8 @@ const Guest = () => {
       }
       const data = {
         facilities: selectedFacilities,
-        propertyId
+        propertyId,
+        route: `/${property.propertyType}/${propertyId}/guest`
       };
       await updateProperty(data);
       isHotel

@@ -1,9 +1,10 @@
-import { Progress, Spin, Space } from 'antd';
+import { Spin, Space, Typography } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import api from 'src/api';
+import { Link } from 'react-router-dom';
 
-function PropertyProgress({ propertyId, ...props }) {
+function ActionProperty({ propertyId, ...props }) {
   //   console.log({ propertyId });
   const { data: progress, isFetching } = useQuery({
     queryKey: ['properties-progress', propertyId],
@@ -19,11 +20,14 @@ function PropertyProgress({ propertyId, ...props }) {
       <Spin indicator={<LoadingOutlined style={{ fontSize: 20 }} spin />} />
     </Space>
   ) : (
-    <Progress
-      percent={parseInt((progress?.routes?.length / 15) * 100)}
-      {...props}
-    />
+    <>
+      {progress?.routes?.length === 15 ? (
+        <Typography.Text>Completed</Typography.Text>
+      ) : (
+        <Link to={progress?.routes?.pop()}>Continue Registration</Link>
+      )}
+    </>
   );
 }
 
-export default PropertyProgress;
+export default ActionProperty;

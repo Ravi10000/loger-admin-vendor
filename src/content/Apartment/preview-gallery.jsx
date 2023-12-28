@@ -169,7 +169,7 @@ const PreviewGallery = () => {
   const [previewTitle, setPreviewTitle] = useState('');
   const [mainPhotoIdx, setMainPhotoIdx] = useState(0);
   const { message } = App.useApp();
-  const { data: result, isFetching } = useQuery({
+  const { isFetching } = useQuery({
     queryKey: [
       roomName ? 'hotel-room' : 'property',
       propertyId,
@@ -203,7 +203,9 @@ const PreviewGallery = () => {
       formData.append('mainPhotoIdx', mainPhotoIdx);
       formData.append(
         'route',
-        `/${result.propertyType}/${propertyId}/preview-gallery`
+        `/${isHotel ? 'hotel' : 'apartment'}/${propertyId}${
+          roomName ? `/${roomName}` : ''
+        }/preview-gallery`
       );
       if (roomName) formData.append('roomName', roomName);
       fileList.forEach(file => {

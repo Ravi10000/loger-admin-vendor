@@ -35,8 +35,6 @@ const Parking = () => {
     }
   );
 
-  console.log(property);
-
   const { status, mutate } = useMutation({
     mutationFn: async data => {
       data.propertyId = propertyId;

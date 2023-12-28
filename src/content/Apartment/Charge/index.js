@@ -57,7 +57,7 @@ const Charge = () => {
     queryFn: async () => {
       const res = isHotel
         ? await api.get(`/hotel-rooms/${propertyId}/${roomName}?select=price`)
-        : await findApartment(propertyId, 'prices');
+        : await findApartment(propertyId, 'prices propertyType');
       console.log({ res });
       const content = isHotel ? res?.data?.room : res?.data?.apartment;
       if (content.price) setPrice(content.price);
@@ -74,6 +74,8 @@ const Charge = () => {
     }
   });
 
+  console.log(content);
+
   const { mutate, status } = useMutation({
     mutationFn: async () => {
       if (!price) {
@@ -88,7 +90,8 @@ const Charge = () => {
         await api.put(`/hotel-rooms`, {
           propertyId,
           roomName,
-          price: parseFloat(price)
+          price: parseFloat(price),
+          route: `/hotel/${propertyId}/${roomName}/charge`
         });
         navigate(`/hotel/${propertyId}/${roomName}/plans`);
       } else {
@@ -104,7 +107,8 @@ const Charge = () => {
               discountedPrice: parseFloat(price)
             },
             ...apartmentPrices
-          ]
+          ],
+          route: `/apartment/${propertyId}/charge`
         };
         await api.put('/apartments', data);
         navigate(`/apartment/${propertyId}/plans`);

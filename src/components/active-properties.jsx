@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Table, Space, Pagination, Skeleton } from 'antd';
+import { Table, Pagination, Skeleton } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import api from 'src/api';
 const columns = [
