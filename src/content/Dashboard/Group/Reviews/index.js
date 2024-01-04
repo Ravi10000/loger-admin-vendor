@@ -7,6 +7,8 @@ import { useQuery } from '@tanstack/react-query';
 import api from 'src/api';
 import ReviewCard from 'src/components/review-card';
 import { useDocumentTitle } from '@uidotdev/usehooks';
+import dayjs from 'dayjs';
+
 const { RangePicker } = DatePicker;
 
 const onChang = value => {
@@ -20,35 +22,14 @@ function Reviews() {
   const [selectedProperty, setSelectedProperty] = useState(null);
   console.log({ selectedProperty });
   const [dates, setDates] = useState(null);
-  const [value, setValue] = useState(null);
-  const disabledDate = current => {
-    if (!dates) {
-      return false;
-    }
-    const tooLate = dates[0] && current.diff(dates[0], 'days') >= 7;
-    const tooEarly = dates[1] && dates[1].diff(current, 'days') >= 7;
-    return !!tooEarly || !!tooLate;
-  };
-  const onOpenChange = open => {
-    if (open) {
-      setDates([null, null]);
-    } else {
-      setDates(null);
-    }
-  };
   const { data: properties, isFetching: isFetchingProperties } = useQuery({
-    queryKey: ['my-properties', ['propertyName']],
+    queryKey: ['my-properties', ['propertyName'], dates],
     queryFn: async ({ queryKey }) => {
       const res = await api.get(
         `/properties/my-properties?select=${queryKey[1].join(
           ' '
         )}&limit=${Infinity}`
       );
-      console.log({ res });
-      // setSelectedProperty({
-      //   _id: '656f04c80368a49410d8f489',
-      //   propertyName: 'Apartment 12-05-2023'
-      // });
       setSelectedProperty(res?.data?.properties[0]);
       return res?.data?.properties;
     }
@@ -58,7 +39,13 @@ function Reviews() {
     queryKey: ['reviews', selectedProperty?._id],
     enabled: !!selectedProperty,
     queryFn: async () => {
-      const reviewsRes = await api.get(`/review/${selectedProperty?._id}`);
+      let query = '';
+      if (dates?.from && dates?.to) {
+        query = `?from=${dates?.from}&to=${dates?.to}`;
+      }
+      const reviewsRes = await api.get(
+        `/review/${selectedProperty?._id}${query}`
+      );
       return reviewsRes?.data?.reviews || [];
     }
   });
@@ -72,13 +59,20 @@ function Reviews() {
         {isFetchingProperties ? (
           <ReviewFormSkeleton />
         ) : (
-          <Form>
+          <Form
+            onFinish={values => {
+              const { dates } = values;
+              const from = dayjs(dates[0]).format('YYYY-MM-DD');
+              const to = dayjs(dates[1]).format('YYYY-MM-DD');
+              setDates({ from, to });
+            }}
+          >
             <Space
               // direction="horizontal"
               size="large"
               style={{ width: '100%', alignItems: 'center' }}
             >
-              <Form.Item
+              {/* <Form.Item
                 label={
                   <Typography.Title level={5}>Filter by Dates</Typography.Title>
                 }
@@ -97,8 +91,20 @@ function Reviews() {
                   onOpenChange={onOpenChange}
                   changeOnBlur
                 />
-              </Form.Item>
+              </Form.Item> */}
 
+              <Form.Item
+                style={{
+                  margin: 0
+                }}
+                label={
+                  <Typography.Title level={5}>Select Date</Typography.Title>
+                }
+                labelCol={{ span: 24 }}
+                name="dates"
+              >
+                <RangePicker size="large" format="YYYY-MM-DD" />
+              </Form.Item>
               <Form.Item
                 label={
                   <Typography.Title level={5}>Select Property</Typography.Title>
@@ -120,7 +126,9 @@ function Reviews() {
                 />
               </Form.Item>
 
-              <Button type="primary">Show Reviews</Button>
+              <Button type="primary" htmlType="submit">
+                Show Reviews
+              </Button>
 
               <Select
                 style={{ marginLeft: '20rem' }}
