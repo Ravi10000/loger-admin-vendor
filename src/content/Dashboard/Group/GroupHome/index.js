@@ -266,7 +266,7 @@ const GroupHome = () => {
                   style={{ width: '100%' }}
                 >
                   <Typography.Title level={4} style={{ marginBottom: 0 }}>
-                    Properties not yet on Loger.ma(!)
+                    Properties not yet on Loger.ma&#40;!&#41;
                   </Typography.Title>
                   <Typography.Text>
                     Lorem ipsum dolor sit amet consectetur. Sit in donec ut

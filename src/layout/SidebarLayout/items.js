@@ -63,7 +63,7 @@ const items = [
     key: 'rateAndAvailability',
     children: [
       {
-        path: '/dashboard/manage/Calendar',
+        path: '/dashboard/manage/rate-and-availability/calendar',
         label: 'Calendar',
         key: 'manageCalendar'
       },

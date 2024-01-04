@@ -193,7 +193,7 @@ const Header = () => {
                   minWidth: '200px',
                   padding: '10px'
                 }}
-                // trigger={['click']}
+                trigger={['click']}
                 menu={{
                   items: [
                     {

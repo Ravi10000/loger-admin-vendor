@@ -49,7 +49,7 @@ const HostProfile = () => {
       const res = await (isHotel
         ? findHotel(propertyId, queryKey[2].join(' '))
         : findApartment(propertyId, queryKey[2].join(' ')));
-      const result = res?.data?.[isHotel ? 'apartment' : 'hotel'];
+      const result = res?.data?.[isHotel ? 'hotel' : 'apartment'];
       setCheckList([
         ...(isHotel
           ? result?.aboutHost || result?.hostName

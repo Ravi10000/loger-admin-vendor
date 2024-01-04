@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { Table, Pagination, Skeleton } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import api from 'src/api';
+import { useNavigate } from 'react-router-dom';
+
 const columns = [
-  {
-    title: 'Id',
-    dataIndex: 'id',
-    key: 'id'
-  },
+  // {
+  //   title: 'Id',
+  //   dataIndex: 'id',
+  //   key: 'id'
+  // },
   {
     title: 'Property',
     dataIndex: 'property',
@@ -42,6 +44,7 @@ const columns = [
 ];
 const limit = 6;
 function ActiveProperties() {
+  const navigate = useNavigate();
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(1);
   const { data: properties, isFetching } = useQuery({
@@ -63,7 +66,7 @@ function ActiveProperties() {
       res.data.properties.forEach(property => {
         tableData.push({
           key: property?._id,
-          id: property?._id,
+          // id: property?._id,
           property: property?.propertyName,
           location: property?.country + ', ' + property?.city,
           status: (
@@ -88,7 +91,17 @@ function ActiveProperties() {
     <TableSkeleton />
   ) : (
     <>
-      <Table pagination={false} columns={columns} dataSource={properties} />
+      <Table
+        pagination={false}
+        columns={columns}
+        dataSource={properties}
+        onRow={record => ({
+          onClick() {
+            console.log(record.key);
+            navigate(`/dashboard/manage/home`);
+          }
+        })}
+      />
       <Pagination
         style={{
           marginTop: '20px',

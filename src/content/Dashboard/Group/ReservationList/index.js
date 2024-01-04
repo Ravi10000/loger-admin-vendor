@@ -214,11 +214,8 @@ function ReservationList() {
         )}&limit=${Infinity}`
       );
       console.log({ res });
-      setSelectedProperty({
-        _id: '656f04c80368a49410d8f489',
-        propertyName: 'Apartment 12-05-2023'
-      });
-      // setSelectedProperty(res?.data?.properties[0]);
+      if (res?.data?.properties?.length)
+        setSelectedProperty(res?.data?.properties[0]);
       return res?.data?.properties;
     }
   });

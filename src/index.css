@@ -1,6 +1,9 @@
 html {
   scroll-behavior: smooth;
 }
+:root {
+  --main-brand-color: #0868f8;
+}
 
 ._main-photo-text {
   position: absolute;
@@ -50,3 +53,85 @@ html {
   background-color: rgba(240, 128, 128, 0.168) !important;
   color: rgb(238, 33, 33) !important;
 }
+
+.__calender {
+  /* padding: 20px; */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  /* border: 1px solid gray; */
+  /* box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px; */
+  border: 1px solid #8d9197;
+  margin: 10px;
+  border-radius: 10px;
+  background: #fff;
+  --booked: #c0f2d9;
+  --blocked: #fccaca;
+}
+
+.__calender-week-names {
+  display: flex;
+  justify-content: space-between;
+  /* border-radius: 10px 10px 0 0;
+  border: 1px solid lightgray; */
+  /* background: var(--main-brand-color); */
+  /* border: 1px solid gray; */
+  border-bottom: 1px solid #8d9197;
+  /* background: lightgray; */
+  /* color: #fff; */
+  text-align: center;
+}
+.__calender-week-names h3 {
+  flex-grow: 1;
+  padding: 20px;
+  font-weight: 600;
+}
+
+.__calender-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  padding-inline: 20px;
+  padding-block-end: 20px;
+}
+.__calender-days .--empty {
+  opacity: 0;
+}
+
+.__calender_day {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  /* border: 1px solid lightgray; */
+  /* box-shadow: rgba(0, 0, 0, 0.122) 0px 0px 0px 1px; */
+  /* box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset; */
+  /* box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px; */
+  /* box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px; */
+  border: 1px solid #8d9197;
+  border-radius: 5px;
+  padding: 10px;
+  transition: all 0.2s ease-in-out;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  /* background: var(--booked); */
+}
+.__calender_day.--booked {
+  background: var(--booked);
+  color: #2a9d8f;
+  /* font-weight: 600; */
+}
+.__calender_day.--blocked {
+  background: var(--blocked);
+  color: #d90429;
+  /* font-weight: 600; */
+}
+/*
+.__calender_day:hover {
+  cursor: pointer;
+  transform: scale(1.075);
+  box-shadow: rgba(0, 0, 0, 0.18) 0px 4px 8px;
+  color: var(--main-brand-color);
+  font-weight: 600;
+} */

@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import ManageCalendar from 'src/pages/manage-calendar/manage-calendar.page';
 
 const Loader = Component => props =>
   (
@@ -238,6 +239,10 @@ const dashboardRoutes = [
       {
         path: 'rate-and-availability',
         children: [
+          {
+            path: 'calendar',
+            element: <ManageCalendar />
+          },
           {
             path: 'rate-plan',
             element: <ManageRatePlan />

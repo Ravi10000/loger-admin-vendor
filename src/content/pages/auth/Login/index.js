@@ -144,7 +144,7 @@ const Login = () => {
             </Form>
             <Typography.Paragraph style={{ textAlign: 'center' }}>
               Don't have an account?{' '}
-              <Link to="/auth/registration">Please Registration</Link>
+              <Link to="/auth/registration">Please Register</Link>
             </Typography.Paragraph>
             {/* </FormWrapper> */}
           </Container>
