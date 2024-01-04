@@ -15,7 +15,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Container, MainWrapper, CardBottom } from 'src/components/Global';
-import { useHotel, useProperty, usePropertyId } from 'src/hooks/property-info.queries';
+import {
+  useHotel,
+  useProperty,
+  usePropertyId
+} from 'src/hooks/property-info.queries';
 import { useMutation } from '@tanstack/react-query';
 import { updateHotel, updateProperty } from 'src/api/properties.req';
 import Spinner from 'src/components/spinner';
@@ -24,7 +28,10 @@ const Rating = () => {
   const navigate = useNavigate();
   const [isChain, setIsChain] = useState(null);
   console.log({ isChain });
-  const { property, isFetching } = useProperty(['propertyName']);
+  const { property, isFetching } = useProperty([
+    'propertyName',
+    'propertyType'
+  ]);
   const { hotel, isFetching: isFetchingApartment } = useHotel(
     ['star', 'chainName'],
     hotel => {
@@ -36,7 +43,8 @@ const Rating = () => {
       console.log({ data });
       await updateProperty({
         propertyId,
-        propertyName: data.propertyName
+        propertyName: data.propertyName,
+        route: `/${property.propertyType}/${propertyId}/rating`
       });
       await updateHotel({
         propertyId,

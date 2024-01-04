@@ -22,31 +22,44 @@ import { CardBottom, Container, MainWrapper } from 'src/components/Global';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import api from 'src/api';
 import onError from 'src/utils/onError';
-import { findApartment } from 'src/api/properties.req';
+import { findApartment, findHotel } from 'src/api/properties.req';
 import { toast } from 'react-hot-toast';
+import { useIsHotel } from 'src/hooks/property-info.queries';
 
 const HostProfile = () => {
   const navigate = useNavigate();
   const { propertyId } = useParams();
   const [checkList, setCheckList] = useState([]);
+  const isHotel = useIsHotel();
 
-  const { data: apartment, isFetching } = useQuery({
+  const { data: result, isFetching } = useQuery({
     queryKey: [
-      'apartment',
+      isHotel ? 'hotel' : 'apartment',
       propertyId,
-      ['aboutNeighborhood', 'aboutProperty', 'hostName', 'aboutHost']
+      [
+        'aboutNeighborhood',
+        'aboutProperty',
+        'propertyType',
+        ...(isHotel ? [] : ['hostName', 'aboutHost'])
+      ]
     ],
     enabled: !!propertyId,
     initialData: {},
     queryFn: async ({ queryKey }) => {
-      const res = await findApartment(propertyId, queryKey[2].join(' '));
-      const apartment = res?.data?.apartment;
+      const res = await (isHotel
+        ? findHotel(propertyId, queryKey[2].join(' '))
+        : findApartment(propertyId, queryKey[2].join(' ')));
+      const result = res?.data?.[isHotel ? 'apartment' : 'hotel'];
       setCheckList([
-        ...(apartment?.aboutHost || apartment?.hostName ? ['host'] : []),
-        ...(apartment?.aboutProperty ? ['property'] : []),
-        ...(apartment?.aboutNeighborhood ? ['neighborhood'] : [])
+        ...(isHotel
+          ? result?.aboutHost || result?.hostName
+            ? ['host']
+            : []
+          : []),
+        ...(result?.aboutProperty ? ['property'] : []),
+        ...(result?.aboutNeighborhood ? ['neighborhood'] : [])
       ]);
-      return apartment;
+      return result;
     }
   });
 
@@ -58,9 +71,16 @@ const HostProfile = () => {
       }
       if (!checkList.includes('none')) {
         data.propertyId = propertyId;
-        await api.put('/apartments', data);
+        data.route = `/${
+          isHotel ? 'hotel' : 'apartment'
+        }/${propertyId}/host-profile`;
+        await api.put(`/${isHotel ? 'hotels' : 'apartments'}`, data);
       }
-      navigate(`/apartment/${propertyId}/preview-gallery`);
+      navigate(
+        `/${isHotel ? 'hotel' : 'apartment'}/${propertyId}/${
+          isHotel ? 'new/room-detail' : 'preview-gallery'
+        }`
+      );
     },
     onError: (...props) => onError(...props, 'Something Went Wrong')
   });
@@ -91,10 +111,12 @@ const HostProfile = () => {
                   <Form
                     onFinish={mutate}
                     initialValues={{
-                      hostName: apartment?.hostName || '',
-                      aboutHost: apartment?.aboutHost || '',
-                      aboutProperty: apartment?.aboutProperty || '',
-                      aboutNeighborhood: apartment?.aboutNeighborhood || ''
+                      ...(isHotel ? { hostName: result?.hostName || '' } : {}),
+                      ...(isHotel
+                        ? { aboutHost: result?.aboutHost || '' }
+                        : {}),
+                      aboutProperty: result?.aboutProperty || '',
+                      aboutNeighborhood: result?.aboutNeighborhood || ''
                     }}
                   >
                     <Space
@@ -133,29 +155,35 @@ const HostProfile = () => {
                               </Form.Item>
                             </Space>
                           )}
-                          <Checkbox value="host">The Host</Checkbox>
-                          {checkList.includes('host') && (
+                          {isHotel ? (
+                            <></>
+                          ) : (
                             <>
-                              <Space
-                                direction="vertical"
-                                style={{ width: '100%' }}
-                              >
-                                <Typography.Text>Host Name</Typography.Text>
-                                <Form.Item name="hostName">
-                                  <Input />
-                                </Form.Item>
-                              </Space>
-                              <Space
-                                direction="vertical"
-                                style={{ width: '100%' }}
-                              >
-                                <Typography.Text>
-                                  About The Host
-                                </Typography.Text>
-                                <Form.Item name="aboutHost">
-                                  <Input.TextArea placeholder="Lorem ipsum dolor sit amet consectetur. Eget non ac nascetur facilisi arcu integ i" />
-                                </Form.Item>
-                              </Space>
+                              <Checkbox value="host">The Host</Checkbox>
+                              {checkList.includes('host') && (
+                                <>
+                                  <Space
+                                    direction="vertical"
+                                    style={{ width: '100%' }}
+                                  >
+                                    <Typography.Text>Host Name</Typography.Text>
+                                    <Form.Item name="hostName">
+                                      <Input />
+                                    </Form.Item>
+                                  </Space>
+                                  <Space
+                                    direction="vertical"
+                                    style={{ width: '100%' }}
+                                  >
+                                    <Typography.Text>
+                                      About The Host
+                                    </Typography.Text>
+                                    <Form.Item name="aboutHost">
+                                      <Input.TextArea placeholder="Lorem ipsum dolor sit amet consectetur. Eget non ac nascetur facilisi arcu integ i" />
+                                    </Form.Item>
+                                  </Space>
+                                </>
+                              )}
                             </>
                           )}
                           <Checkbox value="neighborhood">

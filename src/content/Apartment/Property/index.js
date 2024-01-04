@@ -27,14 +27,14 @@ const Property = () => {
     queryKey: [
       'property',
       propertyId,
-      ['country', 'address', 'city', 'pincode']
+      ['country', 'address', 'city', 'pincode', 'propertyType']
     ],
     enabled: propertyId?.length === 24,
     initialData: null,
     queryFn: async () => {
       const res = await findProperty(
         propertyId,
-        'country address city pincode'
+        'country address city pincode propertyType'
       );
       console.log({ res });
       return res?.data?.property;
@@ -50,7 +50,10 @@ const Property = () => {
         newPropertyId = res?.data?.property?._id;
       } else {
         data.propertyId = propertyId;
-        await updateProperty(data);
+        await updateProperty({
+          ...data,
+          route: `/${property.propertyType}/${propertyId}/property`
+        });
       }
       if (isHotel) {
         const propertyExists = propertyId?.length === 24;

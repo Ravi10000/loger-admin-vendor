@@ -4,18 +4,7 @@ import {
   InfoCircleOutlined
 } from '@ant-design/icons';
 import { CgRemove } from 'react-icons/cg';
-import {
-  Button,
-  Card,
-  Checkbox,
-  Col,
-  Divider,
-  Row,
-  Space,
-  Typography,
-  Input,
-  Spin
-} from 'antd';
+import { Button, Card, Col, Row, Space, Typography, Input, Spin } from 'antd';
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CardBottom, Container, MainWrapper } from 'src/components/Global';
@@ -83,7 +72,8 @@ const Charge = () => {
           roomName,
           propertyId,
           weeklyPlanDiscount,
-          nonRefundableDiscount
+          nonRefundableDiscount,
+          route: `/hotel/${propertyId}/${roomName}/plans`
         };
         await api.put(`/hotel-rooms`, data);
         navigate(`/hotel/${propertyId}/${roomName}/cancellation-policy`);
@@ -93,7 +83,8 @@ const Charge = () => {
           propertyId,
           prices: filteredPrices,
           weeklyPlanDiscount: weeklyPlanDiscount || 0,
-          nonRefundableDiscount: nonRefundableDiscount || 0
+          nonRefundableDiscount: nonRefundableDiscount || 0,
+          route: `/apartment/${propertyId}/plans`
         };
         await api.put('/apartments', data);
         navigate(`/apartment/${propertyId}/cancellation-policy`);
@@ -139,7 +130,7 @@ const Charge = () => {
                           size="large"
                           style={{ width: '100%' }}
                         >
-                          <Space direction="vertical" style={{ width: '100%' }}>
+                          {/* <Space direction="vertical" style={{ width: '100%' }}>
                             <div
                               style={{
                                 display: 'flex',
@@ -166,13 +157,13 @@ const Charge = () => {
                                 Edit
                               </Button>
                             </div>
-                          </Space>
-                          <Typography.Paragraph type="success">
+                          </Space> */}
+                          {/* <Typography.Paragraph type="success">
                             Lorem ipsum dolor sit amet consectetur. Amet
                             vestibulum enim id diam nunc arcu tellus ornare. Sed
                             diam pellentesque sagittis nam. Tristique
-                          </Typography.Paragraph>
-                          <Checkbox.Group>
+                          </Typography.Paragraph> */}
+                          {/* <Checkbox.Group>
                             <Space
                               direction="vertical"
                               style={{ width: '100%' }}
@@ -185,7 +176,7 @@ const Charge = () => {
                               </Checkbox>
                             </Space>
                           </Checkbox.Group>
-                          <Divider style={{ marginBlock: 0 }} />
+                          <Divider style={{ marginBlock: 0 }} /> */}
                           <Space direction="vertical" style={{ width: '100%' }}>
                             <div
                               style={{

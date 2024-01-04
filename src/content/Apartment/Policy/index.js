@@ -58,8 +58,14 @@ const Policy = () => {
       data.freeCancellationBefore = parseInt(days.split(' ')[0]);
       if (roomName) data.roomName = roomName;
       const res = roomName
-        ? await updateHotelRooms(data)
-        : await updateApartment(data);
+        ? await updateHotelRooms({
+            ...data,
+            route: `/hotel/${propertyId}/${roomName}/cancellation-policy`
+          })
+        : await updateApartment({
+            ...data,
+            route: `/apartment/${propertyId}/cancellation-policy`
+          });
       console.log({ res });
       if (roomName) {
         navigate(`/hotel/${propertyId}/${roomName}/preview-gallery`);

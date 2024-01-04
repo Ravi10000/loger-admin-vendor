@@ -86,7 +86,8 @@ const Availability = () => {
       }
       const data = {
         propertyId,
-        monthlyPlanDiscount
+        monthlyPlanDiscount,
+        route: `/apartment/${propertyId}/availability`
       };
 
       const res = await updateApartment(data);

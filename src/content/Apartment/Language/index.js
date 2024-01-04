@@ -46,7 +46,10 @@ const Language = () => {
     [languages]
   );
 
-  const { property, isFetching } = useProperty(['languagesSpoken']);
+  const { property, isFetching } = useProperty([
+    'languagesSpoken',
+    'propertyType'
+  ]);
   const isHotel = useIsHotel();
   // const { data: property, isFetching } = useQuery({
   //   queryKey: ['property', propertyId, ['languagesSpoken']],
@@ -63,13 +66,13 @@ const Language = () => {
     mutationFn: async data => {
       data = {
         propertyId,
-        languagesSpoken: [...data.selectedLanguages, ...data.otherLanguages]
+        languagesSpoken: [...data.selectedLanguages, ...data.otherLanguages],
+        route: `/${property.propertyType}/${propertyId}/language`
       };
       if (!data?.languagesSpoken?.length) {
         toast.error('please select at least one language');
         return;
       }
-      // const res =
       await updateProperty(data);
       isHotel
         ? navigate(`/hotel/${propertyId}/rules`)

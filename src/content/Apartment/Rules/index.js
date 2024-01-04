@@ -49,7 +49,8 @@ const Rules = () => {
     'checkOutEndTime',
     'checkOutStartTime',
     'checkInEndTime',
-    'checkInStartTime'
+    'checkInStartTime',
+    'propertyType'
   ]);
 
   const { mutate, status } = useMutation({
@@ -67,7 +68,8 @@ const Rules = () => {
         checkInStartTime: dayjs(data.checkIn[0]).format('HH:mm'),
         checkInEndTime: dayjs(data.checkIn[1]).format('HH:mm'),
         checkOutStartTime: dayjs(data.checkOut[0]).format('HH:mm'),
-        checkOutEndTime: dayjs(data.checkOut[1]).format('HH:mm')
+        checkOutEndTime: dayjs(data.checkOut[1]).format('HH:mm'),
+        route: `/${property.propertyType}/${propertyId}/rules`
       };
       // console.log({ data, propertyData });
 
@@ -81,7 +83,7 @@ const Rules = () => {
       };
       if (isHotel) {
         await updateHotel(contentData);
-        navigate(`/hotel/${propertyId}/new/room-detail`);
+        navigate(`/hotel/${propertyId}/host-profile`);
       } else {
         await updateApartment(contentData);
         navigate(`/apartment/${propertyId}/host-profile`);

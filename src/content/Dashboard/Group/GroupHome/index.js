@@ -1,226 +1,226 @@
 import React from 'react';
 import {
-  Button,
+  // Button,
   Card,
   Col,
   Row,
   Space,
   Typography,
-  Input,
-  Tabs,
-  Table
+  Input
+  // Tabs,
+  // Table
 } from 'antd';
 import { Container, MainWrapper } from 'src/components/Global';
 
 import {
-  DownloadOutlined,
-  PauseOutlined,
-  EyeOutlined,
+  // DownloadOutlined,
+  // PauseOutlined,
+  // EyeOutlined,
   SearchOutlined
 } from '@ant-design/icons';
 import { useTheme } from 'styled-components';
 import AddedProperties from 'src/components/added-properties';
 import { useDocumentTitle } from '@uidotdev/usehooks';
 import ActiveProperties from 'src/components/active-properties';
-const onChange = key => {
-  console.log(key);
-};
-const column1 = [
-  {
-    title: 'Id',
-    dataIndex: 'Id',
-    key: 'Id'
-  },
-  {
-    title: 'Property  ',
-    dataIndex: 'Property',
-    key: 'Property  '
-  },
-  {
-    title: 'Status on Loger.ma',
-    dataIndex: 'StatusonLogerma',
-    key: 'StatusonLogerma'
-  },
+// const onChange = key => {
+//   console.log(key);
+// };
+// const column1 = [
+//   {
+//     title: 'Id',
+//     dataIndex: 'Id',
+//     key: 'Id'
+//   },
+//   {
+//     title: 'Property  ',
+//     dataIndex: 'Property',
+//     key: 'Property  '
+//   },
+//   {
+//     title: 'Status on Loger.ma',
+//     dataIndex: 'StatusonLogerma',
+//     key: 'StatusonLogerma'
+//   },
 
-  {
-    title: 'Arrivals in Next 48hrs',
-    dataIndex: 'ArrivalsinNext48hrs',
-    key: 'Arrivals in Next 48hrs'
-  },
-  {
-    title: 'Departure in Next 48hrs',
-    dataIndex: 'DepartureinNext48hrs',
-    Key: 'Departure in Next 48hrs'
-  },
-  {
-    title: 'Guests Messages',
-    dataIndex: 'GuestsMessages',
-    Key: 'Guests Messages'
-  },
-  {
-    title: 'Loger.ma Messages',
-    dataIndex: 'LogermaMessages',
-    Key: 'Loger.ma Messages'
-  }
-];
+//   {
+//     title: 'Arrivals in Next 48hrs',
+//     dataIndex: 'ArrivalsinNext48hrs',
+//     key: 'Arrivals in Next 48hrs'
+//   },
+//   {
+//     title: 'Departure in Next 48hrs',
+//     dataIndex: 'DepartureinNext48hrs',
+//     Key: 'Departure in Next 48hrs'
+//   },
+//   {
+//     title: 'Guests Messages',
+//     dataIndex: 'GuestsMessages',
+//     Key: 'Guests Messages'
+//   },
+//   {
+//     title: 'Loger.ma Messages',
+//     dataIndex: 'LogermaMessages',
+//     Key: 'Loger.ma Messages'
+//   }
+// ];
 
-const data1 = [
-  {
-    key: '1',
-    Id: '104817',
-    Property: 'Blueberry1',
-    StatusonLogerma: (
-      <>
-        <Typography.Text type="danger">Closed/Not bookable</Typography.Text>
-      </>
-    ),
-    ArrivalsinNext48hrs: '0',
-    DepartureinNext48hrs: '0',
-    GuestsMessages: '0'
-  }
-];
-const column2 = [
-  {
-    title: 'Id',
-    dataIndex: 'Id',
-    key: 'Id'
-  },
-  {
-    title: 'Property  ',
-    dataIndex: 'Property',
-    key: 'Property  '
-  },
-  {
-    title: 'Status on Loger.ma',
-    dataIndex: 'StatusonLogerma',
-    key: 'StatusonLogerma'
-  },
+// const data1 = [
+//   {
+//     key: '1',
+//     Id: '104817',
+//     Property: 'Blueberry1',
+//     StatusonLogerma: (
+//       <>
+//         <Typography.Text type="danger">Closed/Not bookable</Typography.Text>
+//       </>
+//     ),
+//     ArrivalsinNext48hrs: '0',
+//     DepartureinNext48hrs: '0',
+//     GuestsMessages: '0'
+//   }
+// ];
+// const column2 = [
+//   {
+//     title: 'Id',
+//     dataIndex: 'Id',
+//     key: 'Id'
+//   },
+//   {
+//     title: 'Property  ',
+//     dataIndex: 'Property',
+//     key: 'Property  '
+//   },
+//   {
+//     title: 'Status on Loger.ma',
+//     dataIndex: 'StatusonLogerma',
+//     key: 'StatusonLogerma'
+//   },
 
-  {
-    title: 'Arrivals in Next 48hrs',
-    dataIndex: 'ArrivalsinNext48hrs',
-    key: 'Arrivals in Next 48hrs'
-  },
-  {
-    title: 'Departure in Next 48hrs',
-    dataIndex: 'DepartureinNext48hrs',
-    Key: 'Departure in Next 48hrs'
-  },
-  {
-    title: 'Guests Messages',
-    dataIndex: 'GuestsMessages',
-    Key: 'Guests Messages'
-  },
-  {
-    title: 'Loger.ma Messages',
-    dataIndex: 'LogermaMessages',
-    Key: 'Loger.ma Messages'
-  }
-];
+//   {
+//     title: 'Arrivals in Next 48hrs',
+//     dataIndex: 'ArrivalsinNext48hrs',
+//     key: 'Arrivals in Next 48hrs'
+//   },
+//   {
+//     title: 'Departure in Next 48hrs',
+//     dataIndex: 'DepartureinNext48hrs',
+//     Key: 'Departure in Next 48hrs'
+//   },
+//   {
+//     title: 'Guests Messages',
+//     dataIndex: 'GuestsMessages',
+//     Key: 'Guests Messages'
+//   },
+//   {
+//     title: 'Loger.ma Messages',
+//     dataIndex: 'LogermaMessages',
+//     Key: 'Loger.ma Messages'
+//   }
+// ];
 
-const data2 = [
-  {
-    key: '1',
-    Id: '104817',
-    Property: 'Blueberry 2',
-    StatusonLogerma: (
-      <>
-        <Typography.Text type="danger">Closed/Not bookable</Typography.Text>
-      </>
-    ),
-    ArrivalsinNext48hrs: '0',
-    DepartureinNext48hrs: '0',
-    GuestsMessages: '0'
-  }
-];
-const column3 = [
-  {
-    title: 'Id',
-    dataIndex: 'Id',
-    key: 'Id'
-  },
-  {
-    title: 'Property  ',
-    dataIndex: 'Property',
-    key: 'Property  '
-  },
-  {
-    title: 'Status on Loger.ma',
-    dataIndex: 'StatusonLogerma',
-    key: 'StatusonLogerma'
-  },
+// const data2 = [
+//   {
+//     key: '1',
+//     Id: '104817',
+//     Property: 'Blueberry 2',
+//     StatusonLogerma: (
+//       <>
+//         <Typography.Text type="danger">Closed/Not bookable</Typography.Text>
+//       </>
+//     ),
+//     ArrivalsinNext48hrs: '0',
+//     DepartureinNext48hrs: '0',
+//     GuestsMessages: '0'
+//   }
+// ];
+// const column3 = [
+//   {
+//     title: 'Id',
+//     dataIndex: 'Id',
+//     key: 'Id'
+//   },
+//   {
+//     title: 'Property  ',
+//     dataIndex: 'Property',
+//     key: 'Property  '
+//   },
+//   {
+//     title: 'Status on Loger.ma',
+//     dataIndex: 'StatusonLogerma',
+//     key: 'StatusonLogerma'
+//   },
 
-  {
-    title: 'Arrivals in Next 48hrs',
-    dataIndex: 'ArrivalsinNext48hrs',
-    key: 'Arrivals in Next 48hrs'
-  },
-  {
-    title: 'Departure in Next 48hrs',
-    dataIndex: 'DepartureinNext48hrs',
-    Key: 'Departure in Next 48hrs'
-  },
-  {
-    title: 'Guests Messages',
-    dataIndex: 'GuestsMessages',
-    Key: 'Guests Messages'
-  },
-  {
-    title: 'Loger.ma Messages',
-    dataIndex: 'LogermaMessages',
-    Key: 'Loger.ma Messages'
-  }
-];
+//   {
+//     title: 'Arrivals in Next 48hrs',
+//     dataIndex: 'ArrivalsinNext48hrs',
+//     key: 'Arrivals in Next 48hrs'
+//   },
+//   {
+//     title: 'Departure in Next 48hrs',
+//     dataIndex: 'DepartureinNext48hrs',
+//     Key: 'Departure in Next 48hrs'
+//   },
+//   {
+//     title: 'Guests Messages',
+//     dataIndex: 'GuestsMessages',
+//     Key: 'Guests Messages'
+//   },
+//   {
+//     title: 'Loger.ma Messages',
+//     dataIndex: 'LogermaMessages',
+//     Key: 'Loger.ma Messages'
+//   }
+// ];
 
-const data3 = [
-  {
-    key: '1',
-    Id: '104817',
-    Property: 'Blueberry',
-    StatusonLogerma: (
-      <>
-        <Typography.Text type="danger">Closed/Not bookable</Typography.Text>
-      </>
-    ),
-    ArrivalsinNext48hrs: '0',
-    DepartureinNext48hrs: '0',
-    GuestsMessages: '0'
-  }
-];
-const items = [
-  {
-    key: '1',
-    label: 'Operations',
-    children: (
-      <>
-        <Row gutter={[32, 32]}>
-          <Col xs={24}>
-            <Table pagination={false} dataSource={data1} columns={column1} />
-          </Col>
-        </Row>
-      </>
-    )
-  },
-  {
-    key: '2',
-    label: 'Performance',
-    children: (
-      <>
-        <Table pagination={false} dataSource={data2} columns={column2} />
-      </>
-    )
-  },
-  {
-    key: '3',
-    label: 'Settings',
-    children: (
-      <>
-        {' '}
-        <Table pagination={false} dataSource={data3} columns={column3} />
-      </>
-    )
-  }
-];
+// const data3 = [
+//   {
+//     key: '1',
+//     Id: '104817',
+//     Property: 'Blueberry',
+//     StatusonLogerma: (
+//       <>
+//         <Typography.Text type="danger">Closed/Not bookable</Typography.Text>
+//       </>
+//     ),
+//     ArrivalsinNext48hrs: '0',
+//     DepartureinNext48hrs: '0',
+//     GuestsMessages: '0'
+//   }
+// ];
+// const items = [
+//   {
+//     key: '1',
+//     label: 'Operations',
+//     children: (
+//       <>
+//         <Row gutter={[32, 32]}>
+//           <Col xs={24}>
+//             <Table pagination={false} dataSource={data1} columns={column1} />
+//           </Col>
+//         </Row>
+//       </>
+//     )
+//   },
+//   {
+//     key: '2',
+//     label: 'Performance',
+//     children: (
+//       <>
+//         <Table pagination={false} dataSource={data2} columns={column2} />
+//       </>
+//     )
+//   },
+//   {
+//     key: '3',
+//     label: 'Settings',
+//     children: (
+//       <>
+//         {' '}
+//         <Table pagination={false} dataSource={data3} columns={column3} />
+//       </>
+//     )
+//   }
+// ];
 
 const GroupHome = () => {
   useDocumentTitle('Loger | Home');
@@ -254,9 +254,9 @@ const GroupHome = () => {
                         Each property with a mobile rate can see, on average , a
                         26 % increase in its bookings.
                       </Typography.Text>
-                      <Button size="large" type="primary" ghost>
+                      {/* <Button size="large" type="primary" ghost>
                         Select 1 Eligible Property
-                      </Button>
+                      </Button> */}
                     </Space>
                   </Space>
                 </Card>
