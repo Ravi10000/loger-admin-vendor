@@ -98,7 +98,7 @@ function ActiveProperties() {
         onRow={record => ({
           onClick() {
             console.log(record.key);
-            navigate(`/dashboard/manage/home`);
+            navigate(`/dashboard/manage/home?propertyId=${record.key}`);
           }
         })}
       />

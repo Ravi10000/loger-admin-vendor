@@ -62,7 +62,7 @@ html {
   /* border: 1px solid gray; */
   /* box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px; */
   border: 1px solid #8d9197;
-  margin: 10px;
+  /* margin: 10px; */
   border-radius: 10px;
   background: #fff;
   --booked: #c0f2d9;
@@ -124,14 +124,18 @@ html {
 }
 .__calender_day.--blocked {
   background: var(--blocked);
-  color: #d90429;
+  color: #f02929;
   /* font-weight: 600; */
 }
-/*
-.__calender_day:hover {
-  cursor: pointer;
-  transform: scale(1.075);
-  box-shadow: rgba(0, 0, 0, 0.18) 0px 4px 8px;
-  color: var(--main-brand-color);
-  font-weight: 600;
-} */
+.__calender-days .--past {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.__calender_day.--selected {
+  outline: 1px solid var(--main-brand-color);
+  border-color: var(--main-brand-color);
+}
+
+.__calender_day:active {
+  transform: scale(0.9);
+}
