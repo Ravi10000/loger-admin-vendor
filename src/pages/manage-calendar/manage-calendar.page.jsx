@@ -1,25 +1,9 @@
 import d from 'dayjs';
 import { useState } from 'react';
 import { Select } from 'antd';
-import { HiLockClosed } from 'react-icons/hi';
-import { GoCheckCircleFill } from 'react-icons/go';
 import BookingCalendar from 'src/components/booking-calendar';
-import { Form, Radio } from 'antd';
-
-const months = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec'
-];
+import ManageDayCard from 'src/components/manage-day-card';
+import { months } from 'src/utils/calendar-info';
 
 const year = d().year();
 const years = [
@@ -35,42 +19,10 @@ const years = [
 function ManageCalendar() {
   const [year, setYear] = useState(d().year());
   const [month, setMonth] = useState(d().month() + 1);
-  const [selectedDay, setSelectedDay] = useState(null);
-  const booked = [
-    {
-      date: '2024-01-05',
-      bookedBy: 'Ravi Sharma'
-    },
-    {
-      date: '2024-01-06',
-      bookedBy: 'Ravi Sharma'
-    },
-    {
-      date: '2024-01-07',
-      bookedBy: 'Ravi Sharma'
-    }
-  ];
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [updatingCalendar, setUpdatingCalendar] = useState(false);
+  console.log({ updatingCalendar });
 
-  const bookedDates = booked.map(({ date, ...rest }) => ({
-    date: d(date).date(),
-    ...rest
-  }));
-  const blocked = [
-    {
-      date: '2024-01-26',
-      bookedBy: 'Ravi Sharma'
-    },
-    {
-      date: '2024-01-27',
-      bookedBy: 'Ravi Sharma'
-    }
-  ];
-
-  const blockedDates = blocked.map(({ date, ...rest }) => ({
-    date: d(date).date(),
-    ...rest
-  }));
-  console.log({ bookedDates });
   return (
     <div
       style={{
@@ -100,9 +52,21 @@ function ManageCalendar() {
         />
       </div>
       <div
-        style={{ display: 'grid', gridTemplateColumns: '6fr 2fr 1fr', gap: '20px' }}
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '6fr 2fr 1fr',
+          gap: '20px'
+        }}
       >
-        <BookingCalendar {...{ month, year, setSelectedDay, selectedDay }} />
+        <BookingCalendar
+          {...{
+            month,
+            year,
+            setSelectedDate,
+            selectedDate,
+            updatingCalendar
+          }}
+        />
         <div
           style={{
             display: 'flex',
@@ -119,52 +83,16 @@ function ManageCalendar() {
               borderRadius: '10px'
             }}
           ></div>
-          {!!selectedDay && (
-            <div
-              style={{
-                minHeight: '500px',
-                width: '100%',
-                border: '1px solid #8d9197',
-                background: '#fff',
-                borderRadius: '10px',
-                padding: '10px'
+          {!!selectedDate && (
+            <ManageDayCard
+              {...{
+                year,
+                month,
+                selectedDate,
+                setSelectedDate,
+                setUpdatingCalendar
               }}
-            >
-              <p>
-                {selectedDay.date} {months[month]} {year}
-              </p>
-              <h4>Open and Close for Bookings</h4>
-              <div>
-                <Form>
-                  <Form.Item
-                    name="parkingAvailable"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please select if parking is available'
-                      }
-                    ]}
-                  >
-                    <Radio.Group
-                      value={selectedDay?.status === 'available'}
-                      onChange={e => {
-                        setSelectedDay({
-                          ...selectedDay,
-                          status: e.target.value ? 'available' : 'blocked'
-                        });
-                      }}
-                      // value={isParkingAvailable}
-                      // onChange={e => {
-                      //   setIsParkingAvailable(e.target.value);
-                      // }}
-                    >
-                      <Radio value={true}>Open</Radio>
-                      <Radio value={false}>Close</Radio>
-                    </Radio.Group>
-                  </Form.Item>
-                </Form>
-              </div>
-            </div>
+            />
           )}
         </div>
       </div>
