@@ -4,7 +4,8 @@ import { Select } from 'antd';
 import BookingCalendar from 'src/components/booking-calendar';
 import ManageDayCard from 'src/components/manage-day-card';
 import { months } from 'src/utils/calendar-info';
-
+import Balancer from 'react-wrap-balancer';
+import { TbMoodEmpty } from 'react-icons/tb';
 const year = d().year();
 const years = [
   year - 5,
@@ -74,7 +75,7 @@ function ManageCalendar() {
             gap: '20px'
           }}
         >
-          <div
+          {/* <div
             style={{
               minHeight: '300px',
               width: '100%',
@@ -82,8 +83,29 @@ function ManageCalendar() {
               background: '#fff',
               borderRadius: '10px'
             }}
-          ></div>
-          {!!selectedDate && (
+          ></div> */}
+          {!selectedDate ? (
+            <div
+              style={{
+                minHeight: '500px',
+                width: '100%',
+                border: '1px solid #8d9197',
+                background: '#fff',
+                borderRadius: '10px',
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <TbMoodEmpty size={98} color="#eee" />
+              <h2 style={{ color: '#c5c5c5' }}>
+                <Balancer>Select a date to view Details</Balancer>
+              </h2>
+            </div>
+          ) : (
             <ManageDayCard
               {...{
                 year,

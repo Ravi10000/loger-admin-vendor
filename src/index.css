@@ -132,8 +132,10 @@ html {
   cursor: not-allowed;
 }
 .__calender_day.--selected {
-  outline: 1px solid var(--main-brand-color);
-  border-color: var(--main-brand-color);
+  transform: scale(1.05);
+  /* outline: 1px solid var(--main-brand-color); */
+  outline: 1px solid #000;
+  border-color: #000;
 }
 
 .__calender_day:active {

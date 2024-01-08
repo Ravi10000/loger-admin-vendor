@@ -10,8 +10,6 @@ export function useCalendarEntries({ from, to, propertyId, onSuccess }) {
   const { data: calendarEntries, ...rest } = useQuery({
     queryKey: ['calendar-entries', propertyId, from?.format?.('YYYY-MM-DD')],
     enabled: !!propertyId && !!from,
-    staleTime: 0,
-    from,
     queryFn: async () => {
       if (!to) to = from.add(1, 'd');
       const { data } = await api.get(

@@ -5,6 +5,7 @@ import router from './router';
 import theme from './theme';
 import { Toaster } from 'react-hot-toast';
 import useFetchUser from 'src/hooks/user.queries';
+import ErrorBoundary from './components/error-boundary';
 // import { useUserStore } from './store/user';
 
 const App = () => {
@@ -12,7 +13,7 @@ const App = () => {
   useFetchUser();
   // const user = useUserStore(state => state.user);
   return (
-    <>
+    <ErrorBoundary>
       <Toaster
         toastOptions={{
           style: {
@@ -25,7 +26,7 @@ const App = () => {
           <AppWrapper>{content}</AppWrapper>
         </AppThemeProvider>
       </ConfigProvider>
-    </>
+    </ErrorBoundary>
   );
 };
 

@@ -14,7 +14,10 @@ function BookingCalendar({
   const days = [...Array(parseInt(from.daysInMonth()))];
 
   return (
-    <div className="__calender" style={{ position: 'relative' }}>
+    <div
+      className="__calender"
+      style={{ position: 'relative', height: 'fit-content' }}
+    >
       {updatingCalendar && (
         <div
           style={{

@@ -17,7 +17,7 @@ function DayCard({ selectedDate, setSelectedDate, from, date }) {
   const day = calendarEntries?.[0] ?? {};
   const status = day?.isBlocked
     ? 'blocked'
-    : day?.date
+    : day?.bookingId
     ? 'booked'
     : 'available';
   return (
