@@ -1,26 +1,22 @@
-import { Radio, Collapse, Card } from 'antd';
+import { Radio, Card } from 'antd';
 import { months } from 'src/utils/calendar-info';
 import { useSearchParams } from 'react-router-dom';
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Balancer } from 'react-wrap-balancer';
 import api from 'src/api';
 import d from 'dayjs';
 import Spinner from './spinner';
 import { useCalendarEntries } from 'src/hooks/calendar-entries.queries';
-import { FaPhone } from 'react-icons/fa6';
-import { MdEmail } from 'react-icons/md';
-import { Fragment } from 'react';
-import { IoCheckmarkDone } from 'react-icons/io5';
 
-const iconStyles = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  height: '30px',
-  width: '30px',
-  borderRadius: '100vw',
-  backgroundColor: '#f1f1f1'
-};
+// const iconStyles = {
+//   display: 'flex',
+//   justifyContent: 'center',
+//   alignItems: 'center',
+//   height: '30px',
+//   width: '30px',
+//   borderRadius: '100vw',
+//   backgroundColor: '#f1f1f1'
+// };
 const stats = {
   display: 'grid',
   gridTemplateColumns: '3fr 1fr',
@@ -32,7 +28,6 @@ function ManageHotelDayCard({
   month,
   year,
   setUpdatingCalendar,
-  isRoomsFetching,
   rooms
 }) {
   const [searchParams] = useSearchParams();
@@ -170,19 +165,20 @@ function ManageHotelDayCard({
           justifyContent: 'center'
         }}
       >
-        {allRooms.map(room => (
-          <Card key={room} style={{ width: '100%' }}>
-            <h3 style={{ color: 'var(--main-brand-color)' }}>
-              {rooms[room].roomName}
-            </h3>
-            <div style={stats}>
-              <p>Booked</p>
-              <p>{lookup[room] || 0}</p>
-              <p>Available</p>
-              <p>{rooms[room].count - (lookup[room] || 0)}</p>
-            </div>
-          </Card>
-        ))}
+        {!entry?.isBlocked &&
+          allRooms.map(room => (
+            <Card key={room} style={{ width: '100%' }}>
+              <h3 style={{ color: 'var(--main-brand-color)' }}>
+                {rooms[room].roomName}
+              </h3>
+              <div style={stats}>
+                <p>Booked</p>
+                <p>{lookup[room] || 0}</p>
+                <p>Available</p>
+                <p>{rooms[room].count - (lookup[room] || 0)}</p>
+              </div>
+            </Card>
+          ))}
       </div>
 
       <p

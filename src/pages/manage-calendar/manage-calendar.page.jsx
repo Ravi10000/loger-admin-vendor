@@ -10,6 +10,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import api from 'src/api';
 import ManageHotelDayCard from 'src/components/manage-hotel-day-card';
+import Spinner from 'src/components/spinner';
 const year = d().year();
 const years = [
   year - 5,
@@ -131,19 +132,7 @@ function ManageCalendar() {
                 <Balancer>Select any date to view Details</Balancer>
               </h2>
             </div>
-          ) : property?.propertyType === 'hotel' ? (
-            <ManageHotelDayCard
-              {...{
-                year,
-                month,
-                selectedDate,
-                setSelectedDate,
-                setUpdatingCalendar,
-                rooms,
-                isRoomsFetching: isFetching
-              }}
-            />
-          ) : (
+          ) : property?.propertyType === 'apartment' ? (
             <ManageApartmentDayCard
               {...{
                 year,
@@ -153,6 +142,36 @@ function ManageCalendar() {
                 setUpdatingCalendar
               }}
             />
+          ) : isFetching ? (
+            <div
+              style={{
+                minHeight: '500px',
+                width: '100%',
+                border: '1px solid #8d9197',
+                background: '#fff',
+                borderRadius: '10px',
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px'
+              }}
+            >
+              <Spinner />
+            </div>
+          ) : (
+            rooms && (
+              <ManageHotelDayCard
+                {...{
+                  year,
+                  month,
+                  selectedDate,
+                  setSelectedDate,
+                  setUpdatingCalendar,
+                  rooms,
+                  isRoomsFetching: isFetching
+                }}
+              />
+            )
           )}
         </div>
       </div>
