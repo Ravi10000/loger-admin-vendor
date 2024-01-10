@@ -91,6 +91,7 @@ const Charge = () => {
           propertyId,
           roomName,
           price: parseFloat(price),
+          discountedPrice: parseFloat(price),
           route: `/hotel/${propertyId}/${roomName}/charge`
         });
         navigate(`/hotel/${propertyId}/${roomName}/plans`);

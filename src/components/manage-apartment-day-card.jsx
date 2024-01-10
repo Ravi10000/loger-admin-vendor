@@ -10,7 +10,22 @@ import { useCalendarEntries } from 'src/hooks/calendar-entries.queries';
 import { FaPhone } from 'react-icons/fa6';
 import { MdEmail } from 'react-icons/md';
 
-function ManageDayCard({ selectedDate, month, year, setUpdatingCalendar }) {
+const iconStyles = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '30px',
+  width: '30px',
+  borderRadius: '100vw',
+  backgroundColor: '#f1f1f1'
+};
+
+function ManageApartmentDayCard({
+  selectedDate,
+  month,
+  year,
+  setUpdatingCalendar
+}) {
   const [searchParams] = useSearchParams();
   const propertyId = searchParams.get('propertyId');
   const queryClient = useQueryClient();
@@ -20,7 +35,9 @@ function ManageDayCard({ selectedDate, month, year, setUpdatingCalendar }) {
     from,
     propertyId
   });
+
   const entry = calendarEntries?.[0] ?? { isBlocked: false };
+
   const entryExists = !!entry?._id;
   console.log({ entry });
 
@@ -88,8 +105,6 @@ function ManageDayCard({ selectedDate, month, year, setUpdatingCalendar }) {
       return user;
     }
   });
-  console.log({ user, userError, isUserLoading });
-  console.log({ booking });
   const pkgDetails = booking?.pkgDetails
     ? JSON.parse(booking?.pkgDetails)
     : null;
@@ -97,16 +112,20 @@ function ManageDayCard({ selectedDate, month, year, setUpdatingCalendar }) {
     key: guest?._id,
     label: guest?.firstName + ' ' + guest?.lastName,
     children: (
-      <>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <FaPhone />
+          <div style={iconStyles}>
+            <FaPhone />
+          </div>
           <p>{guest?.phone}</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <MdEmail />
+          <div style={iconStyles}>
+            <MdEmail />
+          </div>
           <p>{guest?.email}</p>
         </div>
-      </>
+      </div>
     )
   }));
   const diff = d(booking?.checkOutDate).diff(d(booking?.checkInDate), 'day');
@@ -245,20 +264,15 @@ function ManageDayCard({ selectedDate, month, year, setUpdatingCalendar }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <div
                 style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '30px',
-                  width: '30px',
-                  borderRadius: '100vw',
-                  backgroundColor: '#f1f1f1',
+                  ...iconStyles,
                   backgroundImage: `url("${process.env.REACT_APP_SERVER_URL}/images/${user?.profilePic}")`
                 }}
               >
                 {!user?.profilePic && (
-                  <h3>
-                    {user?.fName?.charAt?.(0)} {user?.lName?.charAt?.(0)}
-                  </h3>
+                  <h4>
+                    {user?.fName?.charAt?.(0)}
+                    {user?.lName?.charAt?.(0)}
+                  </h4>
                 )}
               </div>
               <h5 style={{ textTransform: 'capitalize' }}>
@@ -272,11 +286,12 @@ function ManageDayCard({ selectedDate, month, year, setUpdatingCalendar }) {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '10px',
-                  marginLeft: '10px'
+                  gap: '10px'
                 }}
               >
-                <FaPhone />
+                <div style={iconStyles}>
+                  <FaPhone />
+                </div>
                 <p>
                   {user?.countryCode} {user?.phone}
                 </p>
@@ -287,11 +302,13 @@ function ManageDayCard({ selectedDate, month, year, setUpdatingCalendar }) {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '10px',
-                  marginLeft: '10px'
+                  gap: '10px'
+                  // marginLeft: '10px'
                 }}
               >
-                <MdEmail size={20} />
+                <div style={iconStyles}>
+                  <MdEmail size={20} />
+                </div>
                 <p
                   style={{
                     wordBreak: 'break-word'
@@ -311,10 +328,10 @@ function ManageDayCard({ selectedDate, month, year, setUpdatingCalendar }) {
           >
             Guests Info
           </h4>
-          <Collapse items={guestsInfo} />
-          {/* {booking?.guestList?.map(guest => (
-          <p>{guest?.firstName}</p>
-        ))} */}
+          <Collapse
+            items={guestsInfo}
+            defaultActiveKey={[guestsInfo?.[0]?.key]}
+          />
         </div>
       )}
       <p
@@ -330,31 +347,4 @@ function ManageDayCard({ selectedDate, month, year, setUpdatingCalendar }) {
   );
 }
 
-export default ManageDayCard;
-
-// {
-//   "_id": "6597d52d13fee69dccd044e1",
-//   "userId": "6515496c2bbed3933e004f92",
-//   "propertyId": "65979fc4efdb61d6e0e590cc",
-//   "pkgDetails": "{\"rooms\":{},\"noOfAdults\":1,\"noOfRooms\":0,\"amount\":12000,\"discountedAmount\":12000}",
-//   "checkInDate": "2024-01-11T00:00:00.000Z",
-//   "checkOutDate": "2024-01-16T00:00:00.000Z",
-//   "rooms": [],
-//   "guestList": [],
-//   "bookingAmount": 12000,
-//   "transactionId": "6597d52d13fee69dccd044df",
-//   "status": "confirmed",
-//   "createdAt": "2024-01-05T10:08:45.903Z",
-//   "updatedAt": "2024-01-05T10:09:04.074Z",
-//   "__v": 0,
-//   "id": "6597d52d13fee69dccd044e1"
-// }
-
-// {
-//   "fName": "ravi",
-//   "lName": "sharma",
-//   "email": "email@admin51.com",
-//   "phone": "9090909051",
-//   "countryCode": "+91",
-//   "profilePic": "1700642653665-hushaan-fromtinyisles-W6orAQiBmFg-unsplash.jpg"
-// }
+export default ManageApartmentDayCard;

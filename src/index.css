@@ -67,6 +67,7 @@ html {
   background: #fff;
   --booked: #c0f2d9;
   --blocked: #fccaca;
+  overflow: hidden;
 }
 
 .__calender-week-names {
@@ -77,7 +78,7 @@ html {
   /* background: var(--main-brand-color); */
   /* border: 1px solid gray; */
   border-bottom: 1px solid #8d9197;
-  /* background: lightgray; */
+  /* background: #accffd; */
   /* color: #fff; */
   text-align: center;
 }
@@ -85,6 +86,8 @@ html {
   flex-grow: 1;
   padding: 20px;
   font-weight: 600;
+  text-align: left;
+  color: var(--main-brand-color);
 }
 
 .__calender-days {
@@ -128,7 +131,7 @@ html {
   /* font-weight: 600; */
 }
 .__calender-days .--past {
-  opacity: 0.5;
+  opacity: 0.35;
   cursor: not-allowed;
 }
 .__calender_day.--selected {
@@ -136,6 +139,14 @@ html {
   /* outline: 1px solid var(--main-brand-color); */
   outline: 1px solid #000;
   border-color: #000;
+}
+.__calender_day.--selected.--blocked {
+  outline: 1px solid #f02929;
+  border-color: #f02929;
+}
+.__calender_day.--selected.--booked {
+  outline: 1px solid #2a9d8f;
+  border-color: #2a9d8f;
 }
 
 .__calender_day:active {

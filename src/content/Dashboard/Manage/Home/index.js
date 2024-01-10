@@ -12,10 +12,11 @@ import {
   Tag,
   Typography
 } from 'antd';
-import React from 'react';
 import { Container, MainWrapper } from 'src/components/Global';
 import { useTheme } from 'styled-components';
-
+import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
+import { findProperty } from 'src/api/properties.req';
 const items = [
   {
     key: '1',
@@ -180,6 +181,21 @@ const data = [
 
 const Home = () => {
   const theme = useTheme();
+  const [searchParams] = useSearchParams();
+  const propertyId = searchParams.get('propertyId');
+  const {
+    data: property,
+    isFetching,
+    error
+  } = useQuery({
+    queryKey: ['property', propertyId, ['propertyName']],
+    enabled: propertyId?.length === 24,
+    queryFn: async ({ queryKey }) => {
+      const res = await findProperty(propertyId, queryKey?.[2]?.join?.(' '));
+      console.log({ res });
+      return res?.data?.property || null;
+    }
+  });
   return (
     <>
       <MainWrapper>
@@ -194,7 +210,7 @@ const Home = () => {
                   }}
                 >
                   <Typography.Title level={4}>
-                    Tirath View, Haridwar - A Four Star Luxury
+                    {property?.propertyName}
                   </Typography.Title>
                   <Tag color={theme.antd.colorSuccess}>Open / Bookable</Tag>
                 </Space>

@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useCalendarEntries } from 'src/hooks/calendar-entries.queries';
 import Spinner from './spinner';
 import d from 'dayjs';
+import { FaCalendar } from 'react-icons/fa6';
 
 function DayCard({ selectedDate, setSelectedDate, from, date }) {
   const [searchParams] = useSearchParams();
@@ -30,7 +31,7 @@ function DayCard({ selectedDate, setSelectedDate, from, date }) {
       className={`__calender_day 
    --${status} 
    ${selectedDate?.date === date && '--selected'}
-   ${isPast && '--past'}
+   ${isPast && '--past'} selectable
    `}
       key={'day-' + date}
     >
@@ -43,23 +44,27 @@ function DayCard({ selectedDate, setSelectedDate, from, date }) {
           <p style={{ fontWeight: 600, color: 'black' }}>{date}</p>
           <p style={{ textAlign: 'center' }}>
             {status === 'blocked' ? (
-              <HiLockClosed />
+              <HiLockClosed size={24} />
+            ) : status === 'booked' ? (
+              <GoCheckCircleFill size={24} />
             ) : (
-              status === 'booked' && <GoCheckCircleFill />
+              <FaCalendar color="#c3c3c3" size={24} />
             )}
           </p>
           <p
             style={{
               textAlign: 'center',
               textTransform: 'capitalize',
+              alignSelf: 'center',
               fontWeight: 500
+              // ...(status === 'available' && { marginBottom: 'auto' })
             }}
           >
             {status}
           </p>
-          {status === 'available' && (
-            <p style={{ fontWeight: 600, textAlign: 'end' }}>₹ 900</p>
-          )}
+          {/* {status === 'available' && (
+            <p style={{ fontWeight: 600, textAlign: 'end' }}>r</p>
+          )} */}
         </>
       )}
     </div>

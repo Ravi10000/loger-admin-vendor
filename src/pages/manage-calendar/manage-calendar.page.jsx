@@ -2,10 +2,14 @@ import d from 'dayjs';
 import { useState } from 'react';
 import { Select } from 'antd';
 import BookingCalendar from 'src/components/booking-calendar';
-import ManageDayCard from 'src/components/manage-day-card';
+import ManageApartmentDayCard from 'src/components/manage-apartment-day-card';
 import { months } from 'src/utils/calendar-info';
 import Balancer from 'react-wrap-balancer';
 import { TbMoodEmpty } from 'react-icons/tb';
+import { useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import api from 'src/api';
+import ManageHotelDayCard from 'src/components/manage-hotel-day-card';
 const year = d().year();
 const years = [
   year - 5,
@@ -18,11 +22,42 @@ const years = [
 ];
 
 function ManageCalendar() {
+  const [searchParams] = useSearchParams();
+  const propertyId = searchParams.get('propertyId');
   const [year, setYear] = useState(d().year());
   const [month, setMonth] = useState(d().month() + 1);
   const [selectedDate, setSelectedDate] = useState(null);
   const [updatingCalendar, setUpdatingCalendar] = useState(false);
-  console.log({ updatingCalendar });
+
+  const { data: property } = useQuery({
+    queryKey: ['property', propertyId, ['propertyName', 'propertyType']],
+    queryFn: async ({ queryKey }) => {
+      const { data: { property = {} } = {} } = await api.get(
+        `/properties/find/${propertyId}?select=${queryKey?.[2]?.join?.(' ')}`
+      );
+      console.log({ property });
+      return property;
+    }
+  });
+
+  const {
+    data: rooms,
+    isFetching,
+    error
+  } = useQuery({
+    queryKey: ['distinct-rooms', propertyId],
+    enabled: property?.propertyType === 'hotel',
+    queryFn: async () => {
+      const { data: { rooms = [] } = {} } = await api.get(
+        `/hotel-rooms/${propertyId}/distinct?select=roomName`
+      );
+      const hotelRooms = {};
+      rooms.forEach(room => {
+        hotelRooms[room.roomTypeId] = room;
+      });
+      return hotelRooms;
+    }
+  });
 
   return (
     <div
@@ -75,15 +110,6 @@ function ManageCalendar() {
             gap: '20px'
           }}
         >
-          {/* <div
-            style={{
-              minHeight: '300px',
-              width: '100%',
-              border: '1px solid #8d9197',
-              background: '#fff',
-              borderRadius: '10px'
-            }}
-          ></div> */}
           {!selectedDate ? (
             <div
               style={{
@@ -102,11 +128,23 @@ function ManageCalendar() {
             >
               <TbMoodEmpty size={98} color="#eee" />
               <h2 style={{ color: '#c5c5c5' }}>
-                <Balancer>Select a date to view Details</Balancer>
+                <Balancer>Select any date to view Details</Balancer>
               </h2>
             </div>
+          ) : property?.propertyType === 'hotel' ? (
+            <ManageHotelDayCard
+              {...{
+                year,
+                month,
+                selectedDate,
+                setSelectedDate,
+                setUpdatingCalendar,
+                rooms,
+                isRoomsFetching: isFetching
+              }}
+            />
           ) : (
-            <ManageDayCard
+            <ManageApartmentDayCard
               {...{
                 year,
                 month,

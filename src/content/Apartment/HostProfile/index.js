@@ -65,6 +65,7 @@ const HostProfile = () => {
 
   const { mutate, status } = useMutation({
     mutationFn: async data => {
+      console.log({ data });
       if (!checkList.length) {
         toast.error('please select at least one option');
         return;
@@ -74,7 +75,11 @@ const HostProfile = () => {
         data.route = `/${
           isHotel ? 'hotel' : 'apartment'
         }/${propertyId}/host-profile`;
-        await api.put(`/${isHotel ? 'hotels' : 'apartments'}`, data);
+        const res = await api.put(
+          `/${isHotel ? 'hotels' : 'apartments'}`,
+          data
+        );
+        console.log({ res });
       }
       navigate(
         `/${isHotel ? 'hotel' : 'apartment'}/${propertyId}/${
