@@ -11,6 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import api from 'src/api';
 import ManageHotelDayCard from 'src/components/manage-hotel-day-card';
 import Spinner from 'src/components/spinner';
+import { CiSquareChevLeft, CiSquareChevRight } from 'react-icons/ci';
 const year = d().year();
 const years = [
   year - 5,
@@ -65,27 +66,48 @@ function ManageCalendar() {
       style={{
         padding: '20px',
         display: 'flex',
-        flexDirection: 'column',
-        gap: '20px'
+        flexDirection: 'column'
+        // gap: '20px'
       }}
     >
       <div
         style={{
           display: 'flex',
-          gap: '10px'
+          gap: '10px',
+          background: '#fff',
+          padding: '10px',
+          width: 'fit-content',
+          borderRadius: '5px'
         }}
       >
         <Select
+          size="large"
           defaultValue="Jan"
           style={{ width: 120 }}
           onChange={value => setMonth(value)}
+          value={months[month]}
           options={months.map((month, i) => ({ value: i + 1, label: month }))}
         />
         <Select
+          size="large"
           defaultValue={year}
           style={{ width: 120 }}
           onChange={value => setYear(value)}
           options={years.map(year => ({ value: year, label: year }))}
+        />
+      </div>
+      <div style={{ color: '#2e2e2e', fontSize: '48px' }}>
+        <CiSquareChevLeft
+          onClick={() => {
+            if (month < 1) return;
+            setMonth(ps => ps - 1);
+          }}
+        />
+        <CiSquareChevRight
+          onClick={() => {
+            if (month > 10) return;
+            setMonth(ps => ps + 1);
+          }}
         />
       </div>
       <div
