@@ -66,15 +66,18 @@ function ManageCalendar() {
       style={{
         padding: '20px',
         display: 'flex',
-        flexDirection: 'column'
-        // gap: '20px'
+        flexDirection: 'column',
+        gap: '20px'
       }}
     >
+      <h2>Calendar</h2>
       <div
         style={{
           display: 'flex',
           gap: '10px',
-          background: '#fff',
+          // outline: '2px solid red',
+          alignItems: 'center',
+          // background: '#fff',
           padding: '10px',
           width: 'fit-content',
           borderRadius: '5px'
@@ -95,20 +98,28 @@ function ManageCalendar() {
           onChange={value => setYear(value)}
           options={years.map(year => ({ value: year, label: year }))}
         />
-      </div>
-      <div style={{ color: '#2e2e2e', fontSize: '48px' }}>
-        <CiSquareChevLeft
-          onClick={() => {
-            if (month < 1) return;
-            setMonth(ps => ps - 1);
+        <div
+          style={{
+            color: '#2e2e2e',
+            fontSize: '38px',
+            height: 'fit-content',
+            display: 'flex',
+            alignItems: 'center'
           }}
-        />
-        <CiSquareChevRight
-          onClick={() => {
-            if (month > 10) return;
-            setMonth(ps => ps + 1);
-          }}
-        />
+        >
+          <CiSquareChevLeft
+            onClick={() => {
+              if (month < 1) return;
+              setMonth(ps => ps - 1);
+            }}
+          />
+          <CiSquareChevRight
+            onClick={() => {
+              if (month > 10) return;
+              setMonth(ps => ps + 1);
+            }}
+          />
+        </div>
       </div>
       <div
         style={{

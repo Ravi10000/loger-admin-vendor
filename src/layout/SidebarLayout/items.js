@@ -176,10 +176,10 @@ const urlMatch = match('/dashboard/:tab(groups|manage)', {
 function useMenuItems() {
   const [menuItems, setMenuItems] = useState([]);
   const { pathname } = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   let propertyId = searchParams.get('propertyId');
   propertyId =
-    propertyId && propertyId !== 'null' ? '?propertyId=' + propertyId : null;
+    propertyId && propertyId !== 'null' ? '?propertyId=' + propertyId : '';
   console.log({ propertyId });
 
   const items = [

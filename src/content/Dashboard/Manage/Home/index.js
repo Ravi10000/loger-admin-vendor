@@ -6,186 +6,55 @@ import {
   Divider,
   List,
   Row,
-  Select,
   Space,
   Tabs,
   Tag,
-  Typography
+  Typography,
+  DatePicker
 } from 'antd';
+
 import { Container, MainWrapper } from 'src/components/Global';
 import { useTheme } from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { findProperty } from 'src/api/properties.req';
+import d from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { useEffect, useState } from 'react';
+import api from 'src/api';
+import BookingDetails from 'src/components/booking-details';
+import Spinner from 'src/components/spinner';
+d.extend(customParseFormat);
+
 const items = [
   {
-    key: '1',
-    label: 'Arrivals',
-    children: (
-      <>
-        <Row gutter={[16, 16]}>
-          <Col xs={8}>
-            <Space size="small" direction="vertical">
-              <Typography.Text strong>Anil Kumar Sogra</Typography.Text>
-              <Typography.Text>2564865542</Typography.Text>
-            </Space>
-          </Col>
-          <Col xs={8}>
-            <Space size="small" direction="vertical">
-              <Typography.Text>
-                24, July, 2023 to 28, July, 2023
-              </Typography.Text>
-              <Typography.Text>
-                Guest Arrival Time: 12:15 to 1:00 pm
-              </Typography.Text>
-              <Typography.Text>3 Nights 4 Days</Typography.Text>
-              <Typography.Text>2 Adults - 1 Child</Typography.Text>
-            </Space>
-          </Col>
-          <Col xs={8}>
-            <Space size="small" direction="vertical">
-              <Typography.Text strong>3. 500</Typography.Text>
-              <Typography.Text>20, July, 2023</Typography.Text>
-              <Typography.Text>Payment Status</Typography.Text>
-              <Typography.Text>Online</Typography.Text>
-            </Space>
-          </Col>
-        </Row>
-      </>
-    )
+    key: 'arrivals',
+    label: 'Arrivals'
   },
   {
-    key: '2',
-    label: 'Departures',
-    children: (
-      <>
-        <Row gutter={[16, 16]}>
-          <Col xs={8}>
-            <Space size="small" direction="vertical">
-              <Typography.Text strong>Anil Kumar Sogra</Typography.Text>
-              <Typography.Text>2564865542</Typography.Text>
-            </Space>
-          </Col>
-          <Col xs={8}>
-            <Space size="small" direction="vertical">
-              <Typography.Text>
-                24, July, 2023 to 28, July, 2023
-              </Typography.Text>
-              <Typography.Text>
-                Guest Arrival Time: 12:15 to 1:00 pm
-              </Typography.Text>
-              <Typography.Text>3 Nights 4 Days</Typography.Text>
-              <Typography.Text>2 Adults - 1 Child</Typography.Text>
-            </Space>
-          </Col>
-          <Col xs={8}>
-            <Space size="small" direction="vertical">
-              <Typography.Text strong>3. 500</Typography.Text>
-              <Typography.Text>20, July, 2023</Typography.Text>
-              <Typography.Text>Payment Status</Typography.Text>
-              <Typography.Text>Online</Typography.Text>
-            </Space>
-          </Col>
-        </Row>
-      </>
-    )
+    key: 'departures',
+    label: 'Departures'
   },
   {
-    key: '3',
-    label: 'Stay-Overs',
-    children: (
-      <>
-        <Row gutter={[16, 16]}>
-          <Col xs={8}>
-            <Space size="small" direction="vertical">
-              <Typography.Text strong>Anil Kumar Sogra</Typography.Text>
-              <Typography.Text>2564865542</Typography.Text>
-            </Space>
-          </Col>
-          <Col xs={8}>
-            <Space size="small" direction="vertical">
-              <Typography.Text>
-                24, July, 2023 to 28, July, 2023
-              </Typography.Text>
-              <Typography.Text>
-                Guest Arrival Time: 12:15 to 1:00 pm
-              </Typography.Text>
-              <Typography.Text>3 Nights 4 Days</Typography.Text>
-              <Typography.Text>2 Adults - 1 Child</Typography.Text>
-            </Space>
-          </Col>
-          <Col xs={8}>
-            <Space size="small" direction="vertical">
-              <Typography.Text strong>3. 500</Typography.Text>
-              <Typography.Text>20, July, 2023</Typography.Text>
-              <Typography.Text>Payment Status</Typography.Text>
-              <Typography.Text>Online</Typography.Text>
-            </Space>
-          </Col>
-        </Row>
-      </>
-    )
-  },
-  {
-    key: '4',
-    label: 'Guest Requests',
-    children: (
-      <>
-        <Row gutter={[16, 16]}>
-          <Col xs={8}>
-            <Space size="small" direction="vertical">
-              <Typography.Text strong>Anil Kumar Sogra</Typography.Text>
-              <Typography.Text>2564865542</Typography.Text>
-            </Space>
-          </Col>
-          <Col xs={8}>
-            <Space size="small" direction="vertical">
-              <Typography.Text>
-                24, July, 2023 to 28, July, 2023
-              </Typography.Text>
-              <Typography.Text>
-                Guest Arrival Time: 12:15 to 1:00 pm
-              </Typography.Text>
-              <Typography.Text>3 Nights 4 Days</Typography.Text>
-              <Typography.Text>2 Adults - 1 Child</Typography.Text>
-            </Space>
-          </Col>
-          <Col xs={8}>
-            <Space size="small" direction="vertical">
-              <Typography.Text strong>3. 500</Typography.Text>
-              <Typography.Text>20, July, 2023</Typography.Text>
-              <Typography.Text>Payment Status</Typography.Text>
-              <Typography.Text>Online</Typography.Text>
-            </Space>
-          </Col>
-        </Row>
-      </>
-    )
-  }
-];
-
-const data = [
-  {
-    name: 'Pratiksha Sharma'
-  },
-  {
-    name: 'Anil Sogra'
-  },
-  {
-    name: 'Dipanshu Gupta'
-  },
-  {
-    name: 'Anil Sogra'
+    key: 'stay-overs',
+    label: 'Stay-Overs'
   }
 ];
 
 const Home = () => {
+  const [selectedDate, setSelectedDate] = useState(d());
+
+  const { data } = useQuery({
+    queryKey: ['bookings']
+  });
   const theme = useTheme();
   const [searchParams] = useSearchParams();
   const propertyId = searchParams.get('propertyId');
+  const [selectedTab, setSelectedTab] = useState('arrivals');
   const {
     data: property,
     isFetching,
+    isLoading,
     error
   } = useQuery({
     queryKey: ['property', propertyId, ['propertyName']],
@@ -194,6 +63,37 @@ const Home = () => {
       const res = await findProperty(propertyId, queryKey?.[2]?.join?.(' '));
       console.log({ res });
       return res?.data?.property || null;
+    }
+  });
+
+  const { data: bookings } = useQuery({
+    queryKey: [
+      'bookings',
+      propertyId,
+      selectedDate,
+      selectedTab,
+      [
+        'userId',
+        'checkInDate',
+        'checkOutDate',
+        'guestList',
+        'specialRequests',
+        'arrivalTime',
+        'transactionId',
+        'pkgDetails'
+      ]
+    ],
+    enabled: !!propertyId && !!selectedDate,
+    queryFn: async ({ queryKey }) => {
+      const res = await api.get(
+        `/booking/find/${propertyId}?date=${selectedDate.format(
+          'YYYY-MM-DD'
+        )}&select=${queryKey?.[4]?.join?.(
+          ' '
+        )}&queryType=${selectedTab}&status=confirmed`
+      );
+      console.log({ res });
+      return res?.data?.bookings || [];
     }
   });
   return (
@@ -226,19 +126,34 @@ const Home = () => {
                       <Typography.Title level={4} style={{ marginBottom: 0 }}>
                         Reservations
                       </Typography.Title>
-                      <Select
-                        style={{ width: 120 }}
-                        options={[
-                          { value: 'jack', label: 'Jack' },
-                          { value: 'lucy', label: 'Lucy' },
-                          { value: 'Yiminghe', label: 'yiminghe' }
-                        ]}
+                      <DatePicker
+                        value={selectedDate}
+                        onChange={setSelectedDate}
                       />
                     </Space>
                     <Typography.Link>View All Reservation</Typography.Link>
                   </Space>
                   <Card>
-                    <Tabs defaultActiveKey="1" items={items} />
+                    <Tabs
+                      activeKey={selectedTab}
+                      onChange={setSelectedTab}
+                      items={items}
+                    />
+                    <div style={{ minHeight: '100px' }}>
+                      {error ? (
+                        <p>Something went wrong</p>
+                      ) : isFetching ? (
+                        <Spinner />
+                      ) : !bookings?.length ? (
+                        <p>
+                          No {selectedTab} found for {}
+                        </p>
+                      ) : (
+                        bookings?.map?.(booking => (
+                          <BookingDetails key={booking._id} {...{ booking }} />
+                        ))
+                      )}
+                    </div>
                   </Card>
                 </Space>
                 <Space direction="vertical" style={{ width: '100%' }}>

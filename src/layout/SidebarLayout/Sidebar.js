@@ -14,12 +14,13 @@ const SideBar = ({ collapsed, handleCollapsed }) => {
     let selectedChild = null;
     const selectedItem = items.find(item => {
       if (item?.children) {
+        console.log({ childrens: item.children, pathname });
         selectedChild = item.children?.find(
-          child => child?.label?.props?.to === pathname
+          child => child?.label?.props?.to?.split?.('?')?.[0] === pathname
         );
         if (selectedChild) return true;
       }
-      return pathname?.includes?.(item?.label?.props?.to);
+      return pathname?.includes?.(item?.label?.props?.to?.split?.('?')?.[0]);
     });
     const selectedKeys = [selectedItem?.key];
     if (selectedChild) {
@@ -30,43 +31,43 @@ const SideBar = ({ collapsed, handleCollapsed }) => {
   }, [pathname, items]);
 
   return (
-    <>
-      <Layout.Sider
+    <Layout.Sider
+      theme="light"
+      collapsible
+      breakpoint="lg"
+      collapsed={collapsed}
+      onCollapse={handleCollapsed}
+      width={token.Layout.siderWidth}
+      collapsedWidth={token.Layout.siderCollapsedWidth}
+      style={{
+        // background: '#0868f8',
+        position: 'fixed',
+        top: token.Layout.headerHeight,
+        left: 0,
+        bottom: 0,
+        overflow: 'auto',
+        gap: '50px',
+        height: `calc(100vh - ${
+          token.Layout.headerHeight + token.Layout.triggerHeight
+        }px)`
+      }}
+    >
+      <Menu
+        // style={{ background: '#0868f8', color: '#fff' }}
         theme="light"
-        collapsible
-        breakpoint="lg"
-        collapsed={collapsed}
-        onCollapse={handleCollapsed}
-        width={token.Layout.siderWidth}
-        collapsedWidth={token.Layout.siderCollapsedWidth}
-        style={{
-          position: 'fixed',
-          top: token.Layout.headerHeight,
-          left: 0,
-          bottom: 0,
-          overflow: 'auto',
-          gap: '50px',
-          height: `calc(100vh - ${
-            token.Layout.headerHeight + token.Layout.triggerHeight
-          }px)`
+        mode="inline"
+        items={items}
+        selectedKeys={selectedKeys}
+        openKeys={openKeys}
+        // onSelect={(...props) => {
+        //   console.log({ props });
+        // }}
+        onOpenChange={keyOpened => {
+          console.log({ keyOpened });
+          setOpenKeys(keyOpened);
         }}
-      >
-        <Menu
-          theme="light"
-          mode="inline"
-          items={items}
-          selectedKeys={selectedKeys}
-          openKeys={openKeys}
-          // onSelect={(...props) => {
-          //   console.log({ props });
-          // }}
-          onOpenChange={keyOpened => {
-            console.log({ keyOpened });
-            setOpenKeys(keyOpened);
-          }}
-        />
-      </Layout.Sider>
-    </>
+      />
+    </Layout.Sider>
   );
 };
 
