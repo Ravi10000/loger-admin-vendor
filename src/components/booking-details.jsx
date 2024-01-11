@@ -45,7 +45,7 @@ function BookingDetails({ booking, idx, totalBookings }) {
           flexGrow: 1
         }}
       >
-        <h2>
+        <h2 style={{ fontWeight: '600' }}>
           {user?.fName} {user?.lName}
         </h2>
       </div>
@@ -64,9 +64,9 @@ function BookingDetails({ booking, idx, totalBookings }) {
             gap: '10px'
           }}
         >
-          <p>{d(booking?.checkInDate).format('DD MMM YYYY')}</p>
+          <p>{d(booking?.checkInDate).format('DD, MMM, YYYY')}</p>
           <span>to</span>
-          <p>{d(booking?.checkOutDate).format('DD MMM YYYY')}</p>
+          <p>{d(booking?.checkOutDate).format('DD, MMM, YYYY')}</p>
         </div>
         <p>
           {stayLength} day{stayLength > 1 ? 's' : ''}
@@ -84,10 +84,13 @@ function BookingDetails({ booking, idx, totalBookings }) {
         style={{
           flexGrow: 1,
           fontWeight: '600',
-          fontSize: '14px'
+          fontSize: '20px'
         }}
       >
-        {currencyFormator(pkgDetails?.discountedAmount)}
+        <p>{currencyFormator(pkgDetails?.discountedAmount)}</p>
+        <p style={{ fontWeight: '500', fontSize: '16px' }}>
+          {d(booking?.createdAt).format('DD, MMM, YYYY')}
+        </p>
       </div>
       <div></div>
       {/* <pre>{booking?._id && JSON.stringify(booking, null, 2)}</pre> */}
