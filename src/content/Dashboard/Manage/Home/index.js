@@ -24,6 +24,7 @@ import { useEffect, useState } from 'react';
 import api from 'src/api';
 import BookingDetails from 'src/components/booking-details';
 import Spinner from 'src/components/spinner';
+import LatestBookings from 'src/components/latest-bookings';
 d.extend(customParseFormat);
 
 const items = [
@@ -44,9 +45,6 @@ const items = [
 const Home = () => {
   const [selectedDate, setSelectedDate] = useState(d());
 
-  const { data } = useQuery({
-    queryKey: ['bookings']
-  });
   const theme = useTheme();
   const [searchParams] = useSearchParams();
   const propertyId = searchParams.get('propertyId');
@@ -159,7 +157,8 @@ const Home = () => {
                   <Typography.Title level={4} style={{ marginBottom: 0 }}>
                     Latest Reservations
                   </Typography.Title>
-                  <Card>
+                  <LatestBookings />
+                  {/* <Card>
                     <Row gutter={[16, 16]}>
                       <Col xs={8}>
                         <Space size="small" direction="vertical">
@@ -252,7 +251,7 @@ const Home = () => {
                         </Space>
                       </Col>
                     </Row>
-                  </Card>
+                  </Card> */}
                 </Space>
                 <Row gutter={[32, 32]}>
                   <Col xs={24} xxl={12}>
@@ -269,7 +268,7 @@ const Home = () => {
                         >
                           <List
                             bordered={false}
-                            dataSource={data}
+                            dataSource={[]}
                             renderItem={(item, index) => (
                               <List.Item>
                                 <List.Item.Meta

@@ -3,7 +3,7 @@ import api from 'src/api';
 import d from 'dayjs';
 import { currencyFormator } from 'src/utils/currency-formator';
 
-function BookingDetails({ booking }) {
+function BookingDetails({ booking, idx, totalBookings }) {
   const {
     data: user,
     error: userError,
@@ -30,7 +30,16 @@ function BookingDetails({ booking }) {
   );
   console.log({ user, userError, isUserLoading });
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-evenly',
+        padding: '20px',
+        ...(idx < totalBookings - 1 && {
+          borderBottom: '1px solid #D6D6D6'
+        })
+      }}
+    >
       <div
         style={{
           flexGrow: 1
