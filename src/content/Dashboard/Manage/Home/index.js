@@ -54,7 +54,6 @@ const Home = () => {
   const {
     data: property,
     isFetching,
-    isLoading,
     error
   } = useQuery({
     queryKey: ['property', propertyId, ['propertyName']],

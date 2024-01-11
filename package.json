@@ -35,6 +35,7 @@
     "build": "sh -ac '. $(pwd)/.env.production; react-scripts build'",
     "preview": "npm run build && serve -s build",
     "push": "git push origin master",
+    "postpush": "git push github master",
     "pull": "git pull origin master",
     "dev": "npm start",
     "test": "react-scripts test",
