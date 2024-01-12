@@ -75,36 +75,16 @@ function Reviews() {
               setDates({ from, to });
             }}
           >
-            <Space
-              // direction="horizontal"
-              size="large"
-              style={{ width: '100%', alignItems: 'center' }}
+            <div
+              style={{
+                display: 'flex',
+                gap: '30px',
+                alignItems: 'flex-end',
+                flexWrap: 'wrap'
+              }}
             >
-              {/* <Form.Item
-                label={
-                  <Typography.Title level={5}>Filter by Dates</Typography.Title>
-                }
-                labelCol={{ span: 24 }}
-              >
-                <RangePicker
-                  size="large"
-                  value={dates || value}
-                  disabledDate={disabledDate}
-                  onCalendarChange={val => {
-                    setDates(val);
-                  }}
-                  onChange={val => {
-                    setValue(val);
-                  }}
-                  onOpenChange={onOpenChange}
-                  changeOnBlur
-                />
-              </Form.Item> */}
-
               <Form.Item
-                style={{
-                  margin: 0
-                }}
+                style={{ margin: 0 }}
                 label={
                   <Typography.Title level={5}>Select Date</Typography.Title>
                 }
@@ -114,8 +94,11 @@ function Reviews() {
                 <RangePicker size="large" format="YYYY-MM-DD" />
               </Form.Item>
               <Form.Item
+                style={{ margin: 0 }}
                 label={
-                  <Typography.Title level={5}>Select Property</Typography.Title>
+                  <Typography.Title style={{ width: 'fit-content' }} level={5}>
+                    Select Property
+                  </Typography.Title>
                 }
                 labelCol={{ span: 24 }}
               >
@@ -134,19 +117,19 @@ function Reviews() {
                 />
               </Form.Item>
 
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" size="large">
                 Show Reviews
               </Button>
 
-              <Select
-                style={{ marginLeft: '20rem' }}
+              {/* <Select
+                // style={{ marginLeft: 'auto' }}
                 showSearch
                 placeholder="Search by Score Date & Comment"
                 optionFilterProp="children"
                 onChange={onChang}
                 onSearch={onSearc}
-              />
-            </Space>
+              /> */}
+            </div>
           </Form>
         )}
         <Row gutter={[32, 32]}>

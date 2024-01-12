@@ -10,7 +10,6 @@ const iconStyles = {
   height: '30px',
   width: '30px',
   borderRadius: '5px 5px 5px 0',
-  backgroundColor: 'var(--main-brand-color)',
   color: '#fff',
   fontSize: '16px',
   fontWeight: 600
@@ -21,6 +20,7 @@ function ReviewItem({ review }) {
   const [showMore, setShowMore] = useState(false);
   const isLong = review?.comment?.length > 100;
   const commentText = isLong ? review?.comment?.slice(0, 75) : review?.comment;
+  console.log({ review });
   return (
     <div>
       <div
@@ -34,6 +34,12 @@ function ReviewItem({ review }) {
         <div
           style={{
             ...iconStyles,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: review?.user?.profilePic
+              ? 'transparent'
+              : 'var(--main-brand-color)',
             backgroundImage: `url("${process.env.REACT_APP_SERVER_URL}/images/${review?.user?.profilePic}")`
           }}
         >
@@ -50,15 +56,20 @@ function ReviewItem({ review }) {
           </Balancer>
         </h5>
         <Stars ratings={review?.rating} color="var(--main-brand-color)" />
-        <span style={{ marginLeft: 'auto', fontSize: "14px" }}>
+        <span style={{ marginLeft: 'auto', fontSize: '14px' }}>
           {d(review?.createdAt).format('DD, MMM, YYYY')}
         </span>
       </div>
       <p>
-        {showMore ? review?.comment : commentText} {isLong && '...'}{' '}
+        {showMore ? review?.comment : commentText}{' '}
+        {isLong && !showMore && '...'}{' '}
         {isLong && (
           <span
-            style={{ color: 'var(--main-brand-color)', cursor: 'pointer' }}
+            style={{
+              color: 'var(--main-brand-color)',
+              cursor: 'pointer',
+              fontSize: '12px'
+            }}
             onClick={() => {
               setShowMore(ps => !ps);
             }}

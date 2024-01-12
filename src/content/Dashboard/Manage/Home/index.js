@@ -120,7 +120,7 @@ const Home = () => {
                       <Link
                         to={`/dashboard/manage/reservations?propertyId=${propertyId}`}
                       >
-                        View All Reservation
+                        View All Reservations
                       </Link>
                     </Typography.Link>
                   </Space>
@@ -153,9 +153,24 @@ const Home = () => {
                   </Card>
                 </Space>
                 <Space direction="vertical" style={{ width: '100%' }}>
-                  <Typography.Title level={4} style={{ marginBottom: 0 }}>
-                    Latest Reservations
-                  </Typography.Title>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between'
+                    }}
+                  >
+                    <Typography.Title level={4} style={{ marginBottom: 0 }}>
+                      Latest Reservations
+                    </Typography.Title>
+                    <Typography.Link>
+                      <Link
+                        to={`/dashboard/manage/reservations?propertyId=${propertyId}`}
+                      >
+                        View Reservations
+                      </Link>
+                    </Typography.Link>
+                  </div>
                   <LatestBookings />
                   {/* <Card>
                     <Row gutter={[16, 16]}>
