@@ -160,7 +160,8 @@ const dashboardRoutes = [
         children: [
           {
             path: '',
-            element: <ManageReservations />
+            // element: <ManageReservations />
+            element: <GroupsReservation />
           },
           {
             path: ':reservationNo',

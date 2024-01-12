@@ -28,7 +28,6 @@ function BookingDetails({ booking, idx, totalBookings }) {
     d(booking?.checkInDate),
     'day'
   );
-  console.log({ user, userError, isUserLoading });
   return (
     <div
       style={{
@@ -45,7 +44,7 @@ function BookingDetails({ booking, idx, totalBookings }) {
           flexGrow: 1
         }}
       >
-        <h2 style={{ fontWeight: '600' }}>
+        <h2 style={{ fontWeight: '600', fontSize: '20px' }}>
           {user?.fName} {user?.lName}
         </h2>
       </div>
@@ -78,7 +77,6 @@ function BookingDetails({ booking, idx, totalBookings }) {
           </p>
           <p>{booking?.roomName}</p>
         </div>
-        {/* <pre>{JSON.stringify(pkgDetails, null, 2)}</pre> */}
       </div>
       <div
         style={{
@@ -88,12 +86,11 @@ function BookingDetails({ booking, idx, totalBookings }) {
         }}
       >
         <p>{currencyFormator(pkgDetails?.discountedAmount)}</p>
-        <p style={{ fontWeight: '500', fontSize: '16px' }}>
+        <p style={{ fontWeight: 400, fontSize: '16px' }}>
           {d(booking?.createdAt).format('DD, MMM, YYYY')}
         </p>
       </div>
       <div></div>
-      {/* <pre>{booking?._id && JSON.stringify(booking, null, 2)}</pre> */}
     </div>
   );
 }

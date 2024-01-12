@@ -6,7 +6,7 @@ import { DownloadOutlined, PrinterOutlined } from '@ant-design/icons';
 import { DatePicker } from 'antd';
 import { useDocumentTitle } from '@uidotdev/usehooks';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from 'src/api';
 import dayjs from 'dayjs';
 const { RangePicker } = DatePicker;
@@ -202,6 +202,8 @@ const columns = [
 
 function ReservationList() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const propertyId = searchParams.get('propertyId');
   useDocumentTitle('Loger | Reservations');
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [dates, setDates] = useState(null);
@@ -213,8 +215,12 @@ function ReservationList() {
           ' '
         )}&limit=${Infinity}`
       );
-      console.log({ res });
-      if (res?.data?.properties?.length)
+      if (propertyId) {
+        const property = res?.data?.properties?.find(
+          property => property?._id === propertyId
+        );
+        setSelectedProperty(property);
+      } else if (res?.data?.properties?.length)
         setSelectedProperty(res?.data?.properties[0]);
       return res?.data?.properties;
     }

@@ -25,6 +25,7 @@ import api from 'src/api';
 import BookingDetails from 'src/components/booking-details';
 import Spinner from 'src/components/spinner';
 import LatestBookings from 'src/components/latest-bookings';
+import RecentReviews from 'src/components/recent-reviews';
 d.extend(customParseFormat);
 
 const items = [
@@ -259,36 +260,7 @@ const Home = () => {
                       <Typography.Title level={4} style={{ marginBottom: 0 }}>
                         Recent Reviews
                       </Typography.Title>
-                      <Card>
-                        <Space
-                          direction="vertical"
-                          style={{
-                            width: '100%'
-                          }}
-                        >
-                          <List
-                            bordered={false}
-                            dataSource={[]}
-                            renderItem={(item, index) => (
-                              <List.Item>
-                                <List.Item.Meta
-                                  avatar={
-                                    <Avatar size={48} icon={<UserOutlined />} />
-                                  }
-                                  title={
-                                    <Typography.Text>
-                                      {item.name}
-                                    </Typography.Text>
-                                  }
-                                  description="Lorem ipsum dolor sit amet consectetur. pellentesque imperdiet euismod maecenas."
-                                />
-                                <Typography.Text>8 Jul</Typography.Text>
-                              </List.Item>
-                            )}
-                          />
-                          <Typography.Link>View All Reviews</Typography.Link>
-                        </Space>
-                      </Card>
+                      <RecentReviews propertyId={propertyId} />
                     </Space>
                   </Col>
                   <Col xs={24} xxl={12}>
