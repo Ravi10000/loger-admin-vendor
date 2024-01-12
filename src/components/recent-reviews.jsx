@@ -2,6 +2,7 @@ import { Card, Space, List, Typography, Empty } from 'antd';
 import useReviews from 'src/hooks/review-queries';
 import Spinner from './spinner';
 import ReviewItem from './review-item';
+import { Link } from 'react-router-dom';
 
 function RecentReviews({ propertyId }) {
   const { reviews, isFetching, error } = useReviews({ propertyId });
@@ -28,7 +29,9 @@ function RecentReviews({ propertyId }) {
         reviews?.map(review => <ReviewItem key={review._id} review={review} />)
       )}
       <Typography.Link style={{ marginTop: 'auto' }}>
-        View All Reviews
+        <Link to={`/dashboard/manage/reviews?propertyId=${propertyId}`}>
+          View All Reviews
+        </Link>
       </Typography.Link>
     </Card>
   );

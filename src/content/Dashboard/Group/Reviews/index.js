@@ -8,6 +8,7 @@ import api from 'src/api';
 import ReviewCard from 'src/components/review-card';
 import { useDocumentTitle } from '@uidotdev/usehooks';
 import dayjs from 'dayjs';
+import { useSearchParams } from 'react-router-dom';
 
 const { RangePicker } = DatePicker;
 
@@ -18,6 +19,8 @@ const onSearc = value => {
   console.log('search:', value);
 };
 function Reviews() {
+  const [searchParams] = useSearchParams();
+  const propertyId = searchParams.get('propertyId');
   useDocumentTitle('Loger | Reviews');
   const [selectedProperty, setSelectedProperty] = useState(null);
   console.log({ selectedProperty });
@@ -30,7 +33,12 @@ function Reviews() {
           ' '
         )}&limit=${Infinity}`
       );
-      setSelectedProperty(res?.data?.properties[0]);
+      if (propertyId) {
+        const property = res?.data?.properties.find(
+          property => property._id === propertyId
+        );
+        setSelectedProperty(property);
+      } else setSelectedProperty(res?.data?.properties[0]);
       return res?.data?.properties;
     }
   });

@@ -1,26 +1,13 @@
-import { UserOutlined } from '@ant-design/icons';
-import {
-  Avatar,
-  Card,
-  Col,
-  Divider,
-  List,
-  Row,
-  Space,
-  Tabs,
-  Tag,
-  Typography,
-  DatePicker
-} from 'antd';
+import { Card, Col, Row, Space, Tabs, Tag, Typography, DatePicker } from 'antd';
 
 import { Container, MainWrapper } from 'src/components/Global';
 import { useTheme } from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { findProperty } from 'src/api/properties.req';
 import d from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import api from 'src/api';
 import BookingDetails from 'src/components/booking-details';
 import Spinner from 'src/components/spinner';
@@ -129,7 +116,13 @@ const Home = () => {
                         onChange={setSelectedDate}
                       />
                     </Space>
-                    <Typography.Link>View All Reservation</Typography.Link>
+                    <Typography.Link>
+                      <Link
+                        to={`/dashboard/manage/reservations?propertyId=${propertyId}`}
+                      >
+                        View All Reservation
+                      </Link>
+                    </Typography.Link>
                   </Space>
                   <Card>
                     <Tabs
@@ -143,9 +136,14 @@ const Home = () => {
                       ) : isFetching ? (
                         <Spinner />
                       ) : !bookings?.length ? (
-                        <p>
-                          No {selectedTab} found for {}
-                        </p>
+                        !selectedDate ? (
+                          <p>Please Select a Date to fetch reservations.</p>
+                        ) : (
+                          <p>
+                            No {selectedTab} found for{' '}
+                            {d(selectedDate).format('DD MMMM, YYYY')}
+                          </p>
+                        )
                       ) : (
                         bookings?.map?.(booking => (
                           <BookingDetails key={booking._id} {...{ booking }} />

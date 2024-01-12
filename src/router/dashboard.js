@@ -164,10 +164,14 @@ const dashboardRoutes = [
             element: <GroupsReservation />
           },
           {
-            path: ':reservationNo',
-            element: <ManageReservationDetails />
+            path: ':bookingId',
+            element: <GroupReservationDetails />
           }
         ]
+      },
+      {
+        path: 'reviews',
+        element: <Reviews />
       },
       {
         path: 'property',

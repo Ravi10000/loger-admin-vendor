@@ -63,9 +63,9 @@ function BookingDetails({ booking, idx, totalBookings }) {
             gap: '10px'
           }}
         >
-          <p>{d(booking?.checkInDate).format('DD, MMM, YYYY')}</p>
+          <p>{d(booking?.checkInDate).format('DD, MMMM, YYYY')}</p>
           <span>to</span>
-          <p>{d(booking?.checkOutDate).format('DD, MMM, YYYY')}</p>
+          <p>{d(booking?.checkOutDate).format('DD, MMMM, YYYY')}</p>
         </div>
         <p>
           {stayLength} day{stayLength > 1 ? 's' : ''}
