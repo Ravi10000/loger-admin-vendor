@@ -107,7 +107,7 @@ const ManageGuestsQA = Loader(
 const dashboardRoutes = [
   {
     path: '',
-    element: <Navigate to="groups" replace />
+    element: <Navigate to="groups/groups-home" replace />
   },
   {
     path: 'groups',

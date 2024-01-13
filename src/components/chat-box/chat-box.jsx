@@ -3,84 +3,81 @@ import { Empty } from 'antd';
 import { PiDotsThreeBold } from 'react-icons/pi';
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-// const messages = [
-//   {
-//     text: 'Lorem ipsum dolor sit amet consectetur',
-//     type: 'received',
-//     date: '1 days ago '
-//   },
-//   {
-//     text: 'LLorem ipsum dolor sit amet consectetur Facilisis eget amet eleifend hendrerit Lectus tellus aliquet id pharetra at velUt ',
-//     type: 'received'
-//   },
-//   {
-//     text: 'LLorem ipsum dolor sit amet consectetur Facilisis eget amet eleifend hendrerit Lectus tellus aliquet id pharetra at velUt ',
-//     type: 'sent'
-//   },
-//   {
-//     text: 'LLorem ipsum dolor sit amet consectetur Facilisis eget amet eleifend hendrerit Lectus tellus aliquet id pharetra at velUt ',
-//     type: 'received'
-//   },
-//   {
-//     text: 'Lorem ipsum dolor sit amet consectetur',
-//     type: 'received',
-//     date: '2 days ago '
-//   },
-//   {
-//     text: 'Lorem ipsum dolor sit amet consectetur',
-//     type: 'received',
-//     date: '1 days ago '
-//   },
-//   {
-//     text: 'LLorem ipsum dolor sit amet consectetur Facilisis eget amet eleifend hendrerit Lectus tellus aliquet id pharetra at velUt ',
-//     type: 'received'
-//   },
-//   {
-//     text: 'LLorem ipsum dolor sit amet consectetur Facilisis eget amet eleifend hendrerit Lectus tellus aliquet id pharetra at velUt ',
-//     type: 'sent'
-//   },
-//   {
-//     text: 'LLorem ipsum dolor sit amet consectetur Facilisis eget amet eleifend hendrerit Lectus tellus aliquet id pharetra at velUt ',
-//     type: 'received'
-//   },
-//   {
-//     text: 'Lorem ipsum dolor sit amet consectetur',
-//     type: 'received',
-//     date: '2 days ago '
-//   }
-// ];
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import api from 'src/api';
 import { useUserStore } from 'src/store/user';
 import Spinner from '../spinner';
-function ChatBox({ title, messages, user }) {
+import { db } from 'src/firebase/firebase.config';
+import {
+  ref,
+  onValue,
+  set,
+  push,
+  query,
+  orderByChild
+} from 'firebase/database';
+import d from 'dayjs';
+function ChatBox({ title, user, booking }) {
   const [text, setText] = useState('');
   const chatBoxRef = useRef(null);
-  const { bookingId } = useParams();
-  const queryClient = useQueryClient();
-  const currentUser = useUserStore(state => state.user);
-
-  const { mutate: addMessage, isFetching: isAdding } = useMutation({
-    mutationFn: async () => {
-      if (!text) {
-        return;
+  const inputRef = useRef(null);
+  const [messages, setMessages] = useState([]);
+  useEffect(() => {
+    try {
+      if (booking?.propertyId && booking?.userId) {
+        const chatsRef = ref(
+          db,
+          `chats/${booking?.propertyId}/${booking?.userId}`
+        );
+        const queryRef = query(chatsRef, orderByChild('timestamp'));
+        onValue(queryRef, snapshot => {
+          const chatsData = snapshot.val();
+          console.log({ chatsData });
+          if (chatsData) setMessages(chatsData);
+        });
       }
-      const res = await api.post(`/messages`, { bookingId, text });
-      console.log({ res });
+    } catch (err) {
+      console.log({ err });
+    }
+  }, [booking]);
+
+  const { mutate: addMessage, isPending } = useMutation({
+    mutationFn: async e => {
+      e.preventDefault();
+      if (!text) return;
+      const newMessage = {
+        text,
+        isReceived: true,
+        timestamp: d().valueOf()
+      };
+      const chatsRef = ref(
+        db,
+        `chats/${booking?.propertyId}/${booking?.userId}`
+      );
+      const newMessageRef = push(chatsRef);
+      set(newMessageRef, newMessage);
       setText('');
-      queryClient.invalidateQueries(['messages', bookingId]);
+    },
+    onError: firebaseError => {
+      console.log({ firebaseError });
+    },
+    onSuccess: () => {
+      inputRef.current.focus();
+      console.log('Message added successfully');
     }
   });
 
   useEffect(() => {
     chatBoxRef.current?.scrollTo(0, chatBoxRef.current.scrollHeight);
   }, [messages]);
+  const messagesKeys = messages ? Object.keys(messages) : [];
+
   return (
     <div>
       <h1>{title}</h1>
       <div className="cb">
         <div className="cb-messages-container" ref={chatBoxRef}>
-          {!messages?.length ? (
+          {!messagesKeys?.length ? (
             <div
               style={{
                 display: 'flex',
@@ -92,22 +89,26 @@ function ChatBox({ title, messages, user }) {
               <Empty description="No requests from user" />
             </div>
           ) : (
-            messages?.map((message, idx) => (
-              <Message
-                user={user}
-                key={idx}
-                message={{
-                  ...message,
-                  type:
-                    currentUser?._id === message.senderId ? 'sent' : 'received'
-                }}
-              />
-            ))
+            messagesKeys?.map(id => {
+              const message = messages?.[id];
+              return (
+                <Message
+                  {...{
+                    user,
+                    key: id,
+                    message,
+                    date: d.unix(message.timestamp).format('YYYY-MM-DD')
+                  }}
+                />
+              );
+            })
           )}
         </div>
-        <div className="cb-footer">
+        <form className="cb-footer" onSubmit={addMessage}>
           <img src="/add-md.png" alt="" className="cb-icon" />
           <input
+            ref={inputRef}
+            disabled={isPending}
             value={text}
             onChange={e => setText(e.target.value)}
             type="text"
@@ -115,26 +116,32 @@ function ChatBox({ title, messages, user }) {
             className="cb-text-box"
           />
           <img src="/link.png" alt="" className="cb-icon" />
-          {isAdding ? (
+          {isPending ? (
             <Spinner />
           ) : (
-            <img
-              style={{ opacity: text?.length > 0 ? 1 : 0.5, cursor: 'pointer' }}
-              src="/send.png"
-              alt=""
-              className="cb-icon"
-              onClick={addMessage}
-            />
+            <button className="cb-submit-button" disabled={isPending}>
+              <img
+                style={{
+                  opacity: text?.length > 0 ? 1 : 0.5,
+                  cursor: 'pointer'
+                }}
+                src="/send.png"
+                alt=""
+                className="cb-icon"
+              />
+            </button>
           )}
-        </div>
+        </form>
       </div>
     </div>
   );
 }
 
-const Message = ({ message, user }) => {
+const Message = ({ message, user, date }) => {
+  const { text, isReceived } = message;
+
   const profilePicStyles = {};
-  if (message?.type === 'received' && user?.profilePic) {
+  if (!isReceived && user?.profilePic) {
     profilePicStyles.backgroundImage = `url("${process.env.REACT_APP_SERVER_URL}/images/${user?.profilePic}")`;
     profilePicStyles.backgroundSize = 'cover';
     profilePicStyles.backgroundPosition = 'center';
@@ -142,27 +149,24 @@ const Message = ({ message, user }) => {
   return (
     <div
       className="cb-message"
-      style={{ justifyContent: message?.type === 'sent' && 'flex-end' }}
+      style={{
+        maxWidth: '60%',
+        ...(isReceived ? { marginLeft: 'auto' } : { marginRight: 'auto' })
+      }}
     >
-      {message?.type === 'received' && (
+      {!isReceived ? (
         <div className="cb-sender-pic" style={profilePicStyles}>
           {!user?.profilePic && user?.initials}
         </div>
+      ) : (
+        <PiDotsThreeBold className="cb-dots" />
       )}
-      {message?.type === 'sent' && <PiDotsThreeBold className="cb-dots" />}
       <div className="cb-msg-text">
-        <p
-          className={`cb-message-text ${
-            message?.type === 'sent' ? 'sent' : 'received'
-          }`}
-        >
-          {message?.text}
+        <p className={`cb-message-text ${isReceived ? 'sent' : 'received'}`}>
+          {text}
         </p>
-        {message?.date && <p className="cb-msg-date">{message?.date}</p>}
+        {date && <p className="cb-msg-date">{date}</p>}
       </div>
-      {/* {message?.type === 'received' && (
-          <PiDotsThreeBold className="cb-dots" />
-        )} */}
     </div>
   );
 };

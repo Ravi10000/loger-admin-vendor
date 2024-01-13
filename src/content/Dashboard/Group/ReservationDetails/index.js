@@ -384,12 +384,15 @@ const ReservationDetails = () => {
                   <Spinner />
                 ) : (
                   <ChatBox
+                    booking={booking}
                     title={'Requests From Guests'}
                     messages={messages}
                     user={{
+                      ...user,
                       profilePic: user?.profilePic,
                       initials:
-                        user?.fName?.charAt?.(0) + user?.lName?.charAt?.(0)
+                        user?.fName?.charAt?.(0) +
+                        (user?.lName?.charAt?.(0) || '')
                     }}
                   />
                 )}

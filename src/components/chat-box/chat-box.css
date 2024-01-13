@@ -39,7 +39,7 @@
   /* flex gap-[20px] items-center */
   display: flex;
   gap: 20px;
-  align-items: center;
+  align-items: flex-start;
 }
 .cb-message-text {
   /* p-4 rounded-sm */
@@ -71,6 +71,9 @@
   color: #a3a7ac;
 }
 .cb-msg-text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
   /* w-[90%] max-w-[400px] */
   width: 90%;
   max-width: 400px;
@@ -84,8 +87,8 @@
 
 .cb-sender-pic {
   text-transform: uppercase;
-  height: 50px;
-  width: 50px;
+  height: 40px;
+  aspect-ratio: 1 / 1;
   background-color: lightgray;
   border-radius: 100%;
   display: flex;
@@ -93,4 +96,9 @@
   align-items: center;
   font-weight: 600;
   font-size: 20px;
+}
+
+.cb-submit-button {
+  background: transparent;
+  border:none;
 }
