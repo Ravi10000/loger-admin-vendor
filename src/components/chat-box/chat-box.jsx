@@ -73,7 +73,7 @@ function ChatBox({ title, user, booking }) {
   const messagesKeys = messages ? Object.keys(messages) : [];
 
   return (
-    <div>
+    <div style={{ maxWidth: '800px' }}>
       <h1>{title}</h1>
       <div className="cb">
         <div className="cb-messages-container" ref={chatBoxRef}>

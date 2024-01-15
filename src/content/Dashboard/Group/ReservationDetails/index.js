@@ -412,7 +412,12 @@ const ReservationDetails = () => {
                               Reservation
                             </Typography.Title>
                             <Typography.Text>
-                              Last Update was on 20, Jul, 2023 Time - 04:55 pm
+                              Last Update was on{' '}
+                              {dayjs(booking?.updatedAt).format(
+                                'DD, MMM, YYYY'
+                              )}{' '}
+                              Time -{' '}
+                              {dayjs(booking?.updatedAt).format('hh:mm a')}
                             </Typography.Text>
                           </>
                         ),
