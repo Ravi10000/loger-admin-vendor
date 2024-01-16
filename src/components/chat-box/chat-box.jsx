@@ -2,10 +2,7 @@ import './chat-box.css';
 import { Empty } from 'antd';
 import { PiDotsThreeBold } from 'react-icons/pi';
 import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import api from 'src/api';
-import { useUserStore } from 'src/store/user';
+import { useMutation } from '@tanstack/react-query';
 import Spinner from '../spinner';
 import { db } from 'src/firebase/firebase.config';
 import {
@@ -16,30 +13,50 @@ import {
   query,
   orderByChild
 } from 'firebase/database';
+import { useQuery } from '@tanstack/react-query';
 import d from 'dayjs';
+import api from 'src/api';
 function ChatBox({ title, user, booking }) {
   const [text, setText] = useState('');
   const chatBoxRef = useRef(null);
   const inputRef = useRef(null);
   const [messages, setMessages] = useState([]);
+  const {
+    data,
+    error: userError,
+    isLoading: isUserLoading
+  } = useQuery({
+    queryKey: ['user-details', booking?.userId],
+    enabled: !!booking?.userId && !user,
+    queryFn: async () => {
+      const { data: { user = {} } = {} } = await api.get(
+        `/user/basic-details/${booking?.userId}`
+      );
+      console.log({ user });
+      user._id = booking?.userId;
+      return user;
+    }
+  });
+  user = user || data;
+  console.log({ user });
+
   useEffect(() => {
     try {
-      if (booking?.propertyId && booking?.userId) {
-        const chatsRef = ref(
-          db,
-          `chats/${booking?.propertyId}/${booking?.userId}`
-        );
+      if (booking?._id) {
+        const chatsRef = ref(db, `messages/${booking?._id}`);
+
         const queryRef = query(chatsRef, orderByChild('timestamp'));
         onValue(queryRef, snapshot => {
           const chatsData = snapshot.val();
           console.log({ chatsData });
           if (chatsData) setMessages(chatsData);
+          else setMessages([]);
         });
       }
     } catch (err) {
       console.log({ err });
     }
-  }, [booking]);
+  }, [booking?._id]);
 
   const { mutate: addMessage, isPending } = useMutation({
     mutationFn: async e => {
@@ -47,13 +64,10 @@ function ChatBox({ title, user, booking }) {
       if (!text) return;
       const newMessage = {
         text,
-        isReceived: true,
-        timestamp: d().valueOf()
+        from: booking?.propertyId,
+        timestamp: Date.now()
       };
-      const chatsRef = ref(
-        db,
-        `chats/${booking?.propertyId}/${booking?.userId}`
-      );
+      const chatsRef = ref(db, `messages/${booking?._id}`);
       const newMessageRef = push(chatsRef);
       set(newMessageRef, newMessage);
       setText('');
@@ -74,7 +88,7 @@ function ChatBox({ title, user, booking }) {
 
   return (
     <div style={{ maxWidth: '800px' }}>
-      <h1>{title}</h1>
+      {title && <h1>{title}</h1>}
       <div className="cb">
         <div className="cb-messages-container" ref={chatBoxRef}>
           {!messagesKeys?.length ? (
@@ -97,7 +111,7 @@ function ChatBox({ title, user, booking }) {
                     user,
                     key: id,
                     message,
-                    date: d.unix(message.timestamp).format('YYYY-MM-DD')
+                    date: new Date(message?.timestamp)
                   }}
                 />
               );
@@ -138,7 +152,8 @@ function ChatBox({ title, user, booking }) {
 }
 
 const Message = ({ message, user, date }) => {
-  const { text, isReceived } = message;
+  const { text } = message;
+  const isReceived = message?.from !== user?._id;
 
   const profilePicStyles = {};
   if (!isReceived && user?.profilePic) {
@@ -165,7 +180,9 @@ const Message = ({ message, user, date }) => {
         <p className={`cb-message-text ${isReceived ? 'sent' : 'received'}`}>
           {text}
         </p>
-        {date && <p className="cb-msg-date">{date}</p>}
+        {date && (
+          <p className="cb-msg-date">{d(date).format('DD, MMM, YYYY')}</p>
+        )}
       </div>
     </div>
   );

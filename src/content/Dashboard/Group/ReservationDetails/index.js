@@ -40,6 +40,7 @@ const ReservationDetails = () => {
     }
   });
   const { user, transaction, property } = booking || {};
+  console.log({ user });
 
   const theme = useTheme();
   return (

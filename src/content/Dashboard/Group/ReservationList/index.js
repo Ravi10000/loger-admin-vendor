@@ -237,25 +237,8 @@ function ReservationList() {
         `/booking/${selectedProperty?._id}${query}`
       );
       console.log({ bookingsRes });
-      // {
-      //   key: '1', _id
-      //   ReservationNo: '2564568732', Date
-      //   PropertyName: 'Westheimer Rd. Santa Ana, ', propertyname
-      //   Location: 'Mahipal Khandari, Haridwar, India', property location
-      //   GuestName: 'Richard Parker',
-      //   GuestPhoneNo: '+91 987 654 1230', phone
-      //   CheckIn: '13 july 2023', checkin
-      //   CheckOut: '17 july 2023', checkout
-      //   Status: 'Paid', status
-      //   TotalPayment: '₹ 900', price
-      //   TaxesCharges: '₹ 900',
-      //   BookedOn: '13 July 2023', created at
-      //   ArivalTime: '09:00 am'
-      // },
       const data = bookingsRes?.data?.bookings?.map(booking => {
         const { property, transaction } = booking;
-        // const pkgDetails = JSON.parse(booking?.pkgDetails);
-
         return {
           key: booking?._id,
           ReservationNo: new Date(booking?.createdAt).getTime(),
