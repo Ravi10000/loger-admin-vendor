@@ -67,22 +67,6 @@ const BreakfastDetail = () => {
     setTypesOfBreakfast(nextSelectedTags);
   };
 
-  // const { property, isFetching } = useProperty(
-  //   [
-  //     'typesOfBreakfast',
-  //     'breakfastPrice',
-  //     'breakfastIncluded',
-  //     'breakfastServed',
-  //     'propertyType'
-  //   ],
-  //   property => {
-  //     setBreakfastIncluded(property?.breakfastServed);
-  //     setBreakfastServed(property?.breakfastIncluded);
-  //     setTypesOfBreakfast(property?.typesOfBreakfast);
-  //     setBreakfastPrice(property?.breakfastPrice.toString());
-  //   }
-  // );
-
   const { data: property, isFetching } = useQuery({
     queryKey: [
       'property',

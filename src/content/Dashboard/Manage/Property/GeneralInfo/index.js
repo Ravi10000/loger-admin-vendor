@@ -10,9 +10,23 @@ import {
   Typography
 } from 'antd';
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Container, MainWrapper } from 'src/components/Global';
+import { usePropertyById } from 'src/hooks/property-info.queries';
 
 const GeneralInfo = () => {
+  const [searchParams] = useSearchParams();
+  const propertyId = searchParams.get('propertyId');
+  const { property, isFetching, error } = usePropertyById(propertyId, [
+    'propertyName',
+    'propertyType',
+    'address',
+    'city',
+    'country',
+    'pincode',
+    'geoLocation'
+  ]);
+  console.log({ property, isFetching, error });
   return (
     <>
       <MainWrapper>
@@ -39,7 +53,7 @@ const GeneralInfo = () => {
                           Property Name
                         </Typography.Title>
                         <Typography.Text>
-                          Lorem ipsum dolor sit amet
+                          {property?.propertyName}
                         </Typography.Text>
                         <Typography.Link>Change Property Name</Typography.Link>
                       </Space>
@@ -48,7 +62,10 @@ const GeneralInfo = () => {
                         <Typography.Title level={5} style={{ marginBottom: 0 }}>
                           Property Address
                         </Typography.Title>
-                        <Typography.Text>Boulevard Mouahidin</Typography.Text>
+                        <Typography.Text>
+                          {property?.address}, {property?.city},{' '}
+                          {property?.country}, {property?.pincode}
+                        </Typography.Text>
                       </Space>
                       <Divider style={{ marginBlock: 0 }} />
                       <Space direction="vertical" style={{ width: '100%' }}>
@@ -56,7 +73,10 @@ const GeneralInfo = () => {
                           Property Location
                         </Typography.Title>
                         <Typography.Text>
-                          {'33.9098365266,(On Google Maps and OpenStreetMap)'}
+                          Longitude :&nbsp;{property?.geoLocation?.lat},<br />
+                          Longitude :&nbsp;
+                          {property?.geoLocation?.lng},<br /> &nbsp;&#40;On
+                          Google Maps and OpenStreetMap&#41;
                         </Typography.Text>
                       </Space>
                       <Divider style={{ marginBlock: 0 }} />

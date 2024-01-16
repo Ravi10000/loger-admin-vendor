@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import Gallery from 'src/components/gallery';
 import ManageCalendar from 'src/pages/manage-calendar/manage-calendar.page';
 
 const Loader = Component => props =>
@@ -187,6 +188,10 @@ const dashboardRoutes = [
           {
             path: 'general-info',
             element: <ManageGeneralInfo />
+          },
+          {
+            path: 'photos',
+            element: <Gallery />
           },
           {
             path: 'policies',
