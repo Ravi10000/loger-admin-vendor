@@ -105,13 +105,13 @@ const ManageGuestsQA = Loader(
 );
 
 const dashboardRoutes = [
-  {
-    path: '',
-    element: <Navigate to="groups/groups-home" replace />
-  },
+  // {
+  //   path: '*',
+  //   element: <Navigate to="/dashboard/groups/groups-home" replace />
+  // },
   {
     path: 'groups',
-    // element: <Navigate to="/dashboard/groups/groups-home" replace />,
+    // element: <Navigate to="groups/groups-home" replace />,
     children: [
       {
         path: 'groups-home',

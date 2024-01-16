@@ -12,6 +12,18 @@ import {
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { Container, MainWrapper } from 'src/components/Global';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import {
+  useApartmentByPropertyId,
+  useProperty,
+  usePropertyById,
+  usePropertyContentByPropertyId
+} from 'src/hooks/property-info.queries';
+import ManageHotelRatePlans from 'src/components/manage-hotel-rate-plans';
+import ManagePropertyRatePlans from 'src/components/manage-property-rate-plans';
+import Spinner from 'src/components/spinner';
+import AddRatePlan from 'src/components/add-rate-plans';
+import RatePlanPopup from 'src/components/rate-plan-popup';
 const columns = [
   {
     title: 'Rate Plan Name',
@@ -307,86 +319,124 @@ const options = [
 ];
 
 const ManageRatePlan = () => {
+  const [searchParams] = useSearchParams();
+  const propertyId = searchParams.get('propertyId');
+  const navigate = useNavigate();
+  const isAdding = searchParams.get('tab') === 'add-rate-plans' ? true : false;
+
+  const { property, isFetching, error } = usePropertyById(propertyId, [
+    'propertyName',
+    'propertyType'
+  ]);
+
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const close = () => setSelectedPlan(null);
+
+  const isHotel = property?.propertyType === 'hotel';
+  const { content, isFetching: isContentFetching } =
+    usePropertyContentByPropertyId(propertyId, property?.propertyType, [
+      'nonRefundableDiscount',
+      'weeklyPlanDiscount',
+      'monthlyPlanDiscount'
+    ]);
+
   const [value3, setValue3] = useState('Apple');
   const onChange3 = ({ target: { value } }) => {
     console.log('radio3 checked', value);
     setValue3(value);
   };
+  if (isContentFetching || isFetching) return <Spinner />;
   return (
     <>
-      <MainWrapper>
-        <Container>
-          <Row>
-            <Col xs={24} xl={20}>
-              <Space
-                direction="vertical"
-                size="large"
-                style={{ width: '100%' }}
-              >
-                <Typography.Title level={4}>Rate Plans</Typography.Title>
-                <Typography.Text>
-                  Create and Review Different Types of Rate Plans for Your
-                  Customers. You Can Manage and Pricing in Your Calendar.
-                </Typography.Text>
-                <Card>
-                  <Space direction="vertical" style={{ width: '100%' }}>
-                    <Space
-                      direction="horizontal"
-                      style={{
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'space-between'
-                      }}
-                    >
-                      <Button type="primary" size="large">
-                        Add New Rate Plans
-                      </Button>
-                      <Space direction="vertical">
-                        <Typography.Text>
-                          Show Cancellation and Net Revenue for Last:{' '}
-                        </Typography.Text>
-                        <Radio.Group
-                          options={options}
-                          onChange={onChange3}
-                          value={value3}
-                          optionType="button"
-                        />
+      <RatePlanPopup
+        {...{
+          isOpen: !!selectedPlan,
+          close,
+          selectedPlan,
+          propertyId,
+          propertyType: property?.propertyType
+        }}
+      />
+      {isAdding ? (
+        <AddRatePlan
+          {...{
+            propertyId,
+            propertyType: property?.propertyTypes,
+            setSelectedPlan,
+            content
+          }}
+        />
+      ) : (
+        <MainWrapper>
+          <Container>
+            <Row>
+              <Col xs={24} xl={20}>
+                <Space
+                  direction="vertical"
+                  size="large"
+                  style={{ width: '100%' }}
+                >
+                  <Typography.Title level={4}>Rate Plans</Typography.Title>
+                  <Typography.Text>
+                    Create and Review Different Types of Rate Plans for Your
+                    Customers. You Can Manage and Pricing in Your Calendar.
+                  </Typography.Text>
+                  <Card>
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Space
+                        direction="horizontal"
+                        style={{
+                          width: '100%',
+                          display: 'flex',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <Button
+                          type="primary"
+                          size="large"
+                          onClick={() => {
+                            navigate(
+                              '?propertyId=' +
+                                propertyId +
+                                '&tab=add-rate-plans'
+                            );
+                          }}
+                        >
+                          Add New Rate Plans
+                        </Button>
+                        <Space direction="vertical">
+                          <Typography.Text>
+                            Show Cancellation and Net Revenue for Last:{' '}
+                          </Typography.Text>
+                          <Radio.Group
+                            options={options}
+                            onChange={onChange3}
+                            value={value3}
+                            optionType="button"
+                          />
+                        </Space>
                       </Space>
+                      <Divider />
+                      {error ? (
+                        <p>Something went wrong</p>
+                      ) : isFetching ? (
+                        <Spinner />
+                      ) : (
+                        <ManagePropertyRatePlans
+                          propertyType={property?.propertyType}
+                          propertyId={propertyId}
+                          content={content}
+                          setSelectedPlan={setSelectedPlan}
+                        />
+                      )}
                     </Space>
-                    <Divider />
-
-                    <Table
-                      columns={columns}
-                      pagination={false}
-                      expandable={{
-                        expandIcon: ({ expanded, onExpand, record }) =>
-                          expanded ? (
-                            <UpOutlined onClick={e => onExpand(record, e)} />
-                          ) : (
-                            <DownOutlined onClick={e => onExpand(record, e)} />
-                          ),
-                        expandedRowRender: record => (
-                          <p
-                            style={{
-                              margin: 0
-                            }}
-                          >
-                            {record.description}
-                          </p>
-                        ),
-
-                        rowExpandable: record =>
-                          record.name !== 'Not Expandable'
-                      }}
-                      dataSource={data}
-                    />
-                  </Space>
-                </Card>
-              </Space>
-            </Col>
-          </Row>
-        </Container>
-      </MainWrapper>
+                  </Card>
+                </Space>
+              </Col>
+            </Row>
+          </Container>
+        </MainWrapper>
+      )}
     </>
   );
 };

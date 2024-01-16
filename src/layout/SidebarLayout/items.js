@@ -238,12 +238,12 @@ function useMenuItems() {
           key: 'manageCalendar'
         },
         {
-          path: '/dashboard/manage/rate-plan' + propertyId,
+          path: '/dashboard/manage/rate-and-availability/rate-plan' + propertyId,
           label: 'Rate Plan',
           key: 'manageRatePlan'
         },
         {
-          path: '/dashboard/manage/sync-calendars' + propertyId,
+          path: '/dashboard/manage/rate-and-availability/sync-calender' + propertyId,
           label: 'Sync Calendars',
           key: 'manageSyncCalendars'
         }

@@ -50,6 +50,24 @@ export function useProperty(select = [], onSuccess) {
   return { property, isFetching, error };
 }
 
+export function usePropertyById(propertyId, select = [], onSuccess) {
+  const {
+    data: property,
+    isFetching,
+    error
+  } = useQuery({
+    queryKey: ['property', propertyId, select],
+    enabled: propertyId?.length === 24,
+    queryFn: async ({ queryKey }) => {
+      const res = await findProperty(propertyId, queryKey?.[2]?.join?.(' '));
+      onSuccess?.(res?.data?.property);
+      return res?.data?.property || null;
+    }
+  });
+
+  return { property, isFetching, error };
+}
+
 export function useHotel(select = [], onSuccess) {
   const { propertyId } = useParams();
   const {
@@ -63,6 +81,23 @@ export function useHotel(select = [], onSuccess) {
       const res = await findHotel(propertyId, queryKey?.[2]?.join?.(' '));
       onSuccess?.(res?.data?.hotel);
       return res?.data?.hotel || null;
+    }
+  });
+
+  return { hotel, isFetching, error };
+}
+export function useHotelByPropertyId(propertyId, select = [], onSuccess) {
+  const {
+    data: hotel,
+    isFetching,
+    error
+  } = useQuery({
+    queryKey: ['hotel', propertyId, select],
+    enabled: propertyId?.length === 24,
+    queryFn: async ({ queryKey }) => {
+      const res = await findHotel(propertyId, queryKey?.[2]?.join?.(' '));
+      onSuccess?.(res?.data?.hotel);
+      return res?.data?.hotel || {};
     }
   });
 
@@ -109,6 +144,23 @@ export function useApartment(select = [], onSuccess) {
 
   return { apartment, isFetching, error };
 }
+export function useApartmentByPropertyId(propertyId, select = [], onSuccess) {
+  const {
+    data: apartment,
+    isFetching,
+    error
+  } = useQuery({
+    queryKey: ['apartment', propertyId, select],
+    enabled: propertyId?.length === 24,
+    queryFn: async ({ queryKey }) => {
+      const res = await findApartment(propertyId, queryKey?.[2]?.join?.(' '));
+      onSuccess?.(res?.data?.apartment);
+      return res?.data?.apartment || {};
+    }
+  });
+
+  return { apartment, isFetching, error };
+}
 
 export function usePropertyContent(select) {
   const isHotel = useIsHotel();
@@ -120,6 +172,30 @@ export function usePropertyContent(select) {
   } = useQuery({
     queryKey: [isHotel ? 'hotel' : 'apartment', propertyId, select],
     enabled: propertyId?.length === 24,
+    initialData: {},
+    queryFn: async ({ queryKey }) => {
+      const res = isHotel
+        ? await findHotel(propertyId, queryKey?.[2]?.join?.(' ') ?? '')
+        : await findApartment(propertyId, queryKey?.[2]?.join?.(' ') ?? '');
+      const content = isHotel ? res?.data?.hotel : res?.data?.apartment;
+      return content;
+    }
+  });
+  return { content, isFetching, error };
+}
+export function usePropertyContentByPropertyId(
+  propertyId,
+  propertyType,
+  select
+) {
+  const isHotel = propertyType === 'hotel';
+  const {
+    data: content,
+    isFetching,
+    error
+  } = useQuery({
+    queryKey: [isHotel ? 'hotel' : 'apartment', propertyId, select],
+    enabled: propertyId?.length === 24 && !!propertyType,
     initialData: {},
     queryFn: async ({ queryKey }) => {
       const res = isHotel
