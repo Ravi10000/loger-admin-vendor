@@ -55,14 +55,15 @@ function ManageSyncCalender() {
     }
   });
 
-  // const { mutate: generateCalendar, isPending } = useMutation({
-  //   mutationFn: async () => {
-  //     const res = await api.get(`/calendar/export-ics/${propertyId}`);
-  //     if (res?.data?.status === 'success') {
-  //       toast.success('Calendar Generated Successfully');
-  //     }
-  //   }
-  // });
+  const { mutate: generateCalendar, isPending } = useMutation({
+    mutationFn: async () => {
+      const res = await api.get(`/calendar/export-ics/${propertyId}`);
+      console.log({ res });
+      if (res?.data?.status === 'success') {
+        toast.success('Calendar Generated Successfully');
+      }
+    }
+  });
   return (
     <>
       <AddCalendarModal
@@ -229,9 +230,13 @@ function ManageSyncCalender() {
                     ))
                   )}
                 </div>
-                {/* <Button onClick={generateCalendar}>
+                <Button
+                  onClick={generateCalendar}
+                  disabled={isPending}
+                  loading={isPending}
+                >
                   Export Loger Calendar
-                </Button> */}
+                </Button>
               </Space>
             </Col>
             <Col span={8}>

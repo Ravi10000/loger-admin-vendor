@@ -9,9 +9,11 @@ function BookingCalendar({
   selectedDate,
   updatingCalendar
 }) {
+  // '2024-01';
   const from = d(`${year}-${month}-01`);
   const startOfMonth = from.startOf('month');
   const days = [...Array(parseInt(from.daysInMonth()))];
+  console.log({ startOfMonth: startOfMonth.format('YYYY-MM-DD'), days: from.daysInMonth() });
 
   return (
     <div

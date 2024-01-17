@@ -28,7 +28,10 @@ function ManageCalendar() {
   const propertyId = searchParams.get('propertyId');
   const [year, setYear] = useState(d().year());
   const [month, setMonth] = useState(d().month() + 1);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState({
+    date: parseInt(d().format('D'))
+  });
+  console.log({ selectedDate });
   const [updatingCalendar, setUpdatingCalendar] = useState(false);
 
   const { data: property } = useQuery({
@@ -88,7 +91,7 @@ function ManageCalendar() {
           defaultValue="Jan"
           style={{ width: 120 }}
           onChange={value => setMonth(value)}
-          value={months[month]}
+          value={months[month - 1]}
           options={months.map((month, i) => ({ value: i + 1, label: month }))}
         />
         <Select

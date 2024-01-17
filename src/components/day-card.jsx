@@ -24,7 +24,7 @@ function DayCard({ selectedDate, setSelectedDate, from, date }) {
   return (
     <div
       onClick={() => {
-        if (isPast) return;
+        // if (isPast) return;
         if (!error && !isFetching) setSelectedDate({ _id: day?._id, date });
       }}
       // ${d().date() > day ? '--past' : ''}
