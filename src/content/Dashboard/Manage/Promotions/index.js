@@ -1,6 +1,6 @@
 import { Button, Radio, Select, Space, Table, Typography } from 'antd';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Container, MainWrapper } from 'src/components/Global';
 import { useTheme } from 'styled-components';
 
@@ -60,6 +60,8 @@ const data = [
 const Promotions = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const propertyId = searchParams.get('propertyId');
 
   return (
     <>
@@ -78,7 +80,9 @@ const Promotions = () => {
               <Button
                 type="primary"
                 onClick={() => {
-                  navigate('/dashboard/manage/promotions/new-promotion');
+                  navigate(
+                    `/dashboard/manage/promotions/new-promotion?propertyId=${propertyId}`
+                  );
                 }}
               >
                 Choose New Promotions
