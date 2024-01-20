@@ -235,7 +235,7 @@ const GroupHome = () => {
           <Row>
             <Col xs={24} xl={20}>
               <Space direction="vertical" size={48} style={{ width: '100%' }}>
-                <Card>
+                {/* <Card>
                   <Space
                     direction="vertical"
                     size="large"
@@ -254,12 +254,9 @@ const GroupHome = () => {
                         Each property with a mobile rate can see, on average , a
                         26 % increase in its bookings.
                       </Typography.Text>
-                      {/* <Button size="large" type="primary" ghost>
-                        Select 1 Eligible Property
-                      </Button> */}
                     </Space>
                   </Space>
-                </Card>
+                </Card> */}
                 <Space
                   direction="vertical"
                   size="middle"

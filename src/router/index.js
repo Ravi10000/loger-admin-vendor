@@ -20,10 +20,10 @@ const Loader = Component => props =>
 const MainPage = Loader(lazy(() => import('src/content/MainPage')));
 
 const router = [
-  // {
-  //   path: '*',
-  //   element: <Navigate to="auth" replace />
-  // },
+  {
+    path: '*',
+    element: <Navigate to="auth" replace />
+  },
   {
     path: '/payment-details',
     element: <Payment />

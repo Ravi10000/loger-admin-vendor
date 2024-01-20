@@ -29,7 +29,7 @@ function ManageCalendar() {
   const [year, setYear] = useState(d().year());
   const [month, setMonth] = useState(d().month() + 1);
   const [selectedDate, setSelectedDate] = useState({
-    date: parseInt(d().format('D'))
+    date: d().get('date')
   });
   console.log({ selectedDate });
   const [updatingCalendar, setUpdatingCalendar] = useState(false);
@@ -127,7 +127,7 @@ function ManageCalendar() {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '6fr 2fr 1fr',
+          gridTemplateColumns: '6fr 2fr',
           gap: '20px'
         }}
       >
