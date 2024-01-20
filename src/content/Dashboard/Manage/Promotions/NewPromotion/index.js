@@ -1,18 +1,26 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Card, Col, Row, Space, Tag, Typography, Skeleton } from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  Row,
+  Space,
+  Typography,
+  Skeleton,
+  List
+} from 'antd';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import api from 'src/api';
 import { Container, MainWrapper } from 'src/components/Global';
-
-const media = {
-  promoMarketing: '/assets/svg/promotions-marketing.svg',
-  promoPercentage: '/assets/svg/promotions-percentage.svg',
-  promoTargeting: '/assets/svg/promotions-targeting.svg'
-};
+dayjs.extend(customParseFormat);
 
 const NewPromotion = () => {
+  const [searchParams] = useSearchParams();
+  const propertyId = searchParams.get('propertyId');
   const { data: promotions = [], isFetching } = useQuery({
     queryKey: ['promotions', 'added'],
     queryFn: async () => {
@@ -20,8 +28,6 @@ const NewPromotion = () => {
       return res.data.promotions;
     }
   });
-
-  console.log(promotions);
 
   return (
     <>
@@ -40,7 +46,7 @@ const NewPromotion = () => {
                   style={{ width: '100%' }}
                 >
                   <Link
-                    to="/dashboard/manage/promotions"
+                    to={`/dashboard/manage/promotions?propertyId=${propertyId}`}
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center'
@@ -53,238 +59,80 @@ const NewPromotion = () => {
                     Choose a New Promotions
                   </Typography.Title>
                 </Space>
-                {isFetching ? (
-                  <>
-                    <Skeleton
-                      avatar
-                      paragraph={{
-                        rows: 4
-                      }}
-                    />
-                    <Skeleton
-                      avatar
-                      paragraph={{
-                        rows: 4
-                      }}
-                    />
-                  </>
-                ) : (
-                  <>
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      <Typography.Title level={4} style={{ marginBottom: 0 }}>
-                        Campaign Deals
-                      </Typography.Title>
-                      <Typography.Text>
-                        Lorem ipsum dolor sit amet consectetur. Praesent cras
-                        sem at ac sit gravida.
-                      </Typography.Text>
-                      <Card>
-                        <Row gutter={[12, 12]} align="middle">
-                          <Col xs={4} xxl={3}>
-                            <img src={media.promoPercentage} alt="" />
-                          </Col>
-                          <Col xs={20} xxl={6}>
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Title
-                                level={5}
-                                style={{ marginBottom: 0 }}
+                <List
+                  itemLayout="vertical"
+                  size="large"
+                  dataSource={promotions}
+                  renderItem={item => (
+                    <List.Item key={item.title} style={{ border: 0 }}>
+                      <Skeleton loading={isFetching} active avatar>
+                        <Card>
+                          <Row gutter={[12, 12]} align="middle">
+                            <Col xs={4} xxl={2}>
+                              <img
+                                src={`${process.env.REACT_APP_SERVER_URL}/images/${item.icon}`}
+                                alt=""
+                              />
+                            </Col>
+                            <Col xs={20} xxl={7}>
+                              <Space
+                                direction="vertical"
+                                style={{ width: '100%' }}
                               >
-                                Gateway Deal
-                              </Typography.Title>
-                              <Typography.Text>
-                                Recommended 20% Discount or More
-                              </Typography.Text>
-                              <Space>
-                                <Tag>Badge</Tag>
-                                <Tag>Marketing Exposure</Tag>
-                              </Space>
-                            </Space>
-                          </Col>
-                          <Col xs={24} xxl={5}>
-                            <Space
-                              size="middle"
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Space direction="vertical">
-                                <Typography.Text strong>
-                                  Bookable Period
-                                </Typography.Text>
+                                <Typography.Title
+                                  level={5}
+                                  style={{ marginBottom: 0 }}
+                                >
+                                  {item.title}
+                                </Typography.Title>
                                 <Typography.Text>
-                                  15 Mar 2023-28 Sept 2023
+                                  Recommended {item.discountPercent}% Discount
+                                  or More
                                 </Typography.Text>
                               </Space>
-                              <Space direction="vertical">
-                                <Typography.Text strong>
-                                  Stay Dates
-                                </Typography.Text>
-                                <Typography.Text>
-                                  4 Apr 2023-28 Sept 2023
-                                </Typography.Text>
-                              </Space>
-                            </Space>
-                          </Col>
-                          <Col xs={24} xxl={6}>
-                            <Typography.Text>
-                              Target occupancy gaps and benefit from extra
-                              marketing exposure
-                            </Typography.Text>
-                          </Col>
-                          <Col xs={24} xxl={4}>
-                            <Button type="primary" ghost>
-                              Add Promotions
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Card>
-                    </Space>
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      <Typography.Title level={4} style={{ marginBottom: 0 }}>
-                        Deep Deals
-                      </Typography.Title>
-                      <Typography.Text>
-                        Lorem ipsum dolor sit amet consectetur. Praesent cras
-                        sem at ac sit gravida.
-                      </Typography.Text>
-                      <Card>
-                        <Row gutter={[12, 12]} align="middle">
-                          <Col xs={4} xxl={3}>
-                            <img src={media.promoMarketing} alt="" />
-                          </Col>
-                          <Col xs={20} xxl={6}>
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Title
-                                level={5}
-                                style={{ marginBottom: 0 }}
+                            </Col>
+                            <Col xs={24} xxl={5}>
+                              <Space
+                                size="middle"
+                                direction="vertical"
+                                style={{ width: '100%' }}
                               >
-                                Gateway Deal
-                              </Typography.Title>
+                                <Space direction="vertical">
+                                  <Typography.Text strong>
+                                    State Date
+                                  </Typography.Text>
+                                  <Typography.Text>
+                                    {dayjs(item.startDate).format(
+                                      'DD MMM YYYY'
+                                    )}
+                                  </Typography.Text>
+                                </Space>
+                                <Space direction="vertical">
+                                  <Typography.Text strong>
+                                    End Date
+                                  </Typography.Text>
+                                  <Typography.Text>
+                                    {dayjs(item.endDate).format('DD MMM YYYY')}
+                                  </Typography.Text>
+                                </Space>
+                              </Space>
+                            </Col>
+                            <Col xs={24} xxl={6}>
                               <Typography.Text>
-                                Recommended 20% Discount or More
+                                {item.description}
                               </Typography.Text>
-                              <Space>
-                                <Tag>Badge</Tag>
-                                <Tag>Marketing Exposure</Tag>
-                              </Space>
-                            </Space>
-                          </Col>
-                          <Col xs={24} xxl={5}>
-                            <Space
-                              size="middle"
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Space direction="vertical">
-                                <Typography.Text strong>
-                                  Bookable Period
-                                </Typography.Text>
-                                <Typography.Text>
-                                  15 Mar 2023-28 Sept 2023
-                                </Typography.Text>
-                              </Space>
-                              <Space direction="vertical">
-                                <Typography.Text strong>
-                                  Stay Dates
-                                </Typography.Text>
-                                <Typography.Text>
-                                  4 Apr 2023-28 Sept 2023
-                                </Typography.Text>
-                              </Space>
-                            </Space>
-                          </Col>
-                          <Col xs={24} xxl={6}>
-                            <Typography.Text>
-                              Target occupancy gaps and benefit from extra
-                              marketing exposure
-                            </Typography.Text>
-                          </Col>
-                          <Col xs={24} xxl={4}>
-                            <Button type="primary" ghost>
-                              Add Promotions
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Card>
-                    </Space>
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      <Typography.Title level={4} style={{ marginBottom: 0 }}>
-                        Targeting
-                      </Typography.Title>
-                      <Typography.Text>
-                        Lorem ipsum dolor sit amet consectetur. Praesent cras
-                        sem at ac sit gravida.
-                      </Typography.Text>
-                      <Card>
-                        <Row gutter={[12, 12]} align="middle">
-                          <Col xs={4} xxl={3}>
-                            <img src={media.promoTargeting} alt="" />
-                          </Col>
-                          <Col xs={20} xxl={6}>
-                            <Space
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Typography.Title
-                                level={5}
-                                style={{ marginBottom: 0 }}
-                              >
-                                Gateway Deal
-                              </Typography.Title>
-                              <Typography.Text>
-                                Recommended 20% Discount or More
-                              </Typography.Text>
-                              <Space>
-                                <Tag>Badge</Tag>
-                                <Tag>Marketing Exposure</Tag>
-                              </Space>
-                            </Space>
-                          </Col>
-                          <Col xs={24} xxl={5}>
-                            <Space
-                              size="middle"
-                              direction="vertical"
-                              style={{ width: '100%' }}
-                            >
-                              <Space direction="vertical">
-                                <Typography.Text strong>
-                                  Bookable Period
-                                </Typography.Text>
-                                <Typography.Text>
-                                  15 Mar 2023-28 Sept 2023
-                                </Typography.Text>
-                              </Space>
-                              <Space direction="vertical">
-                                <Typography.Text strong>
-                                  Stay Dates
-                                </Typography.Text>
-                                <Typography.Text>
-                                  4 Apr 2023-28 Sept 2023
-                                </Typography.Text>
-                              </Space>
-                            </Space>
-                          </Col>
-                          <Col xs={24} xxl={6}>
-                            <Typography.Text>
-                              Target occupancy gaps and benefit from extra
-                              marketing exposure
-                            </Typography.Text>
-                          </Col>
-                          <Col xs={24} xxl={4}>
-                            <Button type="primary" ghost>
-                              Add Promotions
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Card>
-                    </Space>
-                  </>
-                )}
+                            </Col>
+                            <Col xs={24} xxl={4}>
+                              <Button type="primary" ghost>
+                                Add Promotions
+                              </Button>
+                            </Col>
+                          </Row>
+                        </Card>
+                      </Skeleton>
+                    </List.Item>
+                  )}
+                />
               </Space>
             </Col>
           </Row>
